@@ -124,11 +124,11 @@ bg() {
                 for i in $(find "$INPUT" -type f -name "*_R1_*"); do cp "$i" "$ANALYSIS_DIR"/$(echo "$i" | awk -F/ '{print $NF}' | awk -F"-|_" '{print $1}').R1.fastq.gz -v; done
                 for i in $(find "$INPUT" -type f -name "*_R2_*"); do cp "$i" "$ANALYSIS_DIR"/$(echo "$i" | awk -F/ '{print $NF}' | awk -F"-|_" '{print $1}').R2.fastq.gz -v; done
                 source activate vir_assembly
-                for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $NF}' | sed -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' | sort -u); do bwa index $HOME/VIRUS_ASSEMBLY/ref_seq/"$i".fasta; done
+                for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $NF}' | sed -e 's/ChikAsianECSA*/KP164568.1/g' -e 's/DENV1*/NC_001477.1/g' -e 's/DENV2*/NC_001474.2/g' -e 's/DENV3*/NC_001475.2/g' -e 's/DENV4*/NC_002640.1/g' -e 's/ZaireEbola*/KR063671.1/g' -e 's/Lassa*/NC_004296.1/g' -e 's/Nipah*/AJ564622.1/g' -e 's/OROV400L/KP691612.1/g' -e 's/OROV400M/KP691622.1/g' -e 's/OROV400S/KP691623.1/g' -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' -e 's/YFV*/JF912190.1/g' -e 's/ZikaAsian*/KJ776791.2/g' | sort -u); do bwa index $HOME/VIRUS_ASSEMBLY/ref_seq/"$i".fasta; done
                 for j in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $1","$NF}' | sort); do
                     SAMPLE_ID=$(echo "$j" | tr -dc '[:print:]\n' | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$j" | tr -dc '[:print:]\n' | awk -F, '{print $2}')
-                    REF_SEQ=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' | sort -u)
+                    REF_SEQ=$(echo "$PRIMER_SCHEME" | sed -e 's/ChikAsianECSA*/KP164568.1/g' -e 's/DENV1*/NC_001477.1/g' -e 's/DENV2*/NC_001474.2/g' -e 's/DENV3*/NC_001475.2/g' -e 's/DENV4*/NC_002640.1/g' -e 's/ZaireEbola*/KR063671.1/g' -e 's/Lassa*/NC_004296.1/g' -e 's/Nipah*/AJ564622.1/g' -e 's/OROV400L/KP691612.1/g' -e 's/OROV400M/KP691622.1/g' -e 's/OROV400S/KP691623.1/g' -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' -e 's/YFV*/JF912190.1/g' -e 's/ZikaAsian*/KJ776791.2/g' | sort -u)
                     mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID".results/
                     echo "fastp analysis:" > "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".time.txt
                     start=$(date +%s%3N)
