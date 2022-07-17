@@ -41,9 +41,9 @@ DENV-1 [~900pb]              DENV1_V1            https://doi.org/10.1038/s41467-
 DENV-2 [~900pb]              DENV2_V1            https://doi.org/10.1038/s41467-021-22607-0
 DENV-3 [~900pb]              DENV3_V1            https://doi.org/10.1038/s41467-021-22607-0
 DENV-4 [~700pb]              DENV4_V1            https://doi.org/10.1038/s41467-021-22607-0
-EBOV [~1000pb]               ZaireEbola_V1       https://github.com/artic-network/artic-ncov2019
-EBOV [~500pb]                ZaireEbola_V2       https://github.com/artic-network/artic-ncov2019
-EBOV [~400pb]                ZaireEbola_V3       https://github.com/artic-network/artic-ncov2019
+EV [~1000pb]                 ZaireEbola_V1       https://github.com/artic-network/artic-ncov2019
+EV [~500pb]                  ZaireEbola_V2       https://github.com/artic-network/artic-ncov2019
+EV [~400pb]                  ZaireEbola_V3       https://github.com/artic-network/artic-ncov2019
 LASV L-segment [~400pb]      LassaL_V1           https://github.com/zibraproject/zika-pipeline
 LASV S-segment [~400pb]      LassaS_V1           https://github.com/zibraproject/zika-pipeline
 NiV  [~400pb]                Nipah_V1            https://github.com/artic-network/artic-ncov2019
