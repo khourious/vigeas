@@ -2,9 +2,9 @@
 
 usage () {
     echo "
-vigeasIL
+vigeas-illumina
 --------
-Viral genome assembly pipeline for WGS using Illumina platforms
+Viral genome assembly pipeline for WGS using <Illumina>
 
 List available primer scheme in this workflow:
     $(basename $0) -l
@@ -22,7 +22,7 @@ Command line parameters:
     -d arg    Minimum depth to variant calling (default: 10).
     -h        Print this help and exit.
     -i arg    Path containing the Illumina fastQ sequencing data.
-    -s arg    Illumina samplesheet containing the primer scheme in the description column (i.e. ARTIC_V4-1 for SARS-CoV-2).
+    -s arg    Illumina samplesheet containing the primer scheme in the description column (i.e. ARTIC_V4-1).
     -t arg    Max number of threads (default: all cores minus 2).
     -u        Update conda dependencies.
     -v        Display version information and check for update.
