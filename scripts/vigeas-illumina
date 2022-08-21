@@ -32,7 +32,11 @@ exit -1
 
 primer_scheme_list () {
     echo "
-AVAILABLE PRIMER SCHEMES --> updated: 17 Jul 2022
+vigeas-illumina
+
+--> Available primer schemes
+----> updated: 17 Jul 2022
+
 ------------------------------------------------------------------------------------------------
 target                       primer_scheme       url_reference
 ------------------------------------------------------------------------------------------------
@@ -70,15 +74,16 @@ update () {
     mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
     mamba update -y -n vir_assembly -c conda-forge -c anaconda -c bioconda -c defaults --all
     mamba update -y -n vir_summary -c conda-forge -c anaconda -c bioconda -c defaults --all
-    source activate vir_summary
-    pangolin --update
 exit -1
 }
 
 version () {
     echo "
-VIRUS_ASSEMBLY --> updated: 17 Jul 2022
-. made by Laise de Moraes [https://lpmor22.github.io/] --> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil"
+vigeas-illumina
+
+--> updated: 21 Ago 2022
+----> Laise de Moraes [https://lpmor22.github.io/]
+------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil"
 exit -1
 }
 
@@ -96,18 +101,56 @@ while getopts "d:hi:ls:t:uvw:" OPT; do
     esac
 done
 
+
+if [[ ! -z "$SAMPLE_SHEET" ]]; then
+    dos2unix "$SAMPLE_SHET"
+    if [[ ! -z $(cat "$SAMPLESHET" | sed -e '1,18d' | awk -F, '{print $NF}' | sort -u | tr '\n' ',' | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+        source activate vigeas_sars2
+        pangolin --update
+        rm -rf $HOME/nextclade_database/sarscov2_*
+        mkdir -p $HOME/nextclade_database/sarscov2_$(date +'%Y-%m-%d')
+        nextclade dataset get --name 'sars-cov-2' --output-dir $HOME/nextclade_database/sarscov2_$(date +'%Y-%m-%d')
+    fi
+fi
+
 if [[ -z "$DEPTH" ]]; then DEPTH=10; fi
 
 if [[ ! -z "$WORKFLOW" ]]; then
-    if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
-        usage
+    if [[ "$WORKFLOW" == "1" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$DEPTH" ]]; then
+            usage
+        else
+            LIBRARY_NAME="$(basename "$INPUT")"
+            ANALYSIS_DIR=$HOME/VIRUS_ASSEMBLY/"$LIBRARY_NAME"_ANALYSIS
+            [[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
+            echo "" && echo "Output path: "$ANALYSIS_DIR""
+            echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+            echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+        fi
+    elif [[ "$WORKFLOW" == "2" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$DEPTH" ]]; then
+            usage
+        else
+            LIBRARY_NAME="$(basename "$INPUT")"
+            ANALYSIS_DIR=$HOME/VIRUS_ASSEMBLY/"$LIBRARY_NAME"_ANALYSIS
+            [[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
+            echo "" && echo "Output path: "$ANALYSIS_DIR""
+            echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+            echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+        fi
+    elif [[ "$WORKFLOW" == "3" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
+            usage
+        else
+            LIBRARY_NAME="$(basename "$INPUT")"
+            ANALYSIS_DIR=$HOME/VIRUS_ASSEMBLY/"$LIBRARY_NAME"_ANALYSIS
+            [[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
+            echo "" && echo "Output path: "$ANALYSIS_DIR""
+            echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+            echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+        fi
     else
-        LIBRARY_NAME="$(basename "$INPUT")"
-        ANALYSIS_DIR=$HOME/VIRUS_ASSEMBLY/"$LIBRARY_NAME"_depth"$DEPTH"X_ANALYSIS
-        [[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
-        echo "" && echo "Output path: "$ANALYSIS_DIR""
-        echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".depth"$DEPTH"X.log.$(uname -n).$(date +'%Y-%m-%d').txt"
-        echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".depth"$DEPTH"X.log.$(uname -n).$(date +'%Y-%m-%d').txt"
+        usage
     fi
 else
     usage
@@ -118,38 +161,27 @@ bg() {
     if [[ -z "$THREADS" ]]; then THREADS=$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p' | awk '{print $1-2}'); fi
     if [[ ! -z "$WORKFLOW" ]]; then
         if [[ "$WORKFLOW" == "1" ]]; then
-            if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
+            if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$DEPTH" ]]; then
                 usage
             else
                 for i in $(find "$INPUT" -type f -name "*_R1_*"); do cp "$i" "$ANALYSIS_DIR"/$(echo "$i" | awk -F/ '{print $NF}' | awk -F"-|_" '{print $1}').R1.fastq.gz -v; done
                 for i in $(find "$INPUT" -type f -name "*_R2_*"); do cp "$i" "$ANALYSIS_DIR"/$(echo "$i" | awk -F/ '{print $NF}' | awk -F"-|_" '{print $1}').R2.fastq.gz -v; done
-                source activate vir_assembly
-                for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $NF}' | sed -e 's/ChikAsianECSA*/KP164568.1/g' -e 's/DENV1*/NC_001477.1/g' -e 's/DENV2*/NC_001474.2/g' -e 's/DENV3*/NC_001475.2/g' -e 's/DENV4*/NC_002640.1/g' -e 's/ZaireEbola*/KR063671.1/g' -e 's/Lassa*/NC_004296.1/g' -e 's/Nipah*/AJ564622.1/g' -e 's/OROV400L/KP691612.1/g' -e 's/OROV400M/KP691622.1/g' -e 's/OROV400S/KP691623.1/g' -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' -e 's/YFV*/JF912190.1/g' -e 's/ZikaAsian*/KJ776791.2/g' | sort -u); do bwa index $HOME/VIRUS_ASSEMBLY/ref_seq/"$i".fasta; done
+                source activate vigeas_assembly_ilumina
+                for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $NF}' | sed -e 's/ChikAsianECSA*/KP164568.1/g' -e 's/DENV1*/NC_001477.1/g' -e 's/DENV2*/NC_001474.2/g' -e 's/DENV3*/NC_001475.2/g' -e 's/DENV4*/NC_002640.1/g' -e 's/ZaireEbola*/KR063671.1/g' -e 's/Lassa*/NC_004296.1/g' -e 's/Nipah*/AJ564622.1/g' -e 's/OROV400L/KP691612.1/g' -e 's/OROV400M/KP691622.1/g' -e 's/OROV400S/KP691623.1/g' -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' -e 's/YFV*/JF912190.1/g' -e 's/ZikaAsian*/KJ776791.2/g' | sort -u); do
+                    bwa index $HOME/vigeas/illuminas/refseqs_fasta/"$i".fasta
+                done
                 for j in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $1","$NF}' | sort); do
                     SAMPLE_ID=$(echo "$j" | tr -dc '[:print:]\n' | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$j" | tr -dc '[:print:]\n' | awk -F, '{print $2}')
                     REF_SEQ=$(echo "$PRIMER_SCHEME" | sed -e 's/ChikAsianECSA*/KP164568.1/g' -e 's/DENV1*/NC_001477.1/g' -e 's/DENV2*/NC_001474.2/g' -e 's/DENV3*/NC_001475.2/g' -e 's/DENV4*/NC_002640.1/g' -e 's/ZaireEbola*/KR063671.1/g' -e 's/Lassa*/NC_004296.1/g' -e 's/Nipah*/AJ564622.1/g' -e 's/OROV400L/KP691612.1/g' -e 's/OROV400M/KP691622.1/g' -e 's/OROV400S/KP691623.1/g' -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' -e 's/YFV*/JF912190.1/g' -e 's/ZikaAsian*/KJ776791.2/g' | sort -u)
-                    mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID".results/
-                    echo "fastp analysis:" > "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".time.txt
-                    start=$(date +%s%3N)
-                    fastp -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -I "$ANALYSIS_DIR"/"$SAMPLE_ID".R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".R1.fq.gz -O "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".R2.fq.gz --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -h "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".fastp.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".fastp.json --thread "$THREADS" --adapter_fasta $HOME/VIRUS_ASSEMBLY/primer_fasta/"$PRIMER_SCHEME".fasta -f 0 -t 0 -F 0 -T 0
-                    end=$(date +%s%3N)
-                    analysis_in_miliseconds=$(expr $end - $start)
-                    analysis_in_minutes=$(($analysis_in_miliseconds / 60000)).$(($analysis_in_miliseconds % 60000))
-                    echo $analysis_in_minutes >> "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".time.txt
-                    echo "BWA and iVar analysis:" >> "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".time.txt
-                    start=$(date +%s%3N)
-                    bwa mem -t "$THREADS" $HOME/VIRUS_ASSEMBLY/ref_seq/"$REF_SEQ".fasta "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".R1.fq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".R2.fq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".bam
-                    samtools sort -o "$SAMPLE_ID".sorted.bam "$SAMPLE_ID".bam
-                    samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".sorted.bam
-                    samtools mpileup -d 50000 --reference $HOME/VIRUS_ASSEMBLY/ref_seq/"$REF_SEQ".fasta -a -B "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".sorted.bam | ivar variants -p "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID" -q 30 -t 0.05
-                    samtools mpileup -d 50000 --reference $HOME/VIRUS_ASSEMBLY/ref_seq/"$REF_SEQ".fasta -a -B "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".sorted.bam | ivar consensus -p "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID" -q 30 -t 0 -m "$DEPTH" -n N
-                    end=$(date +%s%3N)
-                    analysis_in_miliseconds=$(expr $end - $start)
-                    analysis_in_minutes=$(($analysis_in_miliseconds / 60000)).$(($analysis_in_miliseconds % 60000))
-                    echo $analysis_in_minutes >> "$ANALYSIS_DIR"/"$SAMPLE_ID".results/"$SAMPLE_ID".time.txt
-                    mv "$SAMPLE_ID".fa "$SAMPLE_ID".depth"$DEPTH".fa
-                    sed -i -e 's/>.*/>"$SAMPLE_ID"/g' -e 's/__/\//g' -e 's/--/|/g' "$SAMPLE_ID".depth"$DEPTH".fa
+                    mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
+                    fastp -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -I "$ANALYSIS_DIR"/"$SAMPLE_ID".R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".R1.fastp.fastq.gz -O "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".R2.fastp.fastq.gz --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.json --thread "$THREADS" --adapter_fasta $HOME/VIRUS_ASSEMBLY/primer_fasta/"$PRIMER_SCHEME".fasta -f 0 -t 0 -F 0 -T 0
+                    bwa mem -t "$THREADS" $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".R1.fastp.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".R2.fastp.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".bam
+                    samtools sort -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".bam
+                    samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam
+                    samtools mpileup -d 50000 --reference $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta -a -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | ivar variants -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID" -q 30 -t 0.05 -r $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta -g $HOME/vigeas/illumina/refseqs_gff3/"$REF_SEQ".gff3
+                    samtools mpileup -d 50000 --reference $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta -a -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | ivar consensus -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH" -q 30 -t 0 -m "$DEPTH" -n N
+                    sed -i -e 's/>.*/>"$SAMPLE_ID"/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
                 done
             fi
         else
@@ -159,7 +191,7 @@ bg() {
         usage
     fi
 
-    # rm -rf "$ANALYSIS_DIR"/*.fastq.gz "$ANALYSIS_DIR"/*.tmp $HOME/VIRUS_ASSEMBLY/ref_seq/*.fasta.amb $HOME/VIRUS_ASSEMBLY/ref_seq/*.fasta.ann $HOME/VIRUS_ASSEMBLY/ref_seq/*.fasta.bwt $HOME/VIRUS_ASSEMBLY/ref_seq/*.fasta.fai $HOME/VIRUS_ASSEMBLY/ref_seq/*.fasta.pac $HOME/VIRUS_ASSEMBLY/ref_seq/*.fasta.sa
+    # rm -rf "$ANALYSIS_DIR"/*.fastq.gz "$ANALYSIS_DIR"/*.tmp $HOME/vigeas/illumina/refseqs/*.fasta.amb $HOME/vigeas/illumina/refseqs/*.fasta.ann $HOME/vigeas/illumina/refseqs/*.fasta.bwt $HOME/vigeas/illumina/refseqs/*.fasta.fai $HOME/vigeas/illumina/refseqs/*.fasta.pac $HOME/vigeas/illumina/refseqs/*.fasta.sa
 
     end_all=$(date +%s.%N)
 
@@ -169,6 +201,6 @@ bg() {
 
 }
 
-bg &>>"$ANALYSIS_DIR"/"$LIBRARY_NAME".depth"$DEPTH"X.log.$(uname -n).$(date +'%Y-%m-%d').txt &
+bg &>>"$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt &
 
 exit 0
