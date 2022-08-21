@@ -2,6 +2,8 @@
 
 chmod 700 -R $HOME/vigeas/scripts
 
+sudo apt-get install dos2unix
+
 if [[ -z $(which vigeas) ]]; then
     echo 'export PATH=$HOME/vigeas/script:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
 fi
