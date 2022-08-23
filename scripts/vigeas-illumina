@@ -227,8 +227,8 @@ bg() {
                             echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         fi
                         source activate vigeas_sars2
-                        pangolin "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa -t "$THREADS" --outfile "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".lineage_report.csv
-                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".lineage_report.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        pangolin "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa -t "$THREADS" --outfile "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv
+                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
                         nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$16"\t"$17"\t"$18"\t"$30"\t"$27"\t"$28}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
@@ -270,6 +270,43 @@ bg() {
                     fi
                 done
                 gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.pdf
+                conda deactivate
+            fi
+        elif [[ "$WORKFLOW" == "2" ]]; then
+            if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$DEPTH" ]]; then
+                usage
+            else
+                for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $1}' | sort); do
+                    if [[ $(find "$INPUT" -type f -name '*_L00*') ]]; then
+                        cp -v "$INPUT"/"$i"*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                        cp -v "$INPUT"/"$i"*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                    elif [[ $(find "$INPUT" -type f -name '*_1.fastq.gz') ]]; then
+                        cp -v "$INPUT"/"$i"_1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                        cp -v "$INPUT"/"$i"_2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                    elif [[ $(find "$INPUT" -type f -name '*.R[1-2].fastq.gz') ]]; then
+                        cp -v "$INPUT"/"$i".R1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                        cp -v "$INPUT"/"$i".R2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                    fi
+                done
+                source activate vigeas_illumina
+                for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $NF}' | sed -e 's/ChikAsianECSA.*/KP164568.1/g' -e 's/DENV1.*/NC_001477.1/g' -e 's/DENV2.*/NC_001474.2/g' -e 's/DENV3.*/NC_001475.2/g' -e 's/DENV4.*/NC_002640.1/g' -e 's/ZaireEbola.*/KR063671.1/g' -e 's/Lassa.*/NC_004296.1/g' -e 's/Nipah.*/AJ564622.1/g' -e 's/OROV400L/KP691612.1/g' -e 's/OROV400M/KP691622.1/g' -e 's/OROV400S/KP691623.1/g' -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' -e 's/YFV.*/JF912190.1/g' -e 's/ZikaAsian.*/KJ776791.2/g' | sort -u); do
+                    bwa index $HOME/vigeas/illumina/refseqs_fasta/"$i".fasta
+                done
+                for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $1","$NF}' | sort); do
+                    SAMPLE_ID=$(echo "$i" | tr -dc '[:print:]\n' | awk -F, '{print $1}')
+                    PRIMER_SCHEME=$(echo "$i" | tr -dc '[:print:]\n' | awk -F, '{print $2}')
+                    REF_SEQ=$(echo "$PRIMER_SCHEME" | sed -e 's/ChikAsianECSA.*/KP164568.1/g' -e 's/DENV1.*/NC_001477.1/g' -e 's/DENV2.*/NC_001474.2/g' -e 's/DENV3.*/NC_001475.2/g' -e 's/DENV4.*/NC_002640.1/g' -e 's/ZaireEbola.*/KR063671.1/g' -e 's/Lassa.*/NC_004296.1/g' -e 's/Nipah.*/AJ564622.1/g' -e 's/OROV400L/KP691612.1/g' -e 's/OROV400M/KP691622.1/g' -e 's/OROV400S/KP691623.1/g' -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' -e 's/YFV.*/JF912190.1/g' -e 's/ZikaAsian.*/KJ776791.2/g' | sort -u)
+                    mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
+                    fastp -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -I "$ANALYSIS_DIR"/"$SAMPLE_ID".R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.R1.fastq.gz -O "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.R2.fastq.gz --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.json --thread "$THREADS" --adapter_fasta $HOME/vigeas/illumina/primers/"$PRIMER_SCHEME".fasta -f 0 -t 0 -F 0 -T 0
+                    bwa mem -t "$THREADS" $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".bam
+                    samtools sort -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".bam
+                    samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam
+                    samtools mpileup -d 50000 --reference $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta -a -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | ivar variants -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID" -q 30 -t 0.05 -r $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta -g $HOME/vigeas/illumina/refseqs_gff3/"$REF_SEQ".gff3
+                    samtools mpileup -d 50000 --reference $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta -a -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | ivar consensus -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID" -q 30 -t 0 -m "$DEPTH" -n N
+                    sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fa
+                    mafft --thread "$THREADS" --quiet --auto --keeplength --inputorder --6merpair --leavegappyregion --addfragments "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fa $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | seqkit grep -vip "$REF_SEQ" | sed '/>/!y/atcgn-/ATCGNN/' > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
+                    cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$REF_SEQ".$(uname -n).$(date +'%Y-%m-%d').fasta
+                done
                 conda deactivate
             fi
         else
