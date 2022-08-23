@@ -106,7 +106,7 @@ if [[ ! -z "$WORKFLOW" ]]; then
         if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$DEPTH" ]]; then
             usage
         else
-            LIBRARY_NAME="$(basename "$INPUT")"
+            LIBRARY_NAME="$(cat "$SAMPLE_SHEET" | grep "Experiment Name" | awk -F, '{print $2}')"
             ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
             [[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
             echo "" && echo "Output path: "$ANALYSIS_DIR""
@@ -117,7 +117,7 @@ if [[ ! -z "$WORKFLOW" ]]; then
         if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$DEPTH" ]]; then
             usage
         else
-            LIBRARY_NAME="$(basename "$INPUT")"
+            LIBRARY_NAME="$(cat "$SAMPLE_SHEET" | grep "Experiment Name" | awk -F, '{print $2}')"
             ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
             [[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
             echo "" && echo "Output path: "$ANALYSIS_DIR""
@@ -128,7 +128,7 @@ if [[ ! -z "$WORKFLOW" ]]; then
         if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
             usage
         else
-            LIBRARY_NAME="$(basename "$INPUT")"
+            LIBRARY_NAME="$(cat "$SAMPLE_SHEET" | grep "Experiment Name" | awk -F, '{print $2}')"
             ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
             [[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
             echo "" && echo "Output path: "$ANALYSIS_DIR""
@@ -155,8 +155,18 @@ bg() {
             if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$DEPTH" ]]; then
                 usage
             else
-                for i in $(find "$INPUT" -type f -name "*_R1_*"); do cp "$i" "$ANALYSIS_DIR"/$(echo "$i" | awk -F/ '{print $NF}' | awk -F"-|_" '{print $1}').R1.fastq.gz -v; done
-                for i in $(find "$INPUT" -type f -name "*_R2_*"); do cp "$i" "$ANALYSIS_DIR"/$(echo "$i" | awk -F/ '{print $NF}' | awk -F"-|_" '{print $1}').R2.fastq.gz -v; done
+                for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $1}' | sort); do
+                    if [[ $(find "$INPUT" -type f -name '*_L00*') ]]; then
+                        cp -v "$INPUT"/"$i"*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                        cp -v "$INPUT"/"$i"*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                    elif [[ $(find "$INPUT" -type f -name '*_1.fastq.gz') ]]; then
+                        cp -v "$INPUT"/"$i"_1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                        cp -v "$INPUT"/"$i"_2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                    elif [[ $(find "$INPUT" -type f -name '*.R[1-2].fastq.gz') ]]; then
+                        cp -v "$INPUT"/"$i".R1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                        cp -v "$INPUT"/"$i".R2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                    fi
+                done
                 source activate vigeas_illumina
                 for i in $(cat "$SAMPLE_SHEET" | sed -e '1,18d' | awk -F, '{print $NF}' | sed -e 's/ChikAsianECSA.*/KP164568.1/g' -e 's/DENV1.*/NC_001477.1/g' -e 's/DENV2.*/NC_001474.2/g' -e 's/DENV3.*/NC_001475.2/g' -e 's/DENV4.*/NC_002640.1/g' -e 's/ZaireEbola.*/KR063671.1/g' -e 's/Lassa.*/NC_004296.1/g' -e 's/Nipah.*/AJ564622.1/g' -e 's/OROV400L/KP691612.1/g' -e 's/OROV400M/KP691622.1/g' -e 's/OROV400S/KP691623.1/g' -e 's/ARTIC.*/MN908947.3/g' -e 's/FIOCRUZ-IOC.*/MN908947.3/g' -e 's/MIDNIGHT.*/MN908947.3/g' -e 's/YFV.*/JF912190.1/g' -e 's/ZikaAsian.*/KJ776791.2/g' | sort -u); do
                     bwa index $HOME/vigeas/illumina/refseqs_fasta/"$i".fasta
@@ -187,76 +197,76 @@ bg() {
                     SAMPLE_ID=$(echo "$i" | tr -dc '[:print:]\n' | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | tr -dc '[:print:]\n' | awk -F, '{print $2}')
                     if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
-                        [[ ! -f "$ANALYSIS_DIR"/summary_sars2.tmp ]] && echo "biobanco_seq#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/summary_sars2.tmp
+                        [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "biobanco_seq#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
                         source activate vigeas_summary
-                        echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                        echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                        samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                        samtools view -c -h -F 4 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary_sars2.tmp
+                        echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        samtools view -c -h -F 4 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                         if [[ "$AVG_DEPTH" == 0 ]]; then
-                            echo "0""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
+                            echo "0""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         else
-                            echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
+                            echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         fi
-                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"10"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary_sars2.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"10"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}')
                         N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
                         REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk -F" " '{print $1}')
                         REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
                         conda deactivate
                         if [[ "$N_COUNT" == 0 ]]; then
-                            echo "0" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                            echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                            echo "100" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
+                            echo "0" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                            echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                            echo "100" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         else
-                            echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                            echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                            echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary_sars2.tmp
+                            echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                            echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                            echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         fi
                         source activate vigeas_sars2
                         pangolin "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa -t "$THREADS" --outfile "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".lineage_report.csv
-                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".lineage_report.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary_sars2.tmp
+                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".lineage_report.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
-                        nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary_sars2.tmp
-                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$16"\t"$17"\t"$18"\t"$30"\t"$27"\t"$28}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/summary_sars2.tmp
+                        nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$16"\t"$17"\t"$18"\t"$30"\t"$27"\t"$28}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         conda deactivate
                         source activate vigeas_summary
                         fastcov.py -l "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
-                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.MN908947.3.$(uname -n).$(date +'%Y-%m-%d').txt
+                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.MN908947.3.$(uname -n).$(date +'%Y-%m-%d').txt
                     else
-                        [[ ! -f "$ANALYSIS_DIR"/summary.tmp ]] && echo "biobanco_seq#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/summary.tmp
+                        [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "biobanco_seq#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
                         source activate vigeas_summary
-                        echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/summary.tmp
-                        echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/summary.tmp
-                        samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary.tmp
-                        samtools view -c -h -F 4 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary.tmp
+                        echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                        echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        samtools view -c -h -F 4 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                         if [[ "$AVG_DEPTH" == 0 ]]; then
-                            echo "0""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary.tmp
+                            echo "0""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                         else
-                            echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary.tmp
+                            echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                         fi
-                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"10"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary.tmp
-                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary.tmp
-                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/summary.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"10"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}')
                         N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
                         REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk -F" " '{print $1}')
                         REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/illumina/refseqs_fasta/"$REF_SEQ".fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
                         if [[ "$N_COUNT" == 0 ]]; then
-                            echo "0" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary.tmp
-                            echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary.tmp
-                            echo "100" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary.tmp
+                            echo "0" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            echo "100" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                         else
-                            echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary.tmp
-                            echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/summary.tmp
-                            echo "$N_COUNT_PER" | awk '{printf $0}' >> "$ANALYSIS_DIR"/summary.tmp
+                            echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            echo "$N_COUNT_PER" | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary.tmp
                         fi
                         fastcov.py -l "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
-                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
+                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
                     fi
                 done
                 gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.pdf
