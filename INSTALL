@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get install build-essential cargo clang curl libclang-dev zlib1g-dev xz-utils
+
 chmod 700 -R $HOME/vigeas/scripts
 
 if [[ -z $(cat $HOME/.$(basename $SHELL)rc | grep vigeas) ]]; then
@@ -18,6 +20,8 @@ if [[ -z $(which conda) ]]; then
     conda install -y -c conda-forge mamba
     mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
     mamba create -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults bwa fastp ivar mafft samtools seqkit
+    mamba create -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults artic exonerate medaka mafft seqkit seqtk
+    mamba create -y -n vigeas_pycoqc -c conda-forge -c anaconda -c bioconda -c defaults python=3.6 pycoqc
     mamba create -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults nextclade pangolin
     mamba create -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults exonerate ghostscript numpy pandas pysam samtools seaborn seqtk
 elif [[ -z $(which mamba) ]]; then
@@ -25,6 +29,12 @@ elif [[ -z $(which mamba) ]]; then
     mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
     if [[ -z $(conda env list | grep vigeas_illumina) ]]; then
         mamba create -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults bwa fastp ivar mafft samtools seqkit
+    fi
+    if [[ -z $(conda env list | grep vigeas_nanopore) ]]; then
+        mamba create -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults artic exonerate medaka mafft seqkit seqtk
+    fi
+    if [[ -z $(conda env list | grep vigeas_pycoqc) ]]; then
+        mamba create -y -n vigeas_pycoqc -c conda-forge -c anaconda -c bioconda -c defaults python=3.6 pycoqc
     fi
     if [[ -z $(conda env list | grep vigeas_sars2) ]]; then
         mamba create -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults nextclade pangolin
@@ -37,6 +47,12 @@ elif [[ -z $(which mamba) ]]; then
 elif [[ ! -z $(which mamba) ]]; then
     if [[ -z $(conda env list | grep vigeas_illumina) ]]; then
         mamba create -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults bwa fastp ivar mafft samtools seqkit
+    fi
+    if [[ -z $(conda env list | grep vigeas_nanopore) ]]; then
+        mamba create -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults artic exonerate medaka mafft seqkit seqtk
+    fi
+    if [[ -z $(conda env list | grep vigeas_pycoqc) ]]; then
+        mamba create -y -n vigeas_pycoqc -c conda-forge -c anaconda -c bioconda -c defaults python=3.6 pycoqc
     fi
     if [[ -z $(conda env list | grep vigeas_sars2) ]]; then
         mamba create -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults nextclade pangolin
@@ -51,6 +67,26 @@ else
     conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
 fi
 
+GUPPY_VERSION=6.3.2 # Updated Ago 24 2022
+if [[ -z $(which guppy_basecaller) ]]; then
+    cd
+    wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
+    tar -vzxf ont-guppy.tar.gz
+    rm -rf ont-guppy.tar.gz
+    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
+    source $HOME/.$(basename $SHELL)rc
+elif [[ $(guppy_barcoder --version | awk -F" " '{print $NF}' | awk -F+ '{print $1}' | sed -n '1p') != "$GUPPY_VERSION" ]]; then
+    cd
+    rm -rf ont-guppy
+    wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
+    tar -vzxf ont-guppy.tar.gz
+    rm -rf ont-guppy.tar.gz
+    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
+    source $HOME/.$(basename $SHELL)rc
+else
+    guppy_basecaller --version
+fi
+
 if [[ -z $(which fastcov.py) ]]; then
     cd
     wget https://github.com/RaverJay/fastcov/archive/refs/tags/0.1.3.tar.gz
@@ -63,4 +99,19 @@ if [[ -z $(which fastcov.py) ]]; then
     echo "" && echo "RaverJay/fastcov v.0.1.3"
 else
     echo "" && echo "RaverJay/fastcov v.0.1.3"
+fi
+
+if [[ -z $(which longshot) ]]; then
+    cd
+    wget https://github.com/pjedge/longshot/archive/refs/tags/v0.4.3.tar.gz
+    tar -xvf v0.4.3.tar.gz
+    cd longshot-0.4.3
+    cargo install --path .
+    if [[ -z $(cat $HOME/.$(basename $SHELL)rc | grep longshot-0.4.3) ]]; then
+        echo 'export PATH=$HOME/.cargo/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
+    fi
+    source $HOME/.$(basename $SHELL)rc
+    longshot --version
+else
+    longshot --version
 fi
