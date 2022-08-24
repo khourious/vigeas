@@ -9,6 +9,8 @@ $ compress raw fastq folder
 ===============
 vigeas-nanopore
 ===============
+% check if primers is with "/" or "_"
+% change depth
 % change vgapONT to vigeas-nanopore
 % add new argument for analysis: barcode kit
 % compress analysis folder
