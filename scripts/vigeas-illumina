@@ -21,7 +21,7 @@ Summary stats:
 Command line parameters:
     -d arg    Minimum depth to variant calling (default: 10).
     -h        Print this help and exit.
-    -i arg    Path containing the Illumina fastQ sequencing data.
+    -i arg    Path containing the FASTQ raw data (workflows 1 or 2) or containing the assembly data (workflow 3).
     -s arg    Illumina samplesheet containing the primer scheme in the description column (i.e. ARTIC_V4-1).
     -t arg    Max number of threads (default: all cores minus 2).
     -u        Update conda dependencies.
@@ -72,8 +72,9 @@ exit -1
 
 update () {
     mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
-    mamba update -y -n vir_assembly -c conda-forge -c anaconda -c bioconda -c defaults --all
-    mamba update -y -n vir_summary -c conda-forge -c anaconda -c bioconda -c defaults --all
+    mamba update -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults --all
+    mamba update -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults --all
+    mamba update -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults --all
 exit -1
 }
 
