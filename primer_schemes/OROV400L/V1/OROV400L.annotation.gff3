@@ -1,0 +1,6 @@
+##sequence-region KP691612.1 1 6852
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=118655
+KP691612.1	Genbank	region	1	6852	.	+	.	ID=KP691612.1:1..6852;Dbxref=taxon:118655;Name=L;collection-date=24-Jul-2009;country=Brazil;gbkey=Src;genome=genomic;isolate=BeH759025;mol_type=viral cRNA;nat-host=Homo sapiens;segment=L
+KP691612.1	Genbank	gene	44	6802	.	+	.	ID=gene-L;Name=L;gbkey=Gene;gene=L;gene_biotype=protein_coding
+KP691612.1	Genbank	CDS	44	6802	.	+	0	ID=cds-AJT39477.1;Parent=gene-L;Dbxref=NCBI_GP:AJT39477.1;Name=AJT39477.1;gbkey=CDS;gene=L;product=polymerase;protein_id=AJT39477.1
+
