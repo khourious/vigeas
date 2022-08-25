@@ -1,0 +1,8 @@
+##sequence-region KP691623.1 1 946
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=118655
+KP691623.1	Genbank	region	1	946	.	+	.	ID=KP691623.1:1..946;Dbxref=taxon:118655;Name=S;collection-date=23-Jun-2009;country=Brazil;gbkey=Src;genome=genomic;isolate=BeH759620;mol_type=viral cRNA;nat-host=Homo sapiens;segment=S
+KP691623.1	Genbank	gene	45	740	.	+	.	ID=gene-N;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding
+KP691623.1	Genbank	CDS	45	740	.	+	0	ID=cds-AJT39467.1;Parent=gene-N;Dbxref=NCBI_GP:AJT39467.1;Name=AJT39467.1;gbkey=CDS;gene=N;product=nucleocapsid protein;protein_id=AJT39467.1
+KP691623.1	Genbank	gene	64	342	.	+	.	ID=gene-NSs;Name=NSs;gbkey=Gene;gene=NSs;gene_biotype=protein_coding
+KP691623.1	Genbank	CDS	64	342	.	+	0	ID=cds-AJT39468.1;Parent=gene-NSs;Dbxref=NCBI_GP:AJT39468.1;Name=AJT39468.1;gbkey=CDS;gene=NSs;product=nonstructural protein;protein_id=AJT39468.1
+
