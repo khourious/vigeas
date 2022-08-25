@@ -1,5 +1,0 @@
-##sequence-region JF912190.1 1 10859
-##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11089
-JF912190.1	Genbank	region	1	10859	.	+	.	ID=JF912190.1:1..10859;Dbxref=taxon:11089;collection-date=2002;country=Brazil;gb-acronym=YFV;gbkey=Src;genome=genomic;mol_type=genomic RNA;nat-host=Homo sapiens;strain=BeH655417
-JF912190.1	Genbank	CDS	119	10354	.	+	0	ID=cds-AFH35044.1;Dbxref=NCBI_GP:AFH35044.1;Name=AFH35044.1;gbkey=CDS;product=polyprotein;protein_id=AFH35044.1
-

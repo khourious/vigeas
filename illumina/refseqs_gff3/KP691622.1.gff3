@@ -1,6 +1,0 @@
-##sequence-region KP691622.1 1 4385
-##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=118655
-KP691622.1	Genbank	region	1	4385	.	+	.	ID=KP691622.1:1..4385;Dbxref=taxon:118655;Name=M;collection-date=23-Jun-2009;country=Brazil;gbkey=Src;genome=genomic;isolate=BeH759620;mol_type=viral cRNA;nat-host=Homo sapiens;segment=M
-KP691622.1	Genbank	gene	32	4294	.	+	.	ID=gene-M;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding
-KP691622.1	Genbank	CDS	32	4294	.	+	0	ID=cds-AJT39466.1;Parent=gene-M;Dbxref=NCBI_GP:AJT39466.1;Name=AJT39466.1;gbkey=CDS;gene=M;product=polyprotein;protein_id=AJT39466.1
-
