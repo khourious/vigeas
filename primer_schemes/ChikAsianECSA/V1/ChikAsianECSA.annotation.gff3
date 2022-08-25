@@ -1,0 +1,17 @@
+##sequence-region KP164568.1 1 11812
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=37124
+KP164568.1	Genbank	region	1	11812	.	+	.	ID=KP164568.1:1..11812;Dbxref=taxon:37124;collection-date=26-Aug-2014;country=Brazil: Feira de Santana-BA;gbkey=Src;isolate=BHI3734/H804698;lat-lon=12.24 S 38.97 W;mol_type=genomic RNA;nat-host=Homo sapiens
+KP164568.1	Genbank	five_prime_UTR	1	77	.	+	.	ID=id-KP164568.1:1..77;gbkey=5'UTR
+KP164568.1	Genbank	CDS	78	7502	.	+	0	ID=cds-AJY53701.1;Dbxref=NCBI_GP:AJY53701.1;Name=AJY53701.1;Note=contains NSp1%2C NSp2%2C NSp3 and NSp4;gbkey=CDS;product=nonstructural protein;protein_id=AJY53701.1;transl_except=(pos:5646..5648%2Caa:Other)
+KP164568.1	Genbank	mature_protein_region_of_CDS	78	1682	.	+	.	ID=id-AJY53701.1:1..535;Parent=cds-AJY53701.1;gbkey=Prot;product=nonstructural protein 1
+KP164568.1	Genbank	mature_protein_region_of_CDS	1683	4076	.	+	.	ID=id-AJY53701.1:536..1333;Parent=cds-AJY53701.1;gbkey=Prot;product=nonstructural protein 2
+KP164568.1	Genbank	mature_protein_region_of_CDS	4077	5648	.	+	.	ID=id-AJY53701.1:1334..1857;Parent=cds-AJY53701.1;gbkey=Prot;product=nonstructural protein 3
+KP164568.1	Genbank	mature_protein_region_of_CDS	5667	7499	.	+	.	ID=id-AJY53701.1:1864..2474;Parent=cds-AJY53701.1;gbkey=Prot;product=nonstructural protein 4
+KP164568.1	Genbank	CDS	7568	11314	.	+	0	ID=cds-AJY53702.1;Dbxref=NCBI_GP:AJY53702.1;Name=AJY53702.1;Note=contains C%2C E3%2C E2%2C 6K%2C and E1;gbkey=CDS;product=structural polyprotein;protein_id=AJY53702.1
+KP164568.1	Genbank	mature_protein_region_of_CDS	7568	8359	.	+	.	ID=id-AJY53702.1:1..264;Parent=cds-AJY53702.1;gbkey=Prot;product=capsid protein
+KP164568.1	Genbank	mature_protein_region_of_CDS	8360	8542	.	+	.	ID=id-AJY53702.1:265..325;Parent=cds-AJY53702.1;gbkey=Prot;product=E3
+KP164568.1	Genbank	mature_protein_region_of_CDS	8543	9811	.	+	.	ID=id-AJY53702.1:326..748;Parent=cds-AJY53702.1;gbkey=Prot;product=E2
+KP164568.1	Genbank	mature_protein_region_of_CDS	9812	9994	.	+	.	ID=id-AJY53702.1:749..809;Parent=cds-AJY53702.1;gbkey=Prot;product=6K
+KP164568.1	Genbank	mature_protein_region_of_CDS	9995	11311	.	+	.	ID=id-AJY53702.1:810..1248;Parent=cds-AJY53702.1;gbkey=Prot;product=E1
+KP164568.1	Genbank	three_prime_UTR	11315	11812	.	+	.	ID=id-KP164568.1:11315..11812;gbkey=3'UTR
+
