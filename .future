@@ -1,7 +1,6 @@
 ===============
 vigeas-illumina
 ===============
-$ add option to choose generic samplesheet
 $ add option to choose depth per sample
 $ compress analysis folder
 $ compress raw fastq folder
