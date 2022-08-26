@@ -1,0 +1,334 @@
+#!/bin/bash
+
+usage () {
+    echo "
+vigeas-nanopore
+--------
+Viral genome assembly pipeline for WGS using <Oxford Nanopore Technologies>
+
+List available primer scheme in this workflow:
+    $(basename $0) -l
+
+Basecalling + demultiplexing + assembly + summary stats:
+    $(basename $0) -w 1 -i <input path> -s <sample sheet> -g <gpu memory> -t <threads>
+
+Assembly:
+    $(basename $0) -w 2 -i <input path> -s <sample sheet> -t <threads>
+
+Summary stats:
+    $(basename $0) -w 3 -i <input path> -s <sample sheet> -t <threads>
+
+Basecalling + demultiplexing:
+    $(basename $0) -w 4 -i <input path> -g <gpu memory> -t <threads>
+
+Command line parameters:
+
+    -b arg    Space separated list of barcoding kit(s) or expansion kit(s) to detect against.
+              List supported barcoding kits: guppy_barcoder --print_kits.
+    -g arg    VRAM to determine the number of runners per GPU device.
+    -h        Print this help and exit.
+    -i arg    Path containing the FAST5/POD5 raw data (-w 1, 2 or 4) or containing the assembly data (-w 3).
+    -s arg    Path containing the samplesheet in csv with sample identification, barcode number and primer scheme.
+    -t arg    Max number of threads (default: all cores minus 2).
+    -u        Update conda dependencies.
+    -v        Display version information and check for update.
+    -w arg    Set the workflow option.
+                 1- basecalling + demultiplexing + assembly + summary stats
+                 2- assembly
+                 3- summary stats
+                 4- basecalling + demultiplexing"
+exit -1
+}
+
+primer_scheme_list () {
+    echo "
+vigeas-nanopore
+
+--> Available primer schemes
+----> updated: 25 Ago 2022
+
+---------------------------------------------------------------------------------------------------------
+target                       primer_scheme       url_reference
+---------------------------------------------------------------------------------------------------------
+CHIKV Asian/ECSA [~400pb]    ChikAsianECSA_V1    https://github.com/zibraproject/zika-pipeline
+DENV-1 [~900pb]              DENV1_V1            https://doi.org/10.1038/s41467-021-22607-0
+DENV-2 [~900pb]              DENV2_V1            https://doi.org/10.1038/s41467-021-22607-0
+DENV-3 [~900pb]              DENV3_V1            https://doi.org/10.1038/s41467-021-22607-0
+DENV-4 [~700pb]              DENV4_V1            https://doi.org/10.1038/s41467-021-22607-0
+EV [~1000pb]                 ZaireEbola_V1       https://github.com/artic-network/artic-ncov2019
+EV [~500pb]                  ZaireEbola_V2       https://github.com/artic-network/artic-ncov2019
+EV [~400pb]                  ZaireEbola_V3       https://github.com/artic-network/artic-ncov2019
+LASV L-segment [~400pb]      LassaL_V1           https://github.com/zibraproject/zika-pipeline
+LASV S-segment [~400pb]      LassaS_V1           https://github.com/zibraproject/zika-pipeline
+MPXV [~2000pb]               MPXV_V1             https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
+NiV  [~400pb]                Nipah_V1            https://github.com/artic-network/artic-ncov2019
+OROV L-segment [~400pb]      OROV400L_V1         https://github.com/zibraproject/zika-pipeline
+OROV M-segment [~400pb]      OROV400M_V1         https://github.com/zibraproject/zika-pipeline
+OROV S-segment [~400pb]      OROV400S_V1         https://github.com/zibraproject/zika-pipeline
+SARS-CoV-2 [~400pb]          ARTIC_V1            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb]          ARTIC_V2            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb]          ARTIC_V3            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb]          ARTIC_V4            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb]          ARTIC_V4_1          https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~1200pb]         MIDNIGHT_V1         https://doi.org/10.1093/biomethods/bpaa014
+SARS-CoV-2 [~1200pb]         MIDNIGHT_V2         https://doi.org/10.1093/biomethods/bpaa014
+SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V1      https://doi.org/10.1101/2020.04.30.069039
+SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V2      https://doi.org/10.1101/2020.04.30.069039
+YFV [~500pb]                 YFV500_V1           https://github.com/zibraproject/zika-pipeline
+YFV [~1000pb]                YFV1000_V1          https://github.com/zibraproject/zika-pipeline
+ZIKV Asian [~300pb]          ZikaAsian_V1        https://github.com/zibraproject/zika-pipeline
+---------------------------------------------------------------------------------------------------------"
+exit -1
+}
+
+update () {
+    mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
+    mamba update -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults --all
+    mamba update -y -n vigeas_pycoqc -c conda-forge -c anaconda -c bioconda -c defaults --all
+    mamba update -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults --all
+    mamba update -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults --all
+exit -1
+}
+
+version () {
+    echo "
+vigeas-nanopore
+
+--> updated: 25 Ago 2022
+----> Laise de Moraes [https://lpmor22.github.io/]
+------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil
+--------> Using ARTIC v.1.2.2 (https://github.com/artic-network/fieldbioinformatics)"
+exit -1
+}
+
+while getopts "g:hi:ls:t:uvw:" OPT; do
+    case "$OPT" in
+        b) BARCODE_KIT="$OPTARG";;
+        g) GPU_MEM="$OPTARG";;
+        h) usage;;
+        i) INPUT="$OPTARG";;
+        l) primer_scheme_list;;
+        s) SAMPLE_SHEET="$OPTARG";;
+        t) THREADS="$OPTARG";;
+        u) update;;
+        v) version;;
+        w) WORKFLOW="$OPTARG";;
+    esac
+done
+
+if [[ ! -z "$WORKFLOW" ]]; then
+    if [[ "$WORKFLOW" == "1" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$GPU_MEM" ]]; then
+            usage
+        else
+            LIBRARY_NAME="$(basename "$SAMPLE_SHEET" | awk -F. '{print $1}')"
+            ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
+            [[ ! -d "$ANALYSIS_DIR" ]] && mkdir -p "$ANALYSIS_DIR" "$ANALYSIS_DIR"/ASSEMBLY && chmod 700 -R "$ANALYSIS_DIR"
+            echo "" && echo "Output path: "$ANALYSIS_DIR""
+            echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+            echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+        fi
+    elif [[ "$WORKFLOW" == "2" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
+            usage
+        else
+            LIBRARY_NAME="$(basename "$SAMPLE_SHEET" | awk -F. '{print $1}')"
+            ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
+            [[ ! -d "$ANALYSIS_DIR" ]] && mkdir -p "$ANALYSIS_DIR" "$ANALYSIS_DIR"/ASSEMBLY && chmod 700 -R "$ANALYSIS_DIR"
+            echo "" && echo "Output path: "$ANALYSIS_DIR""
+            echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+            echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+        fi
+    elif [[ "$WORKFLOW" == "3" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
+            usage
+        else
+            LIBRARY_NAME="$(basename "$SAMPLE_SHEET" | awk -F. '{print $1}')"
+            ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
+            [[ ! -d "$ANALYSIS_DIR" ]] && mkdir -p "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
+            echo "" && echo "Output path: "$ANALYSIS_DIR""
+            echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+            echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+        fi
+    elif [[ "$WORKFLOW" == "4" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$GPU_MEM" ]]; then
+            usage
+        else
+            LIBRARY_NAME="$(basename "$INPUT")"
+            ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
+            [[ ! -d "$ANALYSIS_DIR" ]] && mkdir -p "$ANALYSIS_DIR" "$ANALYSIS_DIR"/CAT && chmod 700 -R "$ANALYSIS_DIR"
+            echo "" && echo "Output path: "$ANALYSIS_DIR""
+            echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+            echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+        fi
+    else
+        usage
+    fi
+else
+    usage
+fi
+
+bg() {
+    start=$(date +%s.%N)
+    if [[ -z "$THREADS" ]]; then
+        THREADS=$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p' | awk '{print $1-2}')
+    fi
+    # if [[ -z "$DEPTH" ]]; then
+        # DEPTH=20
+    # fi
+    if [[ ! -z "$WORKFLOW" ]]; then
+        if [[ "$WORKFLOW" == "1" ]]; then
+            if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$GPU_MEM" ]]; then
+                usage
+            else
+                guppy_basecaller -r -x auto --verbose_logs --disable_pings -c dna_r9.4.1_450bps_hac.cfg -i "$INPUT" -s "$ANALYSIS_DIR"/BASECALL --gpu_runners_per_device "$GPU_MEM" --chunks_per_runner 800 --chunk_size 2000 --num_callers "$THREADS" --min_qscore 8
+                guppy_barcoder -r -x auto --disable_pings --trim_adapters --trim_barcodes --barcode_kits ""$BARCODE_KIT"" -i "$ANALYSIS_DIR"/BASECALL/pass -s "$ANALYSIS_DIR"/DEMUX -t "$THREADS"
+                source activate vigeas_pycoqc
+                pycoQC -q -f "$ANALYSIS_DIR"/BASECALL/sequencing_summary.txt -b "$ANALYSIS_DIR"/DEMUX/barcoding_summary.txt -o "$ANALYSIS_DIR"/SUMMARY/"$LIBRARY_NAME".qc.$(uname -n).$(date +'%Y-%m-%d').html --report_title "$LIBRARY_NAME"
+                conda deactivate
+                source activate vigeas_nanopore
+                for i in $(cat "$SAMPLE_SHEET"); do
+                    SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
+                    # SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}' | sed '/^$/d')
+                    BARCODE_ID=$(echo "$i"| awk -F, '{print $2}')
+                    # BARCODE_ID=$(echo "$i"| awk -F, '{print $2}' | sed '/^$/d')
+                    PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $3}')
+                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC_V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
+                    REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
+                    MIN=$(paste <(awk -F"\t" '$4~/RIGHT|R|REVERSE|REV|RV|R/ {print $2}' $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed) <(awk -F"\t" '$4~/LEFT|L|FORWARD|FWD|FW|F/ {print $3}' $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed) | awk -F"\t" '{print $1-$2}' | awk '{if ($0>0) print $0}' | sort -n | sed -n '1p')
+                    MAX=$(paste <(awk -F"\t" '$4~/RIGHT|R|REVERSE|REV|RV|R/ {print $2}' $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed) <(awk -F"\t" '$4~/LEFT|L|FORWARD|FWD|FW|F/ {print $3}' $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed) | awk -F"\t" '{print $1-$2}' | awk '{if ($0>0) print $0+200}' | sort -nr | sed -n '1p')
+                        for i in $(find "$ANALYSIS_DIR"/DEMUX/ -type d -name "barcode*" | sort); do
+                            artic guppyplex --skip-quality-check --min-length "$MIN" --max-length "$MAX" --directory "$i" --output "$ANALYSIS_DIR"/ASSEMBLY/BC"$(basename $i | awk -Fe '{print $2}')"_"$LIBRARY_NAME".fastq
+                        done
+                    cd "$ANALYSIS_DIR"/ASSEMBLY
+                    mkdir "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"
+                    if [ $(echo "$BARCODE_ID" | awk '{if ($0 ~ /-/) {print "yes"} else {print "no"}}') == "yes" ]; then
+                        for j in $(echo "$BARCODE_ID" | tr '-' '\n'); do
+                            cat "$ANALYSIS_DIR"/ASSEMBLY/"$j"_"$LIBRARY_NAME".fastq > "$ANALYSIS_DIR"/ASSEMBLY/"$BARCODE_ID"_"$LIBRARY_NAME".fastq
+                        done
+                    fi
+                    # export PATH=$HOME/.cargo/bin:/usr/local/share/rsi/idl/bin:$PATH
+                    artic minion --medaka --medaka-model r941_min_high_g360 --normalise 0 --threads "$THREADS" --read-file "$ANALYSIS_DIR"/ASSEMBLY/"$BARCODE_ID"_"$LIBRARY_NAME".fastq --scheme-directory $HOME/vigeas/primer_schemes "$PRIMER_SCHEME" "$SAMPLE_ID"
+                    mv "$SAMPLE"*.* "$SAMPLE"
+                    # sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta
+                    cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$REF_SEQ".$(uname -n).$(date +'%Y-%m-%d').fasta
+                done
+                conda deactivate
+                if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+                    source activate vigeas_sars2
+                    pangolin --update
+                    [[ ! -d  $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') ]] && rm -rf $HOME/nextclade_db/sarscov2_* && mkdir -p $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') && nextclade dataset get --name 'sars-cov-2' --output-dir $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d')
+                    conda deactivate
+                fi
+                for i in $(cat "$SAMPLE_SHEET"); do
+                    SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
+                    # SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}' | sed '/^$/d')
+                    PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $3}')
+                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC_V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
+                    REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
+                    if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+                        [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_20x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        source activate vigeas_summary
+                        echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        echo -n "$REF_SEQ""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
+                        if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
+                            echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        else
+                            echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        fi
+                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"20"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}')
+                        N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
+                        REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk -F" " '{print $1}')
+                        REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
+                        conda deactivate
+                        if [[ ! -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta ]]; then
+                            echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                            echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                            echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        else
+                            if [[ "$N_COUNT" == 0 ]]; then
+                                echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                                echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                                echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                            else
+                                echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                                echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                                echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                            fi
+                        fi
+                        source activate vigeas_sars2
+                        pangolin "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta -t "$THREADS" --outfile "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv
+                        cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta
+                        nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$16"\t"$17"\t"$18"\t"$30"\t"$27"\t"$28}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        conda deactivate
+                        source activate vigeas_summary
+                        fastcov.py -l "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam -o "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
+                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.SARS-CoV-2.$(uname -n).$(date +'%Y-%m-%d').txt
+                    else
+                        [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_20x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
+                        source activate vigeas_summary
+                        echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                        echo -n "$REF_SEQ""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
+                        if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
+                            echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                        else
+                            echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                        fi
+                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"20"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}')
+                        N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
+                        REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk -F" " '{print $1}')
+                        REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
+                        conda deactivate
+                        if [[ ! -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta ]]; then
+                            echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                        else
+                            if [[ "$N_COUNT" == 0 ]]; then
+                                echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                                echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                                echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            else
+                                echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                                echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                                echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            fi
+                        fi
+                        fastcov.py -l "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam -o "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
+                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
+                    fi
+                done
+                gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*.pdf
+                conda deactivate
+            fi
+        else
+            usage
+        fi
+    else
+        usage
+    fi
+    rm -rf "$ANALYSIS_DIR"/.summary_*.tmp "$ANALYSIS_DIR"/ASSEMBLY/BC*fastq
+    end=$(date +%s.%N)
+    runtime=$(python -c "print(${end} - ${start})")
+    echo "" && echo "Done. The runtime was "$runtime" seconds." && echo ""
+}
+
+bg &>>"$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt &
+
+exit 0
