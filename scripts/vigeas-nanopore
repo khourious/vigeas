@@ -10,19 +10,18 @@ List available primer scheme in this workflow:
     $(basename $0) -l
 
 Basecalling + demultiplexing + assembly + summary stats:
-    $(basename $0) -w 1 -i <input path> -s <sample sheet> -g <gpu memory> -t <threads>
+    $(basename $0) -w 1 -i <input path> -s <sample sheet> -b <barcode kit> -g <gpu memory> -t <threads>
 
 Assembly:
-    $(basename $0) -w 2 -i <input path> -s <sample sheet> -t <threads>
+    $(basename $0) -w 2 -i <input path> -s <sample sheet> -b <barcode kit> -t <threads>
 
 Summary stats:
     $(basename $0) -w 3 -i <input path> -s <sample sheet> -t <threads>
 
 Basecalling + demultiplexing:
-    $(basename $0) -w 4 -i <input path> -g <gpu memory> -t <threads>
+    $(basename $0) -w 4 -i <input path> -b <barcode kit> -g <gpu memory> -t <threads>
 
 Command line parameters:
-
     -b arg    Space separated list of barcoding kit(s) or expansion kit(s) to detect against.
               List supported barcoding kits: guppy_barcoder --print_kits.
     -g arg    VRAM to determine the number of runners per GPU device.
@@ -94,14 +93,14 @@ version () {
     echo "
 vigeas-nanopore
 
---> updated: 25 Ago 2022
+--> updated: 27 Ago 2022
 ----> Laise de Moraes [https://lpmor22.github.io/]
 ------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil
 --------> Using ARTIC v.1.2.2 (https://github.com/artic-network/fieldbioinformatics)"
 exit -1
 }
 
-while getopts "g:hi:ls:t:uvw:" OPT; do
+while getopts "b:g:hi:ls:t:uvw:" OPT; do
     case "$OPT" in
         b) BARCODE_KIT="$OPTARG";;
         g) GPU_MEM="$OPTARG";;
@@ -118,7 +117,7 @@ done
 
 if [[ ! -z "$WORKFLOW" ]]; then
     if [[ "$WORKFLOW" == "1" ]]; then
-        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$GPU_MEM" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$BARCODE_KIT" ]] || [[ -z "$GPU_MEM" ]]; then
             usage
         else
             LIBRARY_NAME="$(basename "$SAMPLE_SHEET" | awk -F. '{print $1}')"
@@ -129,7 +128,7 @@ if [[ ! -z "$WORKFLOW" ]]; then
             echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
         fi
     elif [[ "$WORKFLOW" == "2" ]]; then
-        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$BARCODE_KIT" ]]; then
             usage
         else
             LIBRARY_NAME="$(basename "$SAMPLE_SHEET" | awk -F. '{print $1}')"
@@ -151,7 +150,7 @@ if [[ ! -z "$WORKFLOW" ]]; then
             echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
         fi
     elif [[ "$WORKFLOW" == "4" ]]; then
-        if [[ -z "$INPUT" ]] || [[ -z "$GPU_MEM" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$BARCODE_KIT" ]] || [[ -z "$GPU_MEM" ]]; then
             usage
         else
             LIBRARY_NAME="$(basename "$INPUT")"
@@ -178,40 +177,36 @@ bg() {
     # fi
     if [[ ! -z "$WORKFLOW" ]]; then
         if [[ "$WORKFLOW" == "1" ]]; then
-            if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$GPU_MEM" ]]; then
+            if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$BARCODE_KIT" ]] || [[ -z "$GPU_MEM" ]]; then
                 usage
             else
                 guppy_basecaller -r -x auto --verbose_logs --disable_pings -c dna_r9.4.1_450bps_hac.cfg -i "$INPUT" -s "$ANALYSIS_DIR"/BASECALL --gpu_runners_per_device "$GPU_MEM" --chunks_per_runner 800 --chunk_size 2000 --num_callers "$THREADS" --min_qscore 8
-                guppy_barcoder -r -x auto --disable_pings --trim_adapters --trim_barcodes --barcode_kits ""$BARCODE_KIT"" -i "$ANALYSIS_DIR"/BASECALL/pass -s "$ANALYSIS_DIR"/DEMUX -t "$THREADS"
+                guppy_barcoder -r -x auto --disable_pings --trim_adapters --barcode_kits ""$BARCODE_KIT"" -i "$ANALYSIS_DIR"/BASECALL/pass -s "$ANALYSIS_DIR"/DEMUX -t "$THREADS"
                 source activate vigeas_pycoqc
-                pycoQC -q -f "$ANALYSIS_DIR"/BASECALL/sequencing_summary.txt -b "$ANALYSIS_DIR"/DEMUX/barcoding_summary.txt -o "$ANALYSIS_DIR"/SUMMARY/"$LIBRARY_NAME".qc.$(uname -n).$(date +'%Y-%m-%d').html --report_title "$LIBRARY_NAME"
+                pycoQC -q -f "$ANALYSIS_DIR"/BASECALL/sequencing_summary.txt -b "$ANALYSIS_DIR"/DEMUX/barcoding_summary.txt -o "$ANALYSIS_DIR"/"$LIBRARY_NAME".qc.$(uname -n).$(date +'%Y-%m-%d').html --report_title "$LIBRARY_NAME"
                 conda deactivate
                 source activate vigeas_nanopore
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
-                    # SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}' | sed '/^$/d')
                     BARCODE_ID=$(echo "$i"| awk -F, '{print $2}')
-                    # BARCODE_ID=$(echo "$i"| awk -F, '{print $2}' | sed '/^$/d')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $3}')
                     PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC_V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
                     REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
-                    MIN=$(paste <(awk -F"\t" '$4~/RIGHT|R|REVERSE|REV|RV|R/ {print $2}' $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed) <(awk -F"\t" '$4~/LEFT|L|FORWARD|FWD|FW|F/ {print $3}' $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed) | awk -F"\t" '{print $1-$2}' | awk '{if ($0>0) print $0}' | sort -n | sed -n '1p')
-                    MAX=$(paste <(awk -F"\t" '$4~/RIGHT|R|REVERSE|REV|RV|R/ {print $2}' $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed) <(awk -F"\t" '$4~/LEFT|L|FORWARD|FWD|FW|F/ {print $3}' $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed) | awk -F"\t" '{print $1-$2}' | awk '{if ($0>0) print $0+200}' | sort -nr | sed -n '1p')
-                        for i in $(find "$ANALYSIS_DIR"/DEMUX/ -type d -name "barcode*" | sort); do
-                            artic guppyplex --skip-quality-check --min-length "$MIN" --max-length "$MAX" --directory "$i" --output "$ANALYSIS_DIR"/ASSEMBLY/BC"$(basename $i | awk -Fe '{print $2}')"_"$LIBRARY_NAME".fastq
-                        done
+                    MIN=$(paste <(egrep "_RIGHT|_REVERSE|_REV|_RV|_R" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $2}') <(egrep "_LEFT|_FORWARD|_FWD|_FW|_F" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
+                    MAX=$(paste <(egrep "_RIGHT|_REVERSE|_REV|_RV|_R" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $2}') <(egrep "_LEFT|_FORWARD|_FWD|_FW|_F" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
                     cd "$ANALYSIS_DIR"/ASSEMBLY
                     mkdir "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"
                     if [ $(echo "$BARCODE_ID" | awk '{if ($0 ~ /-/) {print "yes"} else {print "no"}}') == "yes" ]; then
-                        for j in $(echo "$BARCODE_ID" | tr '-' '\n'); do
-                            cat "$ANALYSIS_DIR"/ASSEMBLY/"$j"_"$LIBRARY_NAME".fastq > "$ANALYSIS_DIR"/ASSEMBLY/"$BARCODE_ID"_"$LIBRARY_NAME".fastq
+                        for i in $(echo "$BARCODE_ID" | sed 's/BC/barcode/g' | tr '-' '\n'); do
+                            cat "$ANALYSIS_DIR"/DEMUX/"$i"/*.fastq > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$BARCODE_ID".fastq
                         done
                     fi
-                    # export PATH=$HOME/.cargo/bin:/usr/local/share/rsi/idl/bin:$PATH
-                    artic minion --medaka --medaka-model r941_min_high_g360 --normalise 0 --threads "$THREADS" --read-file "$ANALYSIS_DIR"/ASSEMBLY/"$BARCODE_ID"_"$LIBRARY_NAME".fastq --scheme-directory $HOME/vigeas/primer_schemes "$PRIMER_SCHEME" "$SAMPLE_ID"
-                    mv "$SAMPLE"*.* "$SAMPLE"
-                    # sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta
-                    cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$REF_SEQ".$(uname -n).$(date +'%Y-%m-%d').fasta
+                    artic guppyplex --skip-quality-check --min-length "$MIN" --max-length "$MAX" --directory "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID" --output "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".fastq
+                    export PATH=$HOME/.cargo/bin:/usr/local/share/rsi/idl/bin:$PATH
+                    artic minion --medaka --medaka-model r941_min_high_g360 --normalise 0 --threads "$THREADS" --read-file "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".fastq --scheme-directory $HOME/vigeas/primer_schemes "$PRIMER_SCHEME_DIR" "$SAMPLE_ID"
+                    mv "$SAMPLE_ID"*.* "$SAMPLE_ID"
+                    sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta
+                    mafft --thread "$THREADS" --quiet --auto --keeplength --inputorder --6merpair --leavegappyregion --addfragments "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$REF_SEQ".$(uname -n).$(date +'%Y-%m-%d').fasta
                 done
                 conda deactivate
                 if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
@@ -222,7 +217,6 @@ bg() {
                 fi
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
-                    # SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}' | sed '/^$/d')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $3}')
                     PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC_V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
                     REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
@@ -230,11 +224,11 @@ bg() {
                         [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_20x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
                         source activate vigeas_summary
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        echo -n "$REF_SEQ""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
+                        AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                         if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
                             echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         else
