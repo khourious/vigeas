@@ -60,10 +60,8 @@ elif [[ ! -z $(which mamba) ]]; then
     if [[ -z $(conda env list | grep vigeas_summary) ]]; then
         mamba create -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults exonerate ghostscript numpy pandas pysam samtools seaborn seqtk
     fi
-    source $HOME/.$(basename $SHELL)rc
     conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
 else
-    source $HOME/.$(basename $SHELL)rc
     conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
 fi
 
