@@ -194,6 +194,7 @@ bg() {
                     samtools mpileup -d 50000 --reference $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta -a -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | ivar consensus -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH" -q 30 -t 0 -m "$DEPTH" -n N
                     sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
                     mafft --thread "$THREADS" --quiet --auto --keeplength --inputorder --6merpair --leavegappyregion --addfragments "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$REF_SEQ".$(uname -n).$(date +'%Y-%m-%d').fasta
+                    rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
                 done
                 conda deactivate
                 if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
@@ -420,7 +421,7 @@ bg() {
     else
         usage
     fi
-    rm -rf "$ANALYSIS_DIR"/*.fastq.gz "$ANALYSIS_DIR"/.summary_*.tmp $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta.* $HOME/vigeas/sample_sheets/.samplesheet.csv
+    rm -rf "$ANALYSIS_DIR"/.summary_*.tmp $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta.* $HOME/vigeas/sample_sheets/.samplesheet.csv
     end=$(date +%s.%N)
     runtime=$(python -c "print(${end} - ${start})")
     echo "" && echo "Done. The runtime was "$runtime" seconds." && echo ""
