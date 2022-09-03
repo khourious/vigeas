@@ -210,7 +210,7 @@ bg() {
                         [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
                         source activate vigeas_summary
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        echo -n "$REF_SEQ""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         samtools view -c -h -F 4 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
@@ -251,7 +251,7 @@ bg() {
                         [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
                         source activate vigeas_summary
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                        echo -n "$REF_SEQ""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         samtools view -c -h -F 4 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
@@ -341,7 +341,7 @@ bg() {
                         [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
                         source activate vigeas_summary
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        echo -n "$REF_SEQ""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         samtools view -c -h -F 4 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
@@ -382,7 +382,7 @@ bg() {
                         [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
                         source activate vigeas_summary
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                        echo -n "$REF_SEQ""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                        echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         samtools view -c -h -F 4 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
