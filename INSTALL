@@ -16,7 +16,7 @@ if [[ -z $(which conda) ]]; then
     if [[ -z $(cat $HOME/.$(basename $SHELL)rc | grep vigeas) ]]; then
         echo 'export PATH=$HOME/miniconda3/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
     fi
-    source $HOME/.$(basename $SHELL)rc
+    echo 'export PATH=$HOME/miniconda3/bin:/usr/local/share/rsi/idl/bin:$PATH'
     conda install -y -c conda-forge mamba
     mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
     mamba create -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults bwa fastp ivar mafft samtools seqkit
