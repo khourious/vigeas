@@ -42,7 +42,6 @@ elif [[ -z $(which mamba) ]]; then
     if [[ -z $(conda env list | grep vigeas_summary) ]]; then
         mamba create -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults exonerate ghostscript numpy pandas pysam samtools seaborn seqtk
     fi
-    source $HOME/.$(basename $SHELL)rc
     conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
 elif [[ ! -z $(which mamba) ]]; then
     if [[ -z $(conda env list | grep vigeas_illumina) ]]; then
@@ -72,7 +71,6 @@ if [[ -z $(which guppy_basecaller) ]]; then
     tar -vzxf ont-guppy.tar.gz
     rm -rf ont-guppy.tar.gz
     echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
-    source $HOME/.$(basename $SHELL)rc
 elif [[ $(guppy_barcoder --version | awk -F" " '{print $NF}' | awk -F+ '{print $1}' | sed -n '1p') != "$GUPPY_VERSION" ]]; then
     cd
     rm -rf ont-guppy
@@ -80,7 +78,6 @@ elif [[ $(guppy_barcoder --version | awk -F" " '{print $NF}' | awk -F+ '{print $
     tar -vzxf ont-guppy.tar.gz
     rm -rf ont-guppy.tar.gz
     echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
-    source $HOME/.$(basename $SHELL)rc
 else
     guppy_basecaller --version
 fi
@@ -108,7 +105,6 @@ if [[ -z $(which longshot) ]]; then
     if [[ -z $(cat $HOME/.$(basename $SHELL)rc | grep longshot-0.4.3) ]]; then
         echo 'export PATH=$HOME/.cargo/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
     fi
-    source $HOME/.$(basename $SHELL)rc
     longshot --version
 else
     longshot --version
