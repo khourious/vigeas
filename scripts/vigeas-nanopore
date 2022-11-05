@@ -44,7 +44,7 @@ primer_scheme_list () {
 vigeas-nanopore
 
 --> Available primer schemes
-----> updated: 25 Ago 2022
+----> updated: 05 Nov 2022
 
 ---------------------------------------------------------------------------------------------------------
 target                       primer_scheme       url_reference
@@ -75,7 +75,7 @@ SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V1      https://doi.org/10.1101/2020.04
 SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V2      https://doi.org/10.1101/2020.04.30.069039
 YFV [~500pb]                 YFV500_V1           https://github.com/zibraproject/zika-pipeline
 YFV [~1000pb]                YFV1000_V1          https://github.com/zibraproject/zika-pipeline
-ZIKV Asian [~300pb]          ZikaAsian_V1        https://github.com/zibraproject/zika-pipeline
+ZIKV Asian [~300pb]          ZikaAsian_V2        https://github.com/zibraproject/zika-pipeline
 ---------------------------------------------------------------------------------------------------------"
 exit -1
 }
@@ -93,7 +93,7 @@ version () {
     echo "
 vigeas-nanopore
 
---> updated: 27 Ago 2022
+--> updated: 05 Nov 2022
 ----> Laise de Moraes [https://lpmor22.github.io/]
 ------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil
 --------> Using ARTIC v.1.2.2 (https://github.com/artic-network/fieldbioinformatics)"
