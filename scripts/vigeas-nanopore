@@ -44,7 +44,7 @@ primer_scheme_list () {
 vigeas-nanopore
 
 --> Available primer schemes
-----> updated: 06 Set 2022
+----> updated: 25 Ago 2022
 
 ---------------------------------------------------------------------------------------------------------
 target                       primer_scheme       url_reference
@@ -75,7 +75,7 @@ SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V1      https://doi.org/10.1101/2020.04
 SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V2      https://doi.org/10.1101/2020.04.30.069039
 YFV [~500pb]                 YFV500_V1           https://github.com/zibraproject/zika-pipeline
 YFV [~1000pb]                YFV1000_V1          https://github.com/zibraproject/zika-pipeline
-ZIKV Asian [~300pb]          ZikaAsian_V2        https://github.com/zibraproject/zika-pipeline
+ZIKV Asian [~300pb]          ZikaAsian_V1        https://github.com/zibraproject/zika-pipeline
 ---------------------------------------------------------------------------------------------------------"
 exit -1
 }
@@ -172,9 +172,6 @@ bg() {
     if [[ -z "$THREADS" ]]; then
         THREADS=$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p' | awk '{print $1-2}')
     fi
-    # if [[ -z "$DEPTH" ]]; then
-        # DEPTH=20
-    # fi
     if [[ ! -z "$WORKFLOW" ]]; then
         if [[ "$WORKFLOW" == "1" ]]; then
             if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$BARCODE_KIT" ]] || [[ -z "$GPU_MEM" ]]; then
@@ -192,12 +189,23 @@ bg() {
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $3}')
                     PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC_V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
                     REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
-                    MIN=$(paste <(egrep "_RIGHT|_REVERSE|_REV|_RV|_R" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $2}') <(egrep "_LEFT|_FORWARD|_FWD|_FW|_F" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
-                    MAX=$(paste <(egrep "_RIGHT|_REVERSE|_REV|_RV|_R" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $2}') <(egrep "_LEFT|_FORWARD|_FWD|_FW|_F" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
+                    if [[ "$BARCODE_KIT" == "SQK-RBK110-96" ]]; then
+                        if [[ "$REF_SEQ" == "MIDNIGHT" ]]; then
+                            MIN=250
+                            MAX=1500
+                        fi
+                    else
+                        MIN=$(paste <(egrep "_RIGHT|_REVERSE|_REV|_RV|_R" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $2}') <(egrep "_LEFT|_FORWARD|_FWD|_FW|_F" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
+                        MAX=$(paste <(egrep "_RIGHT|_REVERSE|_REV|_RV|_R" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $2}') <(egrep "_LEFT|_FORWARD|_FWD|_FW|_F" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".scheme.bed | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
+                    fi
                     cd "$ANALYSIS_DIR"/ASSEMBLY
                     mkdir "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"
                     if [ $(echo "$BARCODE_ID" | awk '{if ($0 ~ /-/) {print "yes"} else {print "no"}}') == "yes" ]; then
                         for i in $(echo "$BARCODE_ID" | sed 's/BC/barcode/g' | tr '-' '\n'); do
+                            cat "$ANALYSIS_DIR"/DEMUX/"$i"/*.fastq > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$BARCODE_ID".fastq
+                        done
+                    else
+                        for i in $(echo "$BARCODE_ID" | sed 's/BC/barcode/g'); do
                             cat "$ANALYSIS_DIR"/DEMUX/"$i"/*.fastq > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$BARCODE_ID".fastq
                         done
                     fi
@@ -262,7 +270,7 @@ bg() {
                         cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta
                         nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$16"\t"$17"\t"$18"\t"$30"\t"$27"\t"$28}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$20"\t"$21"\t"$22"\t"$34"\t"$31"\t"$32}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         conda deactivate
                         source activate vigeas_summary
                         fastcov.py -l "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam -o "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
