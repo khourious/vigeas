@@ -205,7 +205,7 @@ bg() {
                 conda deactivate
                 source activate vigeas_summary
                 for i in $(find "$ANALYSIS_DIR" -type f -name "CN*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa > "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
+                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
                 done
                 for i in $(find "$ANALYSIS_DIR" -type f -name "MOCK*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
                     seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
@@ -348,7 +348,7 @@ bg() {
                 fi
                 source activate vigeas_summary
                 for i in $(find "$ANALYSIS_DIR" -type f -name "CN*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa > "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
+                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
                 done
                 for i in $(find "$ANALYSIS_DIR" -type f -name "MOCK*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
                     seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
