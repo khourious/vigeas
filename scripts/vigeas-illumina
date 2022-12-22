@@ -197,18 +197,27 @@ bg() {
                     rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
                 done
                 conda deactivate
+                source activate vigeas_sars2
                 if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
-                    source activate vigeas_sars2
                     pangolin --update
                     [[ ! -d  $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') ]] && rm -rf $HOME/nextclade_db/sarscov2_* && mkdir -p $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') && nextclade dataset get --name 'sars-cov-2' --output-dir $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d')
-                    conda deactivate
                 fi
+                conda deactivate
+                source activate vigeas_summary
+                for i in $(find "$ANALYSIS_DIR" -type f -name "CN*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
+                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa > "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
+                done
+                for i in $(find "$ANALYSIS_DIR" -type f -name "MOCK*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
+                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
+                done
+                conda deactivate
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
+                    source activate vigeas_summary
+                    samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
                     if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
                         [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        source activate vigeas_summary
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
@@ -227,7 +236,6 @@ bg() {
                         N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
                         REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk -F" " '{print $1}')
                         REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
-                        conda deactivate
                         if [[ "$N_COUNT" == 0 ]]; then
                             echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                             echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
@@ -237,19 +245,21 @@ bg() {
                             echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                             echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         fi
+                        Rscript $HOME/vigeas/scripts/vigeas-sars2-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
+                        conda deactivate
                         source activate vigeas_sars2
                         pangolin "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa -t "$THREADS" --outfile "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv
                         cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
                         nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$20"\t"$21"\t"$22"\t"$34"\t"$31"\t"$32}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.SARS-CoV-2.$(uname -n).$(date +'%Y-%m-%d').txt
                         conda deactivate
                         source activate vigeas_summary
-                        fastcov.py -l "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
-                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.SARS-CoV-2.$(uname -n).$(date +'%Y-%m-%d').txt
                     else
                         [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
                         source activate vigeas_summary
+                        samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                         echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
@@ -277,11 +287,16 @@ bg() {
                             echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                             echo "$N_COUNT_PER" | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary.tmp
                         fi
-                        fastcov.py -l "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
+                        Rscript $HOME/vigeas/scripts/vigeas-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
                         sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
                     fi
                 done
-                gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.pdf
+                if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.pdf
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.contamination.pdf
+                else
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.pdf
+                fi
                 conda deactivate
             fi
         elif [[ "$WORKFLOW" == "2" ]]; then
@@ -331,6 +346,14 @@ bg() {
                     [[ ! -d  $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') ]] && rm -rf $HOME/nextclade_db/sarscov2_* && mkdir -p $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') && nextclade dataset get --name 'sars-cov-2' --output-dir $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d')
                     conda deactivate
                 fi
+                source activate vigeas_summary
+                for i in $(find "$ANALYSIS_DIR" -type f -name "CN*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
+                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa > "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
+                done
+                for i in $(find "$ANALYSIS_DIR" -type f -name "MOCK*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
+                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
+                done
+                conda deactivate
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
@@ -340,6 +363,7 @@ bg() {
                     if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
                         [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
                         source activate vigeas_summary
+                        samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
@@ -368,19 +392,20 @@ bg() {
                             echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                             echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         fi
+                        Rscript $HOME/vigeas/scripts/vigeas-sars2-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
                         source activate vigeas_sars2
                         pangolin "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa -t "$THREADS" --outfile "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv
                         cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
                         nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$20"\t"$21"\t"$22"\t"$34"\t"$31"\t"$32}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.SARS-CoV-2.$(uname -n).$(date +'%Y-%m-%d').txt
                         conda deactivate
                         source activate vigeas_summary
-                        fastcov.py -l "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
-                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.SARS-CoV-2.$(uname -n).$(date +'%Y-%m-%d').txt
                     else
                         [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
                         source activate vigeas_summary
+                        samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                         echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
@@ -408,11 +433,16 @@ bg() {
                             echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                             echo "$N_COUNT_PER" | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary.tmp
                         fi
-                        fastcov.py -l "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".coverage.pdf
+                        Rscript $HOME/vigeas/scripts/vigeas-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
                         sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
                     fi
                 done
-                gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.pdf
+                if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.pdf
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.contamination.pdf
+                else
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.pdf
+                fi
                 conda deactivate
             fi
         else
