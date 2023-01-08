@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get install build-essential cargo clang curl libclang-dev zlib1g-dev xz-utils
+sudo apt-get install build-essential cargo clang curl dos2unix libclang-dev zlib1g-dev xz-utils
 
 chmod 700 -R $HOME/vigeas/scripts
 
@@ -64,7 +64,7 @@ else
     conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
 fi
 
-GUPPY_VERSION=6.3.2 # Updated Ago 24 2022
+GUPPY_VERSION=6.4.2 # Updated 06 Jan 2023
 if [[ -z $(which guppy_basecaller) ]]; then
     cd
     wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
