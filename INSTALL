@@ -64,7 +64,7 @@ else
     conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
 fi
 
-GUPPY_VERSION=6.4.2 # Updated 06 Jan 2023
+GUPPY_VERSION=6.4.6 # Updated 16 Feb 2023
 if [[ -z $(which guppy_basecaller) ]]; then
     cd
     wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
