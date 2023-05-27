@@ -4,20 +4,18 @@ sudo apt-get install build-essential cargo clang curl dos2unix libclang-dev zlib
 
 chmod 700 -R $HOME/vigeas/scripts
 
-if [[ -z $(cat $HOME/.$(basename $SHELL)rc | grep vigeas) ]]; then
-    echo 'export PATH=$HOME/vigeas/scripts:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
+if [[ -z $(grep vigeas $HOME/.$(ps -p $$ -ocomm=)rc) ]]; then
+    echo 'export PATH=$HOME/vigeas/scripts:$PATH' >> $HOME/.$(ps -p $$ -ocomm=)rc
 fi
 
 if [[ -z $(which conda) ]]; then
-    cd
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    bash Miniconda3-latest-Linux-x86_64.sh -bfp miniconda3
-    rm Miniconda3-latest-Linux-x86_64.sh
-    if [[ -z $(cat $HOME/.$(basename $SHELL)rc | grep vigeas) ]]; then
-        echo 'export PATH=$HOME/miniconda3/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
+    cd; wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    bash miniconda.sh -b -p miniconda; rm miniconda.sh
+    if [[ -z $(grep vigeas $HOME/.$(ps -p $$ -ocomm=)rc) ]]; then
+        echo 'export PATH=$HOME/miniconda/scripts:$PATH' >> $HOME/.$(ps -p $$ -ocomm=)rc
     fi
-    echo 'export PATH=$HOME/miniconda3/bin:/usr/local/share/rsi/idl/bin:$PATH'
-    conda install -y -c conda-forge mamba
+    echo 'export PATH=$HOME/miniconda/scripts:$PATH'
+    conda install -y -c conda-forge -c anaconda -c bioconda -c defaults mamba
     mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
     mamba create -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults bwa fastp ivar mafft samtools seqkit
     mamba create -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults artic exonerate medaka mafft seqkit seqtk
@@ -64,34 +62,20 @@ else
     conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
 fi
 
-GUPPY_VERSION=6.4.6 # Updated 16 Feb 2023
+GUPPY_VERSION=6.5.7 # Updated 27 May 2023
 if [[ -z $(which guppy_basecaller) ]]; then
     cd
     wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
     tar -vzxf ont-guppy.tar.gz
     rm -rf ont-guppy.tar.gz
-    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
+    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(ps -p $$ -ocomm=)rc
 elif [[ $(guppy_barcoder --version | awk -F" " '{print $NF}' | awk -F+ '{print $1}' | sed -n '1p') != "$GUPPY_VERSION" ]]; then
     cd
     rm -rf ont-guppy
     wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
     tar -vzxf ont-guppy.tar.gz
     rm -rf ont-guppy.tar.gz
-    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
+    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(ps -p $$ -ocomm=)rc
 else
     guppy_basecaller --version
-fi
-
-if [[ -z $(which longshot) ]]; then
-    cd
-    wget https://github.com/pjedge/longshot/archive/refs/tags/v0.4.3.tar.gz
-    tar -xvf v0.4.3.tar.gz
-    cd longshot-0.4.3
-    cargo install --path .
-    if [[ -z $(cat $HOME/.$(basename $SHELL)rc | grep longshot-0.4.3) ]]; then
-        echo 'export PATH=$HOME/.cargo/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(basename $SHELL)rc
-    fi
-    longshot --version
-else
-    longshot --version
 fi
