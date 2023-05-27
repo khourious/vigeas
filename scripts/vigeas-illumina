@@ -38,38 +38,46 @@ primer_scheme_list () {
 vigeas-illumina
 
 --> Available primer schemes
-----> updated: 05 Nov 2022
+----> updated: 27 May 2023
+
+(#) vigeas-illumina depth coverage plot
+(*) vigeras-nanopore depth coverage plot
 
 ---------------------------------------------------------------------------------------------------------
-target                       primer_scheme       url_reference
+target                          primer_scheme       url_reference
 ---------------------------------------------------------------------------------------------------------
-CHIKV Asian/ECSA [~400pb]    ChikAsianECSA_V1    https://github.com/zibraproject/zika-pipeline
-DENV-1 [~900pb]              DENV1_V1            https://doi.org/10.1038/s41467-021-22607-0
-DENV-2 [~900pb]              DENV2_V1            https://doi.org/10.1038/s41467-021-22607-0
-DENV-3 [~900pb]              DENV3_V1            https://doi.org/10.1038/s41467-021-22607-0
-DENV-4 [~700pb]              DENV4_V1            https://doi.org/10.1038/s41467-021-22607-0
-EV [~1000pb]                 ZaireEbola_V1       https://github.com/artic-network/artic-ncov2019
-EV [~500pb]                  ZaireEbola_V2       https://github.com/artic-network/artic-ncov2019
-EV [~400pb]                  ZaireEbola_V3       https://github.com/artic-network/artic-ncov2019
-LASV L-segment [~400pb]      LassaL_V1           https://github.com/zibraproject/zika-pipeline
-LASV S-segment [~400pb]      LassaS_V1           https://github.com/zibraproject/zika-pipeline
-MPXV [~2000pb]               MPXV_V1             https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
-NiV  [~400pb]                Nipah_V1            https://github.com/artic-network/artic-ncov2019
-OROV L-segment [~400pb]      OROV400L_V1         https://github.com/zibraproject/zika-pipeline
-OROV M-segment [~400pb]      OROV400M_V1         https://github.com/zibraproject/zika-pipeline
-OROV S-segment [~400pb]      OROV400S_V1         https://github.com/zibraproject/zika-pipeline
-SARS-CoV-2 [~400pb]          ARTIC_V1            https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~400pb]          ARTIC_V2            https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~400pb]          ARTIC_V3            https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~400pb]          ARTIC_V4            https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~400pb]          ARTIC_V4_1          https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~1200pb]         MIDNIGHT_V1         https://doi.org/10.1093/biomethods/bpaa014
-SARS-CoV-2 [~1200pb]         MIDNIGHT_V2         https://doi.org/10.1093/biomethods/bpaa014
-SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V1      https://doi.org/10.1101/2020.04.30.069039
-SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V2      https://doi.org/10.1101/2020.04.30.069039
-YFV [~500pb]                 YFV500_V1           https://github.com/zibraproject/zika-pipeline
-YFV [~1000pb]                YFV1000_V1          https://github.com/zibraproject/zika-pipeline
-ZIKV Asian [~300pb]          ZikaAsian_V2        https://github.com/zibraproject/zika-pipeline
+CHIKV Asian/ECSA [~400pb]       ChikAsianECSA_V1    https://github.com/zibraproject/zika-pipeline
+DENV-1 [~400pb](#)              DENGUESEQ1_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+DENV-1 [~900pb](#)              DENV1_V1            https://doi.org/10.1038/s41467-021-22607-0
+DENV-2 [~400pb](#)              DENGUESEQ2_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+DENV-2 [~900pb](#)              DENV2_V1            https://doi.org/10.1038/s41467-021-22607-0
+DENV-3 [~400pb](#)              DENGUESEQ3_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+DENV-3 [~900pb](#)              DENV3_V1            https://doi.org/10.1038/s41467-021-22607-0
+DENV-4 [~400pb](#)              DENGUESEQ4_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+DENV-4 [~700pb](#)              DENV4_V1            https://doi.org/10.1038/s41467-021-22607-0
+EV [~1000pb]                    ZaireEbola_V1       https://github.com/artic-network/artic-ncov2019
+EV [~500pb]                     ZaireEbola_V2       https://github.com/artic-network/artic-ncov2019
+EV [~400pb]                     ZaireEbola_V3       https://github.com/artic-network/artic-ncov2019
+LASV L-segment [~400pb]         LassaL_V1           https://github.com/zibraproject/zika-pipeline
+LASV S-segment [~400pb]         LassaS_V1           https://github.com/zibraproject/zika-pipeline
+MPXV [~2000pb]                  MPXV_V1             https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
+NiV  [~400pb]                   Nipah_V1            https://github.com/artic-network/artic-ncov2019
+OROV L-segment [~400pb]         OROV400L_V1         https://github.com/zibraproject/zika-pipeline
+OROV M-segment [~400pb]         OROV400M_V1         https://github.com/zibraproject/zika-pipeline
+OROV S-segment [~400pb]         OROV400S_V1         https://github.com/zibraproject/zika-pipeline
+SARS-CoV-2 [~400pb](#)          ARTIC_V1            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V2            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V3            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V4            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V4_1          https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V5_3_2        https://github.com/quick-lab/SARS-CoV-2
+SARS-CoV-2 [~1200pb](#)         MIDNIGHT_V1         https://doi.org/10.1093/biomethods/bpaa014
+SARS-CoV-2 [~1200pb](#)         MIDNIGHT_V2         https://doi.org/10.1093/biomethods/bpaa014
+SARS-CoV-2 [~2000pb](#)         FIOCRUZ-IOC_V1      https://doi.org/10.1101/2020.04.30.069039
+SARS-CoV-2 [~2000pb](#)         FIOCRUZ-IOC_V2      https://doi.org/10.1101/2020.04.30.069039
+YFV [~500pb]                    YFV500_V1           https://github.com/zibraproject/zika-pipeline
+YFV [~1000pb]                   YFV1000_V1          https://github.com/zibraproject/zika-pipeline
+ZIKV Asian [~400pb](#)          ZikaAsian_V2        https://github.com/zibraproject/zika-pipeline
 ---------------------------------------------------------------------------------------------------------"
 exit -1
 }
@@ -86,7 +94,7 @@ version () {
     echo "
 vigeas-illumina
 
---> updated: 05 Nov 2022
+--> updated: 27 May 2023
 ----> Laise de Moraes [https://lpmor22.github.io/]
 ------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil"
 exit -1
@@ -150,21 +158,21 @@ fi
 bg() {
     start=$(date +%s.%N)
     if [[ -z "$THREADS" ]]; then
-        THREADS=$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p' | awk '{print $1-2}')
+        NPROC=$(nproc); if ((NPROC > 2)); then THREADS=$((NPROC - 2)); else THREADS=2; fi
     fi
     if [[ -z "$DEPTH" ]]; then
         DEPTH=10
     fi
     if [[ $(cat "$SAMPLE_SHEET" | grep "Experiment Name") ]]; then
-        cat "$SAMPLE_SHEET" | tr -dc '[:print:]\n' | sed -e '1,18d' | awk -F, '{print $1","$NF}' | sort > $HOME/vigeas/sample_sheets/.samplesheet.csv
-        SAMPLE_SHEET=$HOME/vigeas/sample_sheets/.samplesheet.csv
+        cat "$SAMPLE_SHEET" | tr -dc '[:print:]\n' | sed -e '1,18d' | awk -F, '{print $1","$NF}' | sort > "$ANALYSIS_DIR"/.samplesheet.csv
+        SAMPLE_SHEET="$ANALYSIS_DIR"/.samplesheet.csv
     fi
     if [[ ! -z "$WORKFLOW" ]]; then
         if [[ "$WORKFLOW" == "1" ]]; then
             if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
                 usage
             else
-                for i in $(cat "$SAMPLE_SHEET" | awk -F, '{print $1}'); do
+                for i in $(awk -F, '{print $1}' "$SAMPLE_SHEET"); do
                     if [[ $(find "$INPUT" -type f -name '*_L00*') ]]; then
                         cp -v "$INPUT"/"$i"_*/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
                         cp -v "$INPUT"/"$i"_*/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
@@ -177,13 +185,14 @@ bg() {
                     fi
                 done
                 source activate vigeas_illumina
-                for i in $(cat "$SAMPLE_SHEET" | awk -F, '{print $2}' | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' | sort -u); do
+                for i in $(awk -F, '{print $2}' "$SAMPLE_SHEET" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' | sort -u); do
                     bwa index $HOME/vigeas/primer_schemes/"$i"/$(echo "$i" | awk -F/ '{print $1}').reference.fasta
+                    touch "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.$(echo "$i" | awk -F/ '{print $1}').analysis.$(uname -n).$(date +'%Y-%m-%d').bed
                 done
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
-                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
+                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g')
                     REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
                     mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
                     fastp -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -I "$ANALYSIS_DIR"/"$SAMPLE_ID".R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.R1.fastq.gz -O "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.R2.fastq.gz --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.json --thread "$THREADS" --adapter_fasta $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".primers.fasta -f 0 -t 0 -F 0 -T 0
@@ -197,24 +206,21 @@ bg() {
                     rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
                 done
                 conda deactivate
-                source activate vigeas_sars2
                 if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+                    source activate vigeas_sars2
                     pangolin --update
                     [[ ! -d  $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') ]] && rm -rf $HOME/nextclade_db/sarscov2_* && mkdir -p $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') && nextclade dataset get --name 'sars-cov-2' --output-dir $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d')
+                    conda deactivate
                 fi
-                conda deactivate
-                source activate vigeas_summary
-                for i in $(find "$ANALYSIS_DIR" -type f -name "CN*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
-                done
-                for i in $(find "$ANALYSIS_DIR" -type f -name "MOCK*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
-                done
-                conda deactivate
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
+                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g')
+                    REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
                     source activate vigeas_summary
+                    if [[ "${SAMPLE_ID,,}" == cn* || "${SAMPLE_ID,,}" == mock* ]]; then
+                        seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination."$REF_SEQ".analysis.$(uname -n).$(date +'%Y-%m-%d').bed
+                    fi
                     samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
                     if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
                         [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
@@ -245,21 +251,18 @@ bg() {
                             echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                             echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         fi
-                        Rscript $HOME/vigeas/scripts/vigeas-sars2-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
+                        Rscript $HOME/vigeas/scripts/vigeas-illumina-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination."$REF_SEQ".analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$REF_SEQ" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
                         conda deactivate
                         source activate vigeas_sars2
                         pangolin "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa -t "$THREADS" --outfile "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv
-                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        sed -n 2p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
                         nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$20"\t"$21"\t"$22"\t"$34"\t"$31"\t"$32}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        sed -n 2p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | awk -F"\t" '{print $8"\t"$26"\t"$27"\t"$28"\t"$40"\t"$30"\t"$31}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.SARS-CoV-2.$(uname -n).$(date +'%Y-%m-%d').txt
                         conda deactivate
-                        source activate vigeas_summary
                     else
                         [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
-                        source activate vigeas_summary
-                        samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                         echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
@@ -287,16 +290,34 @@ bg() {
                             echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                             echo "$N_COUNT_PER" | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary.tmp
                         fi
-                        Rscript $HOME/vigeas/scripts/vigeas-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
+                        Rscript $HOME/vigeas/scripts/vigeas-illumina-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination."$REF_SEQ".analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$REF_SEQ" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
                         sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
+                        conda deactivate
                     fi
                 done
-                if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
-                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.pdf
-                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.contamination.pdf
-                else
-                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.pdf
-                fi
+                source activate vigeas_summary
+                for i in $(cat "$SAMPLE_SHEET"); do
+                    PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
+                    if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".sars2-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.sars2-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".sars2-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.sars2-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "DENGUESEQ1") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv1-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv1-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv1-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv1-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "DENGUESEQ2") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv2-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv2-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv2-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv2-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "DENGUESEQ3") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv3-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv3-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv3-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv3-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "DENGUESEQ4") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv4-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv4-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv4-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv4-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ZikaAsian") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".zikv-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.zikv-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".zikv-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.zikv-coverage.contamination.pdf
+                    fi
+                done
                 conda deactivate
             fi
         elif [[ "$WORKFLOW" == "2" ]]; then
@@ -316,13 +337,13 @@ bg() {
                     fi
                 done
                 source activate vigeas_illumina
-                for i in $(cat "$SAMPLE_SHEET" | awk -F, '{print $2}' | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' | sort -u); do
+                for i in $(awk -F, '{print $2}' "$SAMPLE_SHEET" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' | sort -u); do
                     bwa index $HOME/vigeas/primer_schemes/"$i"/$(echo "$i" | awk -F/ '{print $1}').reference.fasta
                 done
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
-                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
+                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g')
                     REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
                     mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
                     fastp -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -I "$ANALYSIS_DIR"/"$SAMPLE_ID".R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.R1.fastq.gz -O "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.R2.fastq.gz --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".fastp.json --thread "$THREADS" --adapter_fasta $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".primers.fasta -f 0 -t 0 -F 0 -T 0
@@ -333,6 +354,7 @@ bg() {
                     samtools mpileup -d 50000 --reference $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta -a -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | ivar consensus -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa -q 30 -t 0 -m "$DEPTH" -n N
                     sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
                     mafft --thread "$THREADS" --quiet --auto --keeplength --inputorder --6merpair --leavegappyregion --addfragments "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$REF_SEQ".$(uname -n).$(date +'%Y-%m-%d').fasta
+                    rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
                 done
                 conda deactivate
             fi
@@ -346,23 +368,18 @@ bg() {
                     [[ ! -d  $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') ]] && rm -rf $HOME/nextclade_db/sarscov2_* && mkdir -p $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') && nextclade dataset get --name 'sars-cov-2' --output-dir $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d')
                     conda deactivate
                 fi
-                source activate vigeas_summary
-                for i in $(find "$ANALYSIS_DIR" -type f -name "CN*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
-                done
-                for i in $(find "$ANALYSIS_DIR" -type f -name "MOCK*.depth*.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                    seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$i"/"$i".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
-                done
-                conda deactivate
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
-                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
+                    PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g')
                     REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
                     DEPTH=$(find "$ANALYSIS_DIR" -type f -name '*depth*' | awk -F. '{print $(NF-1)}' | uniq | sed 's|depth||g')
                     if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
                         [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
                         source activate vigeas_summary
+                        if [[ "${SAMPLE_ID,,}" == cn* || "${SAMPLE_ID,,}" == mock* ]]; then
+                            seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth*.fa >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination."$REF_SEQ".analysis.$(uname -n).$(date +'%Y-%m-%d').bed
+                        fi
                         samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
@@ -392,16 +409,15 @@ bg() {
                             echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                             echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         fi
-                        Rscript $HOME/vigeas/scripts/vigeas-sars2-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
+                        Rscript $HOME/vigeas/scripts/vigeas-illumina-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination."$REF_SEQ".analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$REF_SEQ" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
                         source activate vigeas_sars2
                         pangolin "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa -t "$THREADS" --outfile "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv
-                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        sed -n 2p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
                         nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$20"\t"$21"\t"$22"\t"$34"\t"$31"\t"$32}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
+                        sed -n 2p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | awk -F"\t" '{print $8"\t"$26"\t"$27"\t"$28"\t"$40"\t"$30"\t"$31}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
                         sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.SARS-CoV-2.$(uname -n).$(date +'%Y-%m-%d').txt
                         conda deactivate
-                        source activate vigeas_summary
                     else
                         [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
                         source activate vigeas_summary
@@ -433,16 +449,33 @@ bg() {
                             echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                             echo "$N_COUNT_PER" | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary.tmp
                         fi
-                        Rscript $HOME/vigeas/scripts/vigeas-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
+                        Rscript $HOME/vigeas/scripts/vigeas-illumina-depth-coverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination."REF_SEQ".analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$REF_SEQ" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
                         sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
+                        conda deactivate
                     fi
                 done
-                if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
-                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.pdf
-                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.contamination.pdf
-                else
-                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.coverage.pdf
-                fi
+                for i in $(cat "$SAMPLE_SHEET"); do
+                    PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
+                    if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".sars2-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.sars2-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".sars2-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.sars2-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "DENGUESEQ1") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv1-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv1-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv1-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv1-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "DENGUESEQ2") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv2-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv2-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv2-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv2-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "DENGUESEQ3") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv3-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv3-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv3-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv3-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "DENGUESEQ4") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv4-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv4-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".denv4-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.denv4-coverage.contamination.pdf
+                    elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ZikaAsian") ]]; then
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".zikv-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.zikv-coverage.pdf
+                        gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".zikv-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.zikv-coverage.contamination.pdf
+                    fi
+                done
                 conda deactivate
             fi
         else
@@ -451,7 +484,7 @@ bg() {
     else
         usage
     fi
-    rm -rf "$ANALYSIS_DIR"/.summary_*.tmp $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta.* $HOME/vigeas/sample_sheets/.samplesheet.csv
+    rm -rf "$ANALYSIS_DIR"/.summary*.tmp $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta.* $HOME/vigeas/sample_sheets/.samplesheet.csv
     end=$(date +%s.%N)
     runtime=$(python -c "print(${end} - ${start})")
     echo "" && echo "Done. The runtime was "$runtime" seconds." && echo ""
