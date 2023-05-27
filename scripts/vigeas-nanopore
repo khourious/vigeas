@@ -179,7 +179,7 @@ bg() {
             else
                 export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH
                 guppy_basecaller -x auto -r --verbose_logs --disable_pings -c dna_r9.4.1_450bps_hac.cfg -i "$INPUT" -s "$ANALYSIS_DIR"/BASECALL --gpu_runners_per_device "$GPU_MEM" --chunks_per_runner 800 --chunk_size 1000 --num_callers "$THREADS" --min_qscore 8
-                guppy_barcoder -r --disable_pings --trim_adapters --barcode_kits ""$BARCODE_KIT"" -i "$ANALYSIS_DIR"/BASECALL/pass -s "$ANALYSIS_DIR"/DEMUX -t "$THREADS"
+                guppy_barcoder -r --disable_pings --trim_adapters --barcode_kits "$BARCODE_KIT" -i "$ANALYSIS_DIR"/BASECALL/pass -s "$ANALYSIS_DIR"/DEMUX -t "$THREADS"
                 source activate vigeas_pycoqc
                 pycoQC -q -f "$ANALYSIS_DIR"/BASECALL/sequencing_summary.txt -b "$ANALYSIS_DIR"/DEMUX/barcoding_summary.txt -o "$ANALYSIS_DIR"/"$LIBRARY_NAME".qc.$(uname -n).$(date +'%Y-%m-%d').html --report_title "$LIBRARY_NAME"
                 conda deactivate
@@ -213,124 +213,77 @@ bg() {
                         done
                     fi
                     artic guppyplex --skip-quality-check --min-length "$MIN" --max-length "$MAX" --directory "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID" --output "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".fastq
-                    export PATH=$HOME/.cargo/bin:/usr/local/share/rsi/idl/bin:$PATH
                     artic minion --medaka --medaka-model r941_min_high_g360 --normalise 0 --threads "$THREADS" --read-file "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".fastq --scheme-directory $HOME/vigeas/primer_schemes "$PRIMER_SCHEME_DIR" "$SAMPLE_ID"
+                    bcftools consensus -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".preconsensus.fasta "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".pass.vcf.gz -m "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".coverage_mask.txt -o "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".consensus.fasta 2> "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".unmatch.txt
+                    UNMATCH=$(grep "does not match" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".unmatch.txt | awk -F: '{print $2}')
+                    if [ -n "$UNMATCH" ]; then
+                        grep "MN908947.3\s\+$UNMATCH" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".merged.vcf > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".vcf_disagreement.txt
+                        grep -v "MN908947.3\s\+$UNMATCH" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".merged.vcf > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".merged.vcf.temp
+                        mv -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".merged.vcf.temp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".merged.vcf
+                        artic_vcf_filter --medaka "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".merged.vcf "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".pass.vcf "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".fail.vcf
+                        bgzip -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".pass.vcf
+                        tabix -p vcf "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".pass.vcf.gz
+                        artic_make_depth_mask --store-rg-depths $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".primertrimmed.rg.sorted.bam "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".coverage_mask.txt
+                        artic_mask $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".coverage_mask.txt "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".fail.vcf "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".preconsensus.fasta
+                        bcftools consensus -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".preconsensus.fasta "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".pass.vcf.gz -m "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".coverage_mask.txt -o "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".consensus.fasta
+                        artic_fasta_header "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".consensus.fasta ""$SAMPLE_ID"/ARTIC/medaka"
+                        cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".consensus.fasta $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".muscle.in.fasta
+                        muscle -in "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".muscle.in.fasta -out "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID".muscle.out.fasta
+                    fi
                     mv "$SAMPLE_ID"*.* "$SAMPLE_ID"
                     sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta
                     mafft --thread "$THREADS" --quiet --auto --keeplength --inputorder --6merpair --leavegappyregion --addfragments "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$REF_SEQ".$(uname -n).$(date +'%Y-%m-%d').fasta
                 done
                 conda deactivate
-                source activate vigeas_sars2
-                if [[ ! -z $(cat "$SAMPLE_SHEET" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
-                    pangolin --update
-                    [[ ! -d  $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') ]] && rm -rf $HOME/nextclade_db/sarscov2_* && mkdir -p $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') && nextclade dataset get --name 'sars-cov-2' --output-dir $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d')
-                fi
-                conda deactivate
-                source activate vigeas_summary
                 for i in $(cat "$SAMPLE_SHEET"); do
+                    source activate vigeas_summary
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $3}')
                     PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC_V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
                     REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
-                    for i in $(find "$ANALYSIS_DIR" -type f -name "CN*.consensus.fasta" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                        seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/ASSEMBLY/"$i"/"$i".consensus.fasta >> "$ANALYSIS_DIR"/ASSEMBLY/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
-                    done
-                    for i in $(find "$ANALYSIS_DIR" -type f -name "MOCK*.consensus.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                        seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/ASSEMBLY/"$i"/"$i".consensus.fasta >> "$ANALYSIS_DIR"/ASSEMBLY/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
-                    done
+                    [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_20x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
+                    source activate vigeas_summary
                     samtools depth -a "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
-                    if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
-                        [[ ! -f "$ANALYSIS_DIR"/.summary_sars2.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_20x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc#pango_ver#pango_learn_ver#pango_lin#nextclade_ver#clade#nucl_substitutions#nucl_deletions#nucl_inserc#nucl_missing#aa_substitutions#aa_deletions" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
-                        if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
-                            echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        else
-                            echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        fi
-                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"20"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}')
-                        N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
-                        REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk -F" " '{print $1}')
-                        REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
-                        if [[ ! -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta ]]; then
-                            echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                            echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                            echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        else
-                            if [[ "$N_COUNT" == 0 ]]; then
-                                echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                                echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                                echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                            else
-                                echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                                echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                                echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                            fi
-                        fi
-                        Rscript $HOME/vigeas/scripts/vigeas-sars2-depth-coverage.R "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"
-                        conda deactivate
-                        source activate vigeas_sars2
-                        pangolin "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta -t "$THREADS" --outfile "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv
-                        cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".pangolin.csv | sed -n 2p | awk -F, '{print $10"\t"$9"\t"$2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        nextclade run --input-dataset $HOME/nextclade_db/sarscov2_$(date +'%Y-%m-%d') --output-tsv="$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta
-                        nextclade --version | awk '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        cat "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".nextclade.tsv | sed -n 2p | awk -F"\t" '{print $2"\t"$20"\t"$21"\t"$22"\t"$34"\t"$31"\t"$32}' | awk '{printf $0}' >> "$ANALYSIS_DIR"/.summary_sars2.tmp
-                        conda deactivate
-                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary_sars2.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.SARS-CoV-2.$(uname -n).$(date +'%Y-%m-%d').txt
+                    echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                    echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                    echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                    samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                    samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                    AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
+                    if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
+                        echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                     else
-                        [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_20x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
-                        source activate vigeas_summary
-                        for i in $(find "$ANALYSIS_DIR" -type f -name "CN*.consensus.fasta" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                            seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/ASSEMBLY/"$i"/"$i".consensus.fasta >> "$ANALYSIS_DIR"/ASSEMBLY/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
-                        done
-                        for i in $(find "$ANALYSIS_DIR" -type f -name "MOCK*.consensus.fa" | awk -F/ '{print $NF}' | awk -F. '{print $1}'); do
-                            seqkit locate --bed -r -P -p '[ATGC]+' "$ANALYSIS_DIR"/ASSEMBLY/"$i"/"$i".consensus.fasta >> "$ANALYSIS_DIR"/ASSEMBLY/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed
-                        done
-                        samtools depth -a "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
-                        echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                        echo -n "$REF_SEQ""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
-                        echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
-                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
-                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
-                        AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
-                        if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
-                            echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                        else
-                            echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                        fi
-                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"20"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
-                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
-                        paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
-                        N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}')
-                        N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
-                        REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk -F" " '{print $1}')
-                        REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
-                        conda deactivate
-                        if [[ ! -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta ]]; then
+                        echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                    fi
+                    paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"20"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                    paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                    paste <(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
+                    N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}')
+                    N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
+                    REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk -F" " '{print $1}')
+                    REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
+                    if [[ ! -f "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta ]]; then
+                        echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                        echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                        echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                    else
+                        if [[ "$N_COUNT" == 0 ]]; then
                             echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                             echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                             echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                         else
-                            if [[ "$N_COUNT" == 0 ]]; then
-                                echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                                echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                                echo "100.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                            else
-                                echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                                echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                                echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
-                            fi
+                            echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
+                            echo "$N_COUNT_PER" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                         fi
-                        Rscript $HOME/vigeas/scripts/vigeas-depth-coverage.R "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination.analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"
-                        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
                     fi
+                    sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary.tmp > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
+                    if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
+                        Rscript $HOME/vigeas/scripts/vigeas-nanopore-sars2-depth-coverage.R "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$SAMPLE_ID" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"
+                    else
+                        Rscript $HOME/vigeas/scripts/vigeas-nanopore-depth-coverage.R "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$SAMPLE_ID" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"
+                    fi
+                    conda deactivate
                 done
                 gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*.pdf
                 conda deactivate
