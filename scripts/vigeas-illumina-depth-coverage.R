@@ -1,5 +1,5 @@
 # vigeas-depth-coverage
-# --> updated: 27 May 2023
+# --> updated: 02 Jun 2023
 # ----> Laise de Moraes [https://lpmor22.github.io/]
 # ------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil
 
@@ -180,7 +180,7 @@ if (primer_scheme == "DENGUESEQ1" || primer_scheme == "DENV1") {
       "ORF" = "#0247fe"))
   depcov1 <- ggplot() +
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
-    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme),
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
                        expand = expansion(0, 0), limits = c(0, 10810)) +
@@ -201,7 +201,7 @@ if (primer_scheme == "DENGUESEQ1" || primer_scheme == "DENV1") {
     depcov2 <- ggplot() +
       geom_rect(data = contamination_coords, aes(xmin = cont_start, xmax = cont_end, ymin = 0, ymax = Inf), linewidth = .01, colour = "#5A5A5A", alpha = .1) +
       geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
-      labs(title = paste0(id_sample), subtitle = paste0(primer_scheme),
+      labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
                          expand = expansion(0, 0), limits = c(0, 10750)) +
