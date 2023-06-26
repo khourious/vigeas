@@ -4,3 +4,4 @@
 *.bwt
 *.pac
 *.sa
+scripts/depthCovCreate.R
