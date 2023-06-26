@@ -1,5 +1,5 @@
 # vigeas-depth-coverage
-# --> updated: 02 Jun 2023
+# --> updated: 26 Jun 2023
 # ----> Laise de Moraes [https://lpmor22.github.io/]
 # ------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil
 
@@ -24,17 +24,18 @@ depth_coverage <- data.frame(position = input_depth$V2, depth = input_depth$V3)
 
 ref_seq <- list(
   "ARTIC" = "Genome reference: MN908947.3 (SARS-CoV-2)",
-  "DENGUESEQ1" = "Genome reference: NC_001477.1 (DENV-1)",
-  "DENGUESEQ2" = "Genome reference: NC_001474.2 (DENV-2)",
-  "DENGUESEQ3" = "Genome reference: NC_001475.2 (DENV-3)",
-  "DENGUESEQ4" = "Genome reference: NC_002640.1 (DENV-4)",
-  "DENV1" = "Genome reference: NC_001477.1 (DENV-1)",
-  "DENV2" = "Genome reference: NC_001474.2 (DENV-2)",
-  "DENV3" = "Genome reference: NC_001475.2 (DENV-3)",
-  "DENV4" = "Genome reference: NC_002640.1 (DENV-4)",
   "FIOCRUZ-IOC" = "Genome reference: MN908947.3 (SARS-CoV-2)",
   "MIDNIGHT" = "Genome reference: MN908947.3 (SARS-CoV-2)",
-  "ZikaAsian" = "Genome reference: KJ776791.2 (ZIKV)")
+  "ZikaAsian" = "Genome reference: KJ776791.2 (ZIKV)",
+  "DENGUESEQ1" = "Genome reference: NC_001477.1 (DENV-1)",
+  "DENV1" = "Genome reference: NC_001477.1 (DENV-1)",
+  "DENGUESEQ2" = "Genome reference: NC_001474.2 (DENV-2)",
+  "DENV2" = "Genome reference: NC_001474.2 (DENV-2)",
+  "DENGUESEQ3" = "Genome reference: NC_001475.2 (DENV-3)",
+  "DENV3" = "Genome reference: NC_001475.2 (DENV-3)",
+  "DENGUESEQ4" = "Genome reference: NC_002640.1 (DENV-4)",
+  "DENV4" = "Genome reference: NC_002640.1 (DENV-4)",
+  "ChikAsianECSA" = "Genome reference: KP164568.1 (CHIKV)")
 primer_scheme_2 <- ref_seq[[primer_scheme]]
 
 if (primer_scheme == "ARTIC" || primer_scheme == "FIOCRUZ-IOC" || primer_scheme == "MIDNIGHT") {
@@ -138,6 +139,85 @@ if (primer_scheme == "ARTIC" || primer_scheme == "FIOCRUZ-IOC" || primer_scheme 
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".sars2-coverage.contamination.pdf")
     plot2 <- depcov2 / map1plot / map2plot / map3plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+    save_plot(output2, plot2, base_height = 5, base_width = 16)
+  }}
+
+if (primer_scheme == "ZikaAsian") {
+  # https://www.ncbi.nlm.nih.gov/nuccore/KJ776791.2
+  # https://doi.org/10.1371/journal.ppat.1006528
+  map1 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "UTR", "5'UTR", 1, 107,
+                  "Structural proteins", "pr", 474, 752,
+                  "Structural proteins", "M", 753, 977,
+                  "Structural proteins", "E", 978, 2489,
+                  "Non-structural proteins", "NS1", 2490, 3545,
+                  "Non-structural proteins", "NS2A", 3546, 4223,
+                  "Non-structural proteins", "NS3", 4614, 6464,
+                  "Non-structural proteins", "NS4A", 6465, 6845,
+                  "Non-structural proteins", "NS4B", 6915, 7667,
+                  "Non-structural proteins", "NS5", 7668, 10379,
+                  "UTR", "3'UTR", 10380, 10807)
+  map2 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "Structural proteins", "C", 108, 473,
+                  "Non-structural proteins", "NS2B", 4224, 4613,
+                  "ORF", "2K", 6846, 6914)
+  map1plot <- map1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "UTR" = "#FE0B12",
+      "Structural proteins" = "#11961B",
+      "Non-structural proteins" = "#2F67CD"))
+  map2plot <- map2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "Structural proteins" = "#11961B",
+      "Non-structural proteins" = "#2F67CD",
+      "ORF" = "#FE0B12"))
+  depcov1 <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10807),
+                       expand = expansion(0, 0), limits = c(0, 10810)) +
+    scale_y_continuous(expand = expansion(0, 0)) +
+    theme_light(base_size = 10) +
+    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
+    theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 12),
+          axis.text.x = element_text(size = 8),
+          axis.text.y = element_text(hjust = 1, size = 8)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
+  output1 <-  paste0(output, ".zikv-coverage.pdf")
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+  save_plot(output1, plot1, base_height = 5, base_width = 16)
+  if (file.size(args[2]) > 0) {
+    contamination_bed <- read.delim(args[2], header = FALSE)
+    contamination_coords <- data.frame(cont_start = contamination_bed$V2, cont_end = contamination_bed$V3)
+    depcov2 <- ggplot() +
+      geom_rect(data = contamination_coords, aes(xmin = cont_start, xmax = cont_end, ymin = 0, ymax = Inf), linewidth = .01, colour = "#5A5A5A", alpha = .1) +
+      geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
+      labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+           y = "Per base coverage (x)", x = NULL) +
+      scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10807),
+                         expand = expansion(0, 0), limits = c(0, 10810)) +
+      scale_y_continuous(expand = expansion(0, 0)) +
+      theme_light(base_size = 10) +
+      scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
+      theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+            axis.title.y = element_text(angle = 90, size = 12),
+            axis.text.x = element_text(size = 8),
+            axis.text.y = element_text(hjust = 1, size = 8)) +
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
+    output2 <-  paste0(output, ".zikv-coverage.contamination.pdf")
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
 
@@ -249,7 +329,7 @@ if (primer_scheme == "DENGUESEQ2" || primer_scheme == "DENV2") {
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
               linewidth = .2, colour = "#000000", alpha = .3) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c(
       "Structural proteins" = "#ff9c80",
@@ -326,7 +406,7 @@ if (primer_scheme == "DENGUESEQ3" || primer_scheme == "DENV3") {
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
               linewidth = .2, colour = "#000000", alpha = .3) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c(
       "Structural proteins" = "#fe57f8",
@@ -403,7 +483,7 @@ if (primer_scheme == "DENGUESEQ4" || primer_scheme == "DENV4") {
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
               linewidth = .2, colour = "#000000", alpha = .3) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c(
       "Structural proteins" = "#24f901",
@@ -449,30 +529,26 @@ if (primer_scheme == "DENGUESEQ4" || primer_scheme == "DENV4") {
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
 
-if (primer_scheme == "ZikaAsian") {
-  # https://www.ncbi.nlm.nih.gov/nuccore/KJ776791.2
-  # https://doi.org/10.1371/journal.ppat.1006528
+if (primer_scheme == "ChikAsianECSA") {
+  # https://www.ncbi.nlm.nih.gov/nuccore/KP164568.1
   map1 <- tribble(~"class", ~"gene", ~"start", ~"end",
-                  "UTR", "5'UTR", 1, 107,
-                  "Structural proteins", "pr", 474, 752,
-                  "Structural proteins", "M", 753, 977,
-                  "Structural proteins", "E", 978, 2489,
-                  "Non-structural proteins", "NS1", 2490, 3545,
-                  "Non-structural proteins", "NS2A", 3546, 4223,
-                  "Non-structural proteins", "NS3", 4614, 6464,
-                  "Non-structural proteins", "NS4A", 6465, 6845,
-                  "Non-structural proteins", "NS4B", 6915, 7667,
-                  "Non-structural proteins", "NS5", 7668, 10379,
-                  "UTR", "3'UTR", 10380, 10807)
+                  "UTR", "5'UTR", 1, 77,
+                  "Non-structural proteins", "NS1", 78, 1682,
+                  "Non-structural proteins", "NS2", 1683, 4076,
+                  "Non-structural proteins", "NS3", 4077, 5648,
+                  "Non-structural proteins", "NS4", 5667, 7499,
+                  "UTR", "3'UTR", 11315, 11812)
   map2 <- tribble(~"class", ~"gene", ~"start", ~"end",
-                  "Structural proteins", "C", 108, 473,
-                  "Non-structural proteins", "NS2B", 4224, 4613,
-                  "ORF", "2K", 6846, 6914)
+                  "Structural proteins", "C", 7568, 8359,
+                  "Structural proteins", "E3", 8360, 8542,
+                  "Structural proteins", "E2", 8543, 9811,
+                  "Structural proteins", "6K", 9812, 9994,
+                  "Structural proteins", "E1", 9995, 11311)
   map1plot <- map1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
               linewidth = .2, colour = "#000000", alpha = .3) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 12000)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c(
       "UTR" = "#FE0B12",
@@ -482,7 +558,7 @@ if (primer_scheme == "ZikaAsian") {
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
               linewidth = .2, colour = "#000000", alpha = .3) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 12000)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c(
       "Structural proteins" = "#11961B",
@@ -492,8 +568,8 @@ if (primer_scheme == "ZikaAsian") {
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
     labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
          y = "Per base coverage (x)", x = NULL) +
-    scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10807),
-                       expand = expansion(0, 0), limits = c(0, 10810)) +
+    scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 11812),
+                       expand = expansion(0, 0), limits = c(0, 12000)) +
     scale_y_continuous(expand = expansion(0, 0)) +
     theme_light(base_size = 10) +
     scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
@@ -502,7 +578,7 @@ if (primer_scheme == "ZikaAsian") {
           axis.text.x = element_text(size = 8),
           axis.text.y = element_text(hjust = 1, size = 8)) +
     geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
-  output1 <-  paste0(output, ".zikv-coverage.pdf")
+  output1 <-  paste0(output, ".chikv-coverage.pdf")
   plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
   save_plot(output1, plot1, base_height = 5, base_width = 16)
   if (file.size(args[2]) > 0) {
@@ -513,8 +589,8 @@ if (primer_scheme == "ZikaAsian") {
       geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
            y = "Per base coverage (x)", x = NULL) +
-      scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10807),
-                         expand = expansion(0, 0), limits = c(0, 10810)) +
+      scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 11812),
+                         expand = expansion(0, 0), limits = c(0, 12000)) +
       scale_y_continuous(expand = expansion(0, 0)) +
       theme_light(base_size = 10) +
       scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
@@ -523,7 +599,8 @@ if (primer_scheme == "ZikaAsian") {
             axis.text.x = element_text(size = 8),
             axis.text.y = element_text(hjust = 1, size = 8)) +
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
-    output2 <-  paste0(output, ".zikv-coverage.contamination.pdf")
+    output2 <-  paste0(output, ".chikv-coverage.contamination.pdf")
     plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
+
