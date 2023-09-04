@@ -35,7 +35,8 @@ ref_seq <- list(
   "DENV3" = "Genome reference: NC_001475.2 (DENV-3)",
   "DENGUESEQ4" = "Genome reference: NC_002640.1 (DENV-4)",
   "DENV4" = "Genome reference: NC_002640.1 (DENV-4)",
-  "ChikAsianECSA" = "Genome reference: KP164568.1 (CHIKV)")
+  "ChikAsianECSA" = "Genome reference: KP164568.1 (CHIKV)",
+  "HTLV1" = "Genome reference: J02029.1 (HTLV-1)")
 primer_scheme_2 <- ref_seq[[primer_scheme]]
 
 if (primer_scheme == "ARTIC" || primer_scheme == "FIOCRUZ-IOC" || primer_scheme == "MIDNIGHT") {
@@ -196,7 +197,7 @@ if (primer_scheme == "ZikaAsian") {
           axis.text.y = element_text(hjust = 1, size = 8)) +
     geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
   output1 <-  paste0(output, ".zikv-coverage.pdf")
-  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
   save_plot(output1, plot1, base_height = 5, base_width = 16)
   if (file.size(args[2]) > 0) {
     contamination_bed <- read.delim(args[2], header = FALSE)
@@ -217,7 +218,7 @@ if (primer_scheme == "ZikaAsian") {
             axis.text.y = element_text(hjust = 1, size = 8)) +
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".zikv-coverage.contamination.pdf")
-    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
 
@@ -273,7 +274,7 @@ if (primer_scheme == "DENGUESEQ1" || primer_scheme == "DENV1") {
           axis.text.y = element_text(hjust = 1, size = 8)) +
     geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
   output1 <-  paste0(output, ".denv1-coverage.pdf")
-  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
   save_plot(output1, plot1, base_height = 5, base_width = 16)
   if (file.size(args[2]) > 0) {
     contamination_bed <- read.delim(args[2], header = FALSE)
@@ -294,7 +295,7 @@ if (primer_scheme == "DENGUESEQ1" || primer_scheme == "DENV1") {
             axis.text.y = element_text(hjust = 1, size = 8)) +
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".denv1-coverage.contamination.pdf")
-    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
 }}
 
@@ -350,7 +351,7 @@ if (primer_scheme == "DENGUESEQ2" || primer_scheme == "DENV2") {
           axis.text.y = element_text(hjust = 1, size = 8)) +
     geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
   output1 <-  paste0(output, ".denv2-coverage.pdf")
-  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
   save_plot(output1, plot1, base_height = 5, base_width = 16)
   if (file.size(args[2]) > 0) {
     contamination_bed <- read.delim(args[2], header = FALSE)
@@ -371,7 +372,7 @@ if (primer_scheme == "DENGUESEQ2" || primer_scheme == "DENV2") {
             axis.text.y = element_text(hjust = 1, size = 8)) +
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".denv2-coverage.contamination.pdf")
-    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
 
@@ -427,7 +428,7 @@ if (primer_scheme == "DENGUESEQ3" || primer_scheme == "DENV3") {
           axis.text.y = element_text(hjust = 1, size = 8)) +
     geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
   output1 <-  paste0(output, ".denv3-coverage.pdf")
-  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
   save_plot(output1, plot1, base_height = 5, base_width = 16)
   if (file.size(args[2]) > 0) {
     contamination_bed <- read.delim(args[2], header = FALSE)
@@ -448,7 +449,7 @@ if (primer_scheme == "DENGUESEQ3" || primer_scheme == "DENV3") {
             axis.text.y = element_text(hjust = 1, size = 8)) +
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".denv3-coverage.contamination.pdf")
-    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
 
@@ -504,7 +505,7 @@ if (primer_scheme == "DENGUESEQ4" || primer_scheme == "DENV4") {
           axis.text.y = element_text(hjust = 1, size = 8)) +
     geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
   output1 <-  paste0(output, ".denv4-coverage.pdf")
-  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
   save_plot(output1, plot1, base_height = 5, base_width = 16)
   if (file.size(args[2]) > 0) {
     contamination_bed <- read.delim(args[2], header = FALSE)
@@ -525,7 +526,7 @@ if (primer_scheme == "DENGUESEQ4" || primer_scheme == "DENV4") {
             axis.text.y = element_text(hjust = 1, size = 8)) +
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".denv4-coverage.contamination.pdf")
-    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
 
@@ -579,7 +580,7 @@ if (primer_scheme == "ChikAsianECSA") {
           axis.text.y = element_text(hjust = 1, size = 8)) +
     geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
   output1 <-  paste0(output, ".chikv-coverage.pdf")
-  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
   save_plot(output1, plot1, base_height = 5, base_width = 16)
   if (file.size(args[2]) > 0) {
     contamination_bed <- read.delim(args[2], header = FALSE)
@@ -600,7 +601,77 @@ if (primer_scheme == "ChikAsianECSA") {
             axis.text.y = element_text(hjust = 1, size = 8)) +
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".chikv-coverage.contamination.pdf")
-    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 4, heights = c(3, .4, .3, .3))
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
 
+if (primer_scheme == "HTLV1") {
+  # https://www.ncbi.nlm.nih.gov/nuccore/J02029.1
+  map1 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "gag", "gag", 824, 2113,
+                  "pol", "pol", 2114, 5210,
+                  "pX", "pX", 6857, 8382)
+  map2 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "LTR", "5'LTR", 23, 777,
+                  "pro", "pro", 1960, 2778,
+                  "env", "env", 5203, 6669,
+                  "LTR", "3'LTR", 8301, 9055)
+  map1plot <- map1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "LTR" = "#5A5A5A",
+      "gag" = "#FE0B12",
+      "pol" = "#2F67CD",
+      "pX" = "#FE810F"))
+  map2plot <- map2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "env" = "#11961B",
+      "pro" = "#2F67CD"))
+  depcov1 <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 2000, 4000, 6000, 8000, 9068),
+                       expand = expansion(0, 0), limits = c(0, 9100)) +
+    scale_y_continuous(expand = expansion(0, 0)) +
+    theme_light(base_size = 10) +
+    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
+    theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 12),
+          axis.text.x = element_text(size = 8),
+          axis.text.y = element_text(hjust = 1, size = 8)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
+  output1 <-  paste0(output, ".htlv1-coverage.pdf")
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
+  save_plot(output1, plot1, base_height = 5, base_width = 16)
+  if (file.size(args[2]) > 0) {
+    contamination_bed <- read.delim(args[2], header = FALSE)
+    contamination_coords <- data.frame(cont_start = contamination_bed$V2, cont_end = contamination_bed$V3)
+    depcov2 <- ggplot() +
+      geom_rect(data = contamination_coords, aes(xmin = cont_start, xmax = cont_end, ymin = 0, ymax = Inf), linewidth = .01, colour = "#5A5A5A", alpha = .1) +
+      geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
+      labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+           y = "Per base coverage (x)", x = NULL) +
+      scale_x_continuous(breaks = c(1, 2000, 4000, 6000, 8000, 9068),
+                         expand = expansion(0, 0), limits = c(0, 12000)) +
+      scale_y_continuous(expand = expansion(0, 0)) +
+      theme_light(base_size = 10) +
+      scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
+      theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+            axis.title.y = element_text(angle = 90, size = 12),
+            axis.text.x = element_text(size = 8),
+            axis.text.y = element_text(hjust = 1, size = 8)) +
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
+    output2 <-  paste0(output, ".htlv1-coverage.contamination.pdf")
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
+    save_plot(output2, plot2, base_height = 5, base_width = 16)
+  }}
