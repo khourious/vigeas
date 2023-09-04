@@ -4,62 +4,38 @@ sudo apt-get install -y build-essential cargo clang curl dos2unix libclang-dev z
 
 chmod 700 -R $HOME/vigeas/scripts
 
-if [[ -z $(grep vigeas $HOME/.$(ps -p $$ -ocomm=)rc) ]]; then
-    echo 'export PATH=$HOME/vigeas/scripts:$PATH' >> $HOME/.$(ps -p $$ -ocomm=)rc
+if [[ -z $(grep vigeas ~/.[bz]shrc) ]]; then
+    echo 'export PATH=$HOME/vigeas/scripts:$PATH' >> ~/.[bz]shrc
 fi
 
-if [[ -z $(which conda) ]]; then
-    cd; wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-    bash miniconda.sh -b -p miniconda; rm miniconda.sh
-    if [[ -z $(grep vigeas $HOME/.$(ps -p $$ -ocomm=)rc) ]]; then
-        echo 'export PATH=$HOME/miniconda/scripts:$PATH' >> $HOME/.$(ps -p $$ -ocomm=)rc
-    fi
-    echo 'export PATH=$HOME/miniconda/scripts:$PATH'
-    conda install -y -c conda-forge -c anaconda -c bioconda -c defaults mamba
-    mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
-    mamba create -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults bwa fastp ivar mafft samtools seqkit
-    mamba create -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults artic exonerate medaka mafft seqkit seqtk
-    mamba create -y -n vigeas_pycoqc -c conda-forge -c anaconda -c bioconda -c defaults python=3.6 pycoqc
-    mamba create -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults nextclade pangolin
-    mamba create -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
-elif [[ -z $(which mamba) ]]; then
-    conda install -y -c conda-forge mamba
-    mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
-    if [[ -z $(conda env list | grep vigeas_illumina) ]]; then
-        mamba create -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults bwa fastp ivar mafft samtools seqkit
-    fi
-    if [[ -z $(conda env list | grep vigeas_nanopore) ]]; then
-        mamba create -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults artic exonerate medaka mafft seqkit seqtk
-    fi
-    if [[ -z $(conda env list | grep vigeas_pycoqc) ]]; then
-        mamba create -y -n vigeas_pycoqc -c conda-forge -c anaconda -c bioconda -c defaults python=3.6 pycoqc
-    fi
-    if [[ -z $(conda env list | grep vigeas_sars2) ]]; then
-        mamba create -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults nextclade pangolin
-    fi
-    if [[ -z $(conda env list | grep vigeas_summary) ]]; then
-        mamba create -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
-    fi
-    conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
-elif [[ ! -z $(which mamba) ]]; then
-    if [[ -z $(conda env list | grep vigeas_illumina) ]]; then
-        mamba create -y -n vigeas_illumina -c conda-forge -c anaconda -c bioconda -c defaults bwa fastp ivar mafft samtools seqkit
-    fi
-    if [[ -z $(conda env list | grep vigeas_nanopore) ]]; then
-        mamba create -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults artic exonerate medaka mafft seqkit seqtk
-    fi
-    if [[ -z $(conda env list | grep vigeas_pycoqc) ]]; then
-        mamba create -y -n vigeas_pycoqc -c conda-forge -c anaconda -c bioconda -c defaults python=3.6 pycoqc
-    fi
-    if [[ -z $(conda env list | grep vigeas_sars2) ]]; then
-        mamba create -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults nextclade pangolin
-    fi
-    if [[ -z $(conda env list | grep vigeas_summary) ]]; then
-        mamba create -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
-    fi
-    conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
+if [[ ! -z $(which micromamba | grep not) ]]; then
+    yes | "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
+    source ~/.[bz]shrc
+    echo 'alias conda=micromamba' >> ~/.[bz]shrc
+    echo 'alias mamba=micromamba' >> ~/.[bz]shrc
+    micromamba create -y -n vigeas_illumina -c conda-forge -c bioconda bwa fastp ivar mafft samtools seqkit
+    micromamba create -y -n vigeas_nanopore -c conda-forge -c bioconda artic exonerate medaka mafft seqkit seqtk
+    micromamba create -y -n vigeas_pycoqc -c conda-forge -c bioconda python=3.6 pycoqc
+    micromamba create -y -n vigeas_sars2 -c conda-forge -c bioconda nextclade pangolin
+    micromamba create -y -n vigeas_summary -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
+    echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
 else
-    conda --version && mamba --version | sed '2d' && echo "" && echo "conda environments:" && conda env list | egrep 'vigeas'
+    if [[ -z $(micromamba env list | grep vigeas_illumina) ]]; then
+        micromamba create -y -n vigeas_illumina -c conda-forge -c bioconda bwa fastp ivar mafft samtools seqkit
+    fi
+    if [[ -z $(micromamba env list | grep vigeas_nanopore) ]]; then
+        micromamba create -y -n vigeas_nanopore -c conda-forge -c bioconda artic exonerate medaka mafft seqkit seqtk
+    fi
+    if [[ -z $(micromamba env list | grep vigeas_pycoqc) ]]; then
+        micromamba create -y -n vigeas_pycoqc -c conda-forge -c bioconda python=3.6 pycoqc
+    fi
+    if [[ -z $(micromamba env list | grep vigeas_sars2) ]]; then
+        micromamba create -y -n vigeas_sars2 -c conda-forge -c bioconda nextclade pangolin
+    fi
+    if [[ -z $(micromamba env list | grep vigeas_summary) ]]; then
+        micromamba create -y -n vigeas_summary -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
+    fi
+    echo "micromamba:" && micromamba --version && echo "" && echo "environments:" && micromamba env list | grep vigeas
 fi
 
 GUPPY_VERSION=6.5.7 # Updated 27 May 2023
@@ -68,14 +44,14 @@ if [[ -z $(which guppy_basecaller) ]]; then
     wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
     tar -vzxf ont-guppy.tar.gz
     rm -rf ont-guppy.tar.gz
-    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(ps -p $$ -ocomm=)rc
+    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> ~/.[bz]shrc
 elif [[ $(guppy_barcoder --version | awk -F" " '{print $NF}' | awk -F+ '{print $1}' | sed -n '1p') != "$GUPPY_VERSION" ]]; then
     cd
     rm -rf ont-guppy
     wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
     tar -vzxf ont-guppy.tar.gz
     rm -rf ont-guppy.tar.gz
-    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> $HOME/.$(ps -p $$ -ocomm=)rc
+    echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> ~/.[bz]shrc
 else
     guppy_basecaller --version
 fi
