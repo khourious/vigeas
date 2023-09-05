@@ -16,6 +16,7 @@
 | EV               | ~1000pb       | ZaireEbola_V1      | https://github.com/artic-network/artic-ncov2019          |
 | EV               | ~500pb        | ZaireEbola_V2      | https://github.com/artic-network/artic-ncov2019          |
 | EV               | ~400pb        | ZaireEbola_V3      | https://github.com/artic-network/artic-ncov2019          |
+| HTLV-1           | ~400pb        | HTLV1_V1           | Fernanda Khouri Lab (UFBA-IMS)                           |
 | LASV L-segment   | ~400pb        | LassaL_V1          | https://github.com/zibraproject/zika-pipeline            |
 | LASV S-segment   | ~400pb        | LassaS_V1          | https://github.com/zibraproject/zika-pipeline            |
 | MPXV             | ~2000pb       | MPXV_V1            | https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2 |
