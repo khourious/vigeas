@@ -170,6 +170,7 @@ fi
 
 bg() {
     start=$(date +%s.%N)
+    eval "$(micromamba shell hook --shell bash)"
     eval "$(micromamba shell hook --shell zsh)"
     if [[ -z "$THREADS" ]]; then
         NPROC=$(nproc); if ((NPROC > 2)); then THREADS=$((NPROC - 2)); else THREADS=2; fi
