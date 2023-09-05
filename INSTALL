@@ -8,7 +8,7 @@ if [[ -z $(grep vigeas ~/.[bz]shrc) ]]; then
     echo 'export PATH=$HOME/vigeas/scripts:$PATH' >> ~/.[bz]shrc
 fi
 
-if [[ ! -z $(which micromamba | grep not) ]]; then
+if [[ -z $(which micromamba | grep not) ]]; then
     yes | "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
     source ~/.[bz]shrc
     echo 'alias conda=micromamba' >> ~/.[bz]shrc
