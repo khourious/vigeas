@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get install -y build-essential cargo clang curl dos2unix libclang-dev zlib1g-dev xz-utils
+sudo apt-get install -y autoconf automake build-essential ca-certificates cargo clang cmake curl dos2unix git libclang-dev libhdf5-dev libssl-dev libzstd-dev zlib1g-dev xz-utils
 
 chmod 700 -R $HOME/vigeas/scripts
 
@@ -38,20 +38,49 @@ else
     echo "micromamba:" && micromamba --version && echo "" && echo "environments:" && micromamba env list | grep vigeas
 fi
 
-GUPPY_VERSION=6.5.7 # Updated 27 May 2023
+GUPPY_VER=6.5.7 # Updated 27 May 2023
 if [[ -z $(which guppy_basecaller) ]]; then
     cd
-    wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
+    wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VER"_linux64.tar.gz -O ont-guppy.tar.gz
     tar -vzxf ont-guppy.tar.gz
     rm -rf ont-guppy.tar.gz
     echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> ~/.[bz]shrc
 elif [[ $(guppy_barcoder --version | awk -F" " '{print $NF}' | awk -F+ '{print $1}' | sed -n '1p') != "$GUPPY_VERSION" ]]; then
     cd
     rm -rf ont-guppy
-    wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
+    wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VER"_linux64.tar.gz -O ont-guppy.tar.gz
     tar -vzxf ont-guppy.tar.gz
     rm -rf ont-guppy.tar.gz
     echo 'export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH' >> ~/.[bz]shrc
 else
     guppy_basecaller --version
+fi
+
+DORADO_VER=0.3.4 # Updated 05 Sep 2023
+if [[ -z $(which dorado) ]]; then
+    cd
+    wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-"$DORADO_VER"-linux-x64.tar.gz -O dorado.tar.gz
+    tar -vzxf dorado.tar.gz
+    rm -rf dorado.tar.gz
+    mv dorado-"$DORADO_VER"-linux-x64 ont-dorado
+    echo 'export PATH=$HOME/ont-dorado/bin:$PATH' >> ~/.[bz]shrc
+    source ~/.[bz]shrc
+    dorado download --directory dorado-linux-x64/models
+    pip install pod5
+    echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
+    source ~/.[bz]shrc
+elif [[ $(dorado --version 2>&1 | awk -F+ '{print $1}') != "$DORADO_VER" ]]; then
+    cd
+    wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-"$DORADO_VER"-linux-x64.tar.gz -O dorado.tar.gz
+    tar -vzxf dorado.tar.gz
+    rm -rf dorado.tar.gz
+    mv dorado-"$DORADO_VER"-linux-x64 ont-dorado
+    echo 'export PATH=$HOME/ont-dorado/bin:$PATH' >> ~/.[bz]shrc
+    source ~/.[bz]shrc
+    dorado download --directory dorado-linux-x64/models
+    pip install pod5
+    echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
+    source ~/.[bz]shrc
+else
+    dorado --version
 fi
