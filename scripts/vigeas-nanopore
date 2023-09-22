@@ -29,7 +29,7 @@ Command line parameters:
     -i arg    Path containing the FAST5/POD5 raw data (-w 1, 2 or 4) or containing the assembly data (-w 3).
     -s arg    Path containing the samplesheet in csv with sample identification, barcode number and primer scheme.
     -t arg    Max number of threads (default: all cores minus 2).
-    -u        Update conda dependencies.
+    -u        Update conda (micromamba) dependencies.
     -v        Display version information and check for update.
     -w arg    Set the workflow option.
                  1- basecalling + demultiplexing + assembly + summary stats
@@ -44,48 +44,68 @@ primer_scheme_list () {
 vigeas-nanopore
 
 --> Available primer schemes
-----> updated: 05 Nov 2022
+----> updated: 27 May 2023
+
+(#) vigeas-illumina depth coverage plot
+(*) vigeras-nanopore depth coverage plot
 
 ---------------------------------------------------------------------------------------------------------
-target                       primer_scheme       url_reference
+target                          primer_scheme       url_reference
 ---------------------------------------------------------------------------------------------------------
-CHIKV Asian/ECSA [~400pb]    ChikAsianECSA_V1    https://github.com/zibraproject/zika-pipeline
-DENV-1 [~900pb]              DENV1_V1            https://doi.org/10.1038/s41467-021-22607-0
-DENV-2 [~900pb]              DENV2_V1            https://doi.org/10.1038/s41467-021-22607-0
-DENV-3 [~900pb]              DENV3_V1            https://doi.org/10.1038/s41467-021-22607-0
-DENV-4 [~700pb]              DENV4_V1            https://doi.org/10.1038/s41467-021-22607-0
-EV [~1000pb]                 ZaireEbola_V1       https://github.com/artic-network/artic-ncov2019
-EV [~500pb]                  ZaireEbola_V2       https://github.com/artic-network/artic-ncov2019
-EV [~400pb]                  ZaireEbola_V3       https://github.com/artic-network/artic-ncov2019
-LASV L-segment [~400pb]      LassaL_V1           https://github.com/zibraproject/zika-pipeline
-LASV S-segment [~400pb]      LassaS_V1           https://github.com/zibraproject/zika-pipeline
-MPXV [~2000pb]               MPXV_V1             https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
-NiV  [~400pb]                Nipah_V1            https://github.com/artic-network/artic-ncov2019
-OROV L-segment [~400pb]      OROV400L_V1         https://github.com/zibraproject/zika-pipeline
-OROV M-segment [~400pb]      OROV400M_V1         https://github.com/zibraproject/zika-pipeline
-OROV S-segment [~400pb]      OROV400S_V1         https://github.com/zibraproject/zika-pipeline
-SARS-CoV-2 [~400pb]          ARTIC_V1            https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~400pb]          ARTIC_V2            https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~400pb]          ARTIC_V3            https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~400pb]          ARTIC_V4            https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~400pb]          ARTIC_V4_1          https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2 [~1200pb]         MIDNIGHT_V1         https://doi.org/10.1093/biomethods/bpaa014
-SARS-CoV-2 [~1200pb]         MIDNIGHT_V2         https://doi.org/10.1093/biomethods/bpaa014
-SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V1      https://doi.org/10.1101/2020.04.30.069039
-SARS-CoV-2 [~2000pb]         FIOCRUZ-IOC_V2      https://doi.org/10.1101/2020.04.30.069039
-YFV [~500pb]                 YFV500_V1           https://github.com/zibraproject/zika-pipeline
-YFV [~1000pb]                YFV1000_V1          https://github.com/zibraproject/zika-pipeline
-ZIKV Asian [~300pb]          ZikaAsian_V2        https://github.com/zibraproject/zika-pipeline
+CHIKV Asian/ECSA [~400pb]       ChikAsianECSA_V1    https://github.com/zibraproject/zika-pipeline
+
+DENV-1 [~400pb](#)              DENGUESEQ1_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+DENV-1 [~900pb](#)              DENV1_V1            https://doi.org/10.1038/s41467-021-22607-0
+
+DENV-2 [~400pb](#)              DENGUESEQ2_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+DENV-2 [~900pb](#)              DENV2_V1            https://doi.org/10.1038/s41467-021-22607-0
+
+DENV-3 [~400pb](#)              DENGUESEQ3_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+DENV-3 [~900pb](#)              DENV3_V1            https://doi.org/10.1038/s41467-021-22607-0
+
+DENV-4 [~400pb](#)              DENGUESEQ4_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+DENV-4 [~700pb](#)              DENV4_V1            https://doi.org/10.1038/s41467-021-22607-0
+
+EV [~1000pb]                    ZaireEbola_V1       https://github.com/artic-network/artic-ncov2019
+EV [~500pb]                     ZaireEbola_V2       https://github.com/artic-network/artic-ncov2019
+EV [~400pb]                     ZaireEbola_V3       https://github.com/artic-network/artic-ncov2019
+
+HTLV-1 [400~pb](#)              HTLV1_V1            Fernanda Khouri Lab (UFBA-IMS)
+
+LASV L-segment [~400pb]         LassaL_V1           https://github.com/zibraproject/zika-pipeline
+LASV S-segment [~400pb]         LassaS_V1           https://github.com/zibraproject/zika-pipeline
+
+MPXV [~2000pb]                  MPXV_V1             https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
+
+NiV  [~400pb]                   Nipah_V1            https://github.com/artic-network/artic-ncov2019
+
+OROV L-segment [~400pb]         OROV400L_V1         https://github.com/zibraproject/zika-pipeline
+OROV M-segment [~400pb]         OROV400M_V1         https://github.com/zibraproject/zika-pipeline
+OROV S-segment [~400pb]         OROV400S_V1         https://github.com/zibraproject/zika-pipeline
+
+SARS-CoV-2 [~400pb](#)          ARTIC_V1            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V2            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V3            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V4            https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V4_1          https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2 [~400pb](#)          ARTIC_V5_3_2        https://github.com/quick-lab/SARS-CoV-2
+SARS-CoV-2 [~1200pb](#)         MIDNIGHT_V1         https://doi.org/10.1093/biomethods/bpaa014
+SARS-CoV-2 [~1200pb](#)         MIDNIGHT_V2         https://doi.org/10.1093/biomethods/bpaa014
+SARS-CoV-2 [~2000pb](#)         FIOCRUZ-IOC_V1      https://doi.org/10.1101/2020.04.30.069039
+SARS-CoV-2 [~2000pb](#)         FIOCRUZ-IOC_V2      https://doi.org/10.1101/2020.04.30.069039
+
+YFV [~500pb]                    YFV500_V1           https://github.com/zibraproject/zika-pipeline
+YFV [~1000pb]                   YFV1000_V1          https://github.com/zibraproject/zika-pipeline
+
+ZIKV Asian [~400pb](#)          ZikaAsian_V2        https://github.com/zibraproject/zika-pipeline
 ---------------------------------------------------------------------------------------------------------"
 exit -1
 }
 
 update () {
-    mamba update -y -n base -c conda-forge -c anaconda -c bioconda -c defaults conda
-    mamba update -y -n vigeas_nanopore -c conda-forge -c anaconda -c bioconda -c defaults --all
-    mamba update -y -n vigeas_pycoqc -c conda-forge -c anaconda -c bioconda -c defaults --all
-    mamba update -y -n vigeas_sars2 -c conda-forge -c anaconda -c bioconda -c defaults --all
-    mamba update -y -n vigeas_summary -c conda-forge -c anaconda -c bioconda -c defaults --all
+    micromamba update -y -n vigeas_nanopore -c conda-forge -c bioconda --all
+    micromamba update -y -n vigeas_sars2 -c conda-forge -c bioconda --all
+    micromamba update -y -n vigeas_summary -c conda-forge -c bioconda --all
 exit -1
 }
 
@@ -93,7 +113,7 @@ version () {
     echo "
 vigeas-nanopore
 
---> updated: 06 Jan 2023
+--> updated: 04 Sep 2023
 ----> Laise de Moraes [https://lpmor22.github.io/]
 ------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil
 --------> Using ARTIC v.1.2.3 (https://github.com/artic-network/fieldbioinformatics)"
@@ -170,20 +190,20 @@ fi
 bg() {
     start=$(date +%s.%N)
     if [[ -z "$THREADS" ]]; then
-        THREADS=$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p' | awk '{print $1-2}')
+        THREADS=$(nproc | awk '{print $1-2}')
     fi
     if [[ ! -z "$WORKFLOW" ]]; then
         if [[ "$WORKFLOW" == "1" ]]; then
             if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$BARCODE_KIT" ]] || [[ -z "$GPU_MEM" ]]; then
                 usage
             else
-                export PATH=$HOME/ont-guppy/bin:/usr/local/share/rsi/idl/bin:$PATH
-                guppy_basecaller -x auto -r --verbose_logs --disable_pings -c dna_r9.4.1_450bps_hac.cfg -i "$INPUT" -s "$ANALYSIS_DIR"/BASECALL --gpu_runners_per_device "$GPU_MEM" --chunks_per_runner 800 --chunk_size 1000 --num_callers "$THREADS" --min_qscore 8
-                guppy_barcoder -r --disable_pings --trim_adapters --barcode_kits "$BARCODE_KIT" -i "$ANALYSIS_DIR"/BASECALL/pass -s "$ANALYSIS_DIR"/DEMUX -t "$THREADS"
-                source activate vigeas_pycoqc
-                pycoQC -q -f "$ANALYSIS_DIR"/BASECALL/sequencing_summary.txt -b "$ANALYSIS_DIR"/DEMUX/barcoding_summary.txt -o "$ANALYSIS_DIR"/"$LIBRARY_NAME".qc.$(uname -n).$(date +'%Y-%m-%d').html --report_title "$LIBRARY_NAME"
-                conda deactivate
-                source activate vigeas_nanopore
+                eval "$(micromamba shell hook --shell bash)"
+                eval "$(micromamba shell hook --shell zsh)"
+                export PATH=$HOME/ont-guppy/bin:$PATH
+                for i in $(find "$INPUT" -type f -name '*.fast5'); do pod5 convert fast5 "$i" --output "$ANALYSIS_DIR"/POD5/$(echo "$i" | awk -F/ '{print $NF}').pod5; done
+                dorado basecaller $HOME/ont-dorado/models/dna_r9.4.1_e8_hac@v3.3 "$ANALYSIS_DIR"/POD5/ -v --min-qscore 8 -r --emit-fastq > "$ANALYSIS_DIR"/BASECALL/"$LIBRARY_NAME"_BASECAL.fastq
+                guppy_barcoder -r --disable_pings --trim_adapters --barcode_kits "$BARCODE_KIT" -i "$ANALYSIS_DIR"/BASECALL/ -s "$ANALYSIS_DIR"/DEMUX -t "$THREADS"
+                micromamba activate vigeas_nanopore
                 dos2unix "$SAMPLE_SHEET"
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
@@ -234,15 +254,14 @@ bg() {
                     sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta
                     mafft --thread "$THREADS" --quiet --auto --keeplength --inputorder --6merpair --leavegappyregion --addfragments "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$REF_SEQ".$(uname -n).$(date +'%Y-%m-%d').fasta
                 done
-                conda deactivate
+                micromamba deactivate
                 for i in $(cat "$SAMPLE_SHEET"); do
-                    source activate vigeas_summary
+                    micromamba activate vigeas_summary
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $3}')
                     PRIMER_SCHEME_DIR=$(echo "$PRIMER_SCHEME" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC_V4_1/ARTIC\/V4.1/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENV1_V1/DENV1\/V1/g' -e 's/DENV2_V1/DENV2\/V1/g' -e 's/DENV3_V1/DENV3\/V1/g' -e 's/DENV4_V1/DENV4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g')
                     REF_SEQ=$(echo "$PRIMER_SCHEME_DIR" | awk -F/ '{print $1}')
                     [[ ! -f "$ANALYSIS_DIR"/.summary.tmp ]] && echo "primer_scheme#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_20x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/.summary.tmp
-                    source activate vigeas_summary
                     samtools depth -a "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".primertrimmed.rg.sorted.bam > "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv
                     echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary.tmp
                     echo -n "$PRIMER_SCHEME""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary.tmp
@@ -283,10 +302,11 @@ bg() {
                     else
                         Rscript $HOME/vigeas/scripts/vigeas-nanopore-depth-coverage.R "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$SAMPLE_ID" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"
                     fi
-                    conda deactivate
+                    micromamba deactivate
                 done
+                micromamba activate vigeas_summary
                 gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*.pdf
-                conda deactivate
+                micromamba deactivate
             fi
         else
             usage
@@ -294,7 +314,7 @@ bg() {
     else
         usage
     fi
-    rm -rf "$ANALYSIS_DIR"/.summary_*.tmp "$ANALYSIS_DIR"/ASSEMBLY/BC*fastq
+    rm -rf "$ANALYSIS_DIR"/.summary*.tmp "$ANALYSIS_DIR"/ASSEMBLY/BC*fastq
     end=$(date +%s.%N)
     runtime=$(python -c "print(${end} - ${start})")
     echo "" && echo "Done. The runtime was "$runtime" seconds." && echo ""
