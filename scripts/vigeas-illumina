@@ -485,6 +485,7 @@ bg() {
                         micromamba deactivate
                     fi
                 done
+                micromamba activate vigeas_summary
                 for i in $(cat "$SAMPLE_SHEET"); do
                     PRIMER_SCHEME=$(echo "$i" | awk -F, '{print $2}')
                     if [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "ARTIC|MIDNIGHT|FIOCRUZ-IOC") ]]; then
