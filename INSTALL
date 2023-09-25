@@ -8,16 +8,16 @@ if [[ -z $(grep vigeas ~/.[bz]shrc) ]]; then
     echo 'export PATH=$HOME/vigeas/scripts:$PATH' >> ~/.[bz]shrc
 fi
 
-if [[ ! -z $(which $HOME/.local/bin/micromamba | grep not) ]]; then
+if [[ -z $(which $HOME/.local/bin/micromamba) ]]; then
     yes | "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
-    source ~/.[bz]shrc
     echo 'alias conda=micromamba' >> ~/.[bz]shrc
     echo 'alias mamba=micromamba' >> ~/.[bz]shrc
+    echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
+    export PATH=$HOME/.local/bin:$PATH
     micromamba create -y -n vigeas_illumina -c conda-forge -c bioconda bwa fastp ivar mafft samtools seqkit
     micromamba create -y -n vigeas_nanopore -c conda-forge -c bioconda -c defaults artic-porechop=0.3.2pre artic-tools=0.2.6 bcftools=1.17 biopython=1.81 bwa= 0.7.17 clint=0.5.1 htslib=1.17 keras-preprocessing=1.1.2 longshot=0.4.5 mafft medaka >=1.8.0 minimap2=2.26 multiqc=1.15 muscle=3.8 nanopolish=0.14.0 pandas=2.0.3 pip pyfaidx=0.6.0 pytest python=3.9.15 pysam=0.21.0 pyvcf=0.6.8 requests=2.31.0 samtools=1.17 seqkit tqdm=4.66.1
     micromamba create -y -n vigeas_sars2 -c conda-forge -c bioconda nextclade pangolin
     micromamba create -y -n vigeas_summary -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
-    echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
     cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
     python setup.py install
 else
@@ -64,11 +64,10 @@ if [[ ! -z $(which dorado) ]]; then
     rm -rf dorado.tar.gz
     mv dorado-"$DORADO_VERSION"-linux-x64 ont-dorado
     echo 'export PATH=$HOME/ont-dorado/bin:$PATH' >> ~/.[bz]shrc
-    source ~/.[bz]shrc
+    export PATH=$HOME/ont-dorado/bin:$PATH
     dorado download --directory dorado-linux-x64/models
     pip install pod5
     echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
-    source ~/.[bz]shrc
 elif [[ $(dorado --version 2>&1 | awk -F+ '{print $1}') != "$DORADO_VERSION" ]]; then
     cd
     wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-"$DORADO_VERSION"-linux-x64.tar.gz -O dorado.tar.gz
@@ -76,11 +75,10 @@ elif [[ $(dorado --version 2>&1 | awk -F+ '{print $1}') != "$DORADO_VERSION" ]];
     rm -rf dorado.tar.gz
     mv dorado-"$DORADO_VERSION"-linux-x64 ont-dorado
     echo 'export PATH=$HOME/ont-dorado/bin:$PATH' >> ~/.[bz]shrc
-    source ~/.[bz]shrc
+    export PATH=$HOME/ont-dorado/bin:$PATH
     dorado download --directory dorado-linux-x64/models
     pip install pod5
     echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
-    source ~/.[bz]shrc
 else
     dorado --version
 fi
