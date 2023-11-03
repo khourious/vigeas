@@ -6,10 +6,10 @@
 if(!interactive()) pdf(NULL)
 
 library("cowplot")
+library("dplyr")
 library("ggplot2")
 library("patchwork")
 library("plyr")
-library("dplyr")
 library("readr")
 library("svglite")
 
@@ -36,7 +36,8 @@ ref_seq <- list(
   "DENGUESEQ4" = "Genome reference: NC_002640.1 (DENV-4)",
   "DENV4" = "Genome reference: NC_002640.1 (DENV-4)",
   "ChikAsianECSA" = "Genome reference: KP164568.1 (CHIKV)",
-  "HTLV1" = "Genome reference: J02029.1 (HTLV-1)")
+  "HTLV1" = "Genome reference: J02029.1 (HTLV-1)",
+  "WNV400" = "Genome reference: NC_009942.1 (WNV)")
 primer_scheme_2 <- ref_seq[[primer_scheme]]
 
 if (primer_scheme == "ARTIC" || primer_scheme == "FIOCRUZ-IOC" || primer_scheme == "MIDNIGHT") {
@@ -672,6 +673,84 @@ if (primer_scheme == "HTLV1") {
             axis.text.y = element_text(hjust = 1, size = 8)) +
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".htlv1-coverage.contamination.pdf")
+    plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
+    save_plot(output2, plot2, base_height = 5, base_width = 16)
+  }}
+
+if (primer_scheme == "WNV400") {
+  # https://www.ncbi.nlm.nih.gov/nuccore/NC_009942.1
+  map1 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "UTR", "5'UTR", 1, 96,
+                  "Structural proteins", "pr", 466, 741,
+                  "Structural proteins", "M", 742, 966,
+                  "Structural proteins", "E", 967, 2469,
+                  "Non-structural proteins", "NS1", 2470, 3525,
+                  "Non-structural proteins", "NS2A", 3526, 4218,
+                  "Non-structural proteins", "NS3", 4612, 6468,
+                  "Non-structural proteins", "NS4A", 6469, 6846,
+                  "Non-structural proteins", "NS4B", 6916, 7680,
+                  "Non-structural proteins", "NS5", 7681, 10395,
+                  "UTR", "3'UTR", 10399, 11029)
+  map2 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "Structural proteins", "C", 97, 411,
+                  "Non-structural proteins", "NS2B", 4219, 4611,
+                  "ORF", "2K", 6847, 6915)
+  map1plot <- map1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 11060)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "UTR" = "#FE0B12",
+      "Structural proteins" = "#11961B",
+      "Non-structural proteins" = "#2F67CD"))
+  map2plot <- map2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 11060)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "Structural proteins" = "#11961B",
+      "Non-structural proteins" = "#2F67CD",
+      "ORF" = "#FE0B12"))
+  depcov1 <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11029),
+                       expand = expansion(0, 0), limits = c(0, 11060)) +
+    scale_y_continuous(expand = expansion(0, 0)) +
+    theme_light(base_size = 10) +
+    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
+    theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 12),
+          axis.text.x = element_text(size = 8),
+          axis.text.y = element_text(hjust = 1, size = 8)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
+  output1 <-  paste0(output, ".wnv-coverage.pdf")
+  plot1 <- depcov1 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
+  save_plot(output1, plot1, base_height = 5, base_width = 16)
+  if (file.size(args[2]) > 0) {
+    contamination_bed <- read.delim(args[2], header = FALSE)
+    contamination_coords <- data.frame(cont_start = contamination_bed$V2, cont_end = contamination_bed$V3)
+    depcov2 <- ggplot() +
+      geom_rect(data = contamination_coords, aes(xmin = cont_start, xmax = cont_end, ymin = 0, ymax = Inf), linewidth = .01, colour = "#5A5A5A", alpha = .1) +
+      geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
+      labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+           y = "Per base coverage (x)", x = NULL) +
+      scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11029),
+                         expand = expansion(0, 0), limits = c(0, 11060)) +
+      scale_y_continuous(expand = expansion(0, 0)) +
+      theme_light(base_size = 10) +
+      scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
+      theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+            axis.title.y = element_text(angle = 90, size = 12),
+            axis.text.x = element_text(size = 8),
+            axis.text.y = element_text(hjust = 1, size = 8)) +
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
+    output2 <-  paste0(output, ".wnv-coverage.contamination.pdf")
     plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
