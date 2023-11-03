@@ -15,7 +15,7 @@ if [[ -z $(which $HOME/.local/bin/micromamba) ]]; then
     echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
     export PATH=$HOME/.local/bin:$PATH
     micromamba create -y -n vigeas_illumina -c conda-forge -c bioconda bwa fastp ivar mafft samtools seqkit
-    micromamba create -y -n vigeas_nanopore -c conda-forge -c bioconda -c defaults artic-porechop=0.3.2pre artic-tools=0.2.6 bcftools=1.17 biopython=1.81 bwa= 0.7.17 clint=0.5.1 htslib=1.17 keras-preprocessing=1.1.2 longshot=0.4.5 mafft medaka >=1.8.0 minimap2=2.26 multiqc=1.15 muscle=3.8 nanopolish=0.14.0 pandas=2.0.3 pip pyfaidx=0.6.0 pytest python=3.9.15 pysam=0.21.0 pyvcf=0.6.8 requests=2.31.0 samtools=1.17 seqkit tqdm=4.66.1
+    micromamba create -y -n vigeas_nanopore -c conda-forge -c bioconda -c defaults artic-porechop=0.3.2pre artic-tools=0.2.6 bcftools=1.17 biopython=1.81 bwa=0.7.17 clint=0.5.1 htslib=1.17 keras-preprocessing=1.1.2 longshot=0.4.5 mafft medaka=1.8.0 minimap2=2.26 multiqc=1.15 muscle=3.8 nanopolish=0.14.0 pandas=2.0.3 pip pyfaidx=0.6.0 pytest python=3.9.15 pysam=0.21.0 pyvcf=0.6.8 requests=2.31.0 samtools=1.17 seqkit tqdm=4.66.1
     micromamba create -y -n vigeas_sars2 -c conda-forge -c bioconda nextclade pangolin
     micromamba create -y -n vigeas_summary -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
     cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
@@ -25,7 +25,7 @@ else
         micromamba create -y -n vigeas_illumina -c conda-forge -c bioconda bwa fastp ivar mafft samtools seqkit
     fi
     if [[ -z $(micromamba env list | grep vigeas_nanopore) ]]; then
-        micromamba create -y -n vigeas_nanopore -c conda-forge -c bioconda -c defaults artic-porechop=0.3.2pre artic-tools=0.2.6 bcftools=1.17 biopython=1.81 bwa= 0.7.17 clint=0.5.1 htslib=1.17 keras-preprocessing=1.1.2 longshot=0.4.5 mafft medaka >=1.8.0 minimap2=2.26 multiqc=1.15 muscle=3.8 nanopolish=0.14.0 pandas=2.0.3 pip pyfaidx=0.6.0 pytest python=3.9.15 pysam=0.21.0 pyvcf=0.6.8 requests=2.31.0 samtools=1.17 seqkit tqdm=4.66.1
+        micromamba create -y -n vigeas_nanopore -c conda-forge -c bioconda -c defaults artic-porechop=0.3.2pre artic-tools=0.2.6 bcftools=1.17 biopython=1.81 bwa=0.7.17 clint=0.5.1 htslib=1.17 keras-preprocessing=1.1.2 longshot=0.4.5 mafft medaka=1.8.0 minimap2=2.26 multiqc=1.15 muscle=3.8 nanopolish=0.14.0 pandas=2.0.3 pip pyfaidx=0.6.0 pytest python=3.9.15 pysam=0.21.0 pyvcf=0.6.8 requests=2.31.0 samtools=1.17 seqkit tqdm=4.66.1
         cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
         python setup.py install
     fi
