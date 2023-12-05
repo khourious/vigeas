@@ -2,7 +2,7 @@
 
 This repository contains scripts and files to run the bioinformatic analysis of whole genome sequencing of viruses using Illumina or Oxford Nanopore Technologies platforms.
 
-Until now, this workflow was developed and tested for working with primer schemes available at ``vigeas-illumina -l`` or ``vigeas-nanopore -l``. **Tests with other primer schemes should be performed.**
+Until now, this workflow was developed and tested for working with primer schemes available at ``vigeas primers``. **Tests with other primer schemes should be performed.**
 
 ## Setting up the pipeline
 
