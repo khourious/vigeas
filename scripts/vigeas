@@ -1,9 +1,13 @@
 #!/bin/bash
 
+UPDATED_VIGEAS=$(echo "07 Dec 2023")
+UPDATED_PRIMERS=$(echo "07 Dec 2023")
+UPDATED_PANELS=$(echo "06 Dec 2023")
+
 usage() {
     echo "
-Program: vigeas (VIral GEnome ASsembly pipelines for WGS)
-Updated: 06 Dec 2023
+Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
+Updated: $UPDATED_VIGEAS
 Author:  Laise de Moraes <laise.moraes@fiocruz.br>
 
 Usage:   vigeas <command> [options]
@@ -26,46 +30,47 @@ Commands:
 
 primer_schemes() {
     echo "
-----------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------
 target                 amplicon_size  primer_scheme_id  url_reference
-----------------------------------------------------------------------------------------------------------------
-Chikungunya            ~400bp         ChikAsianECSA_V1  https://github.com/zibraproject/zika-pipeline
-Dengue [Pan-Dengue]    ~400bp         DENGUESEQPAN_V1   https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
-Dengue type 1          ~400bp         DENGUESEQ1_V1     https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
-Dengue type 1          ~900bp         DENV1_V1          https://doi.org/10.1038/s41467-021-22607-0
-Dengue type 2          ~400bp         DENGUESEQ2_V1     https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
-Dengue type 2          ~900bp         DENV2_V1          https://doi.org/10.1038/s41467-021-22607-0
-Dengue type 3          ~400bp         DENGUESEQ3_V1     https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
-Dengue type 3          ~900bp         DENV3_V1          https://doi.org/10.1038/s41467-021-22607-0
-Dengue type 4          ~400bp         DENGUESEQ4_V1     https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
-Dengue type 4          ~700bp         DENV4_V1          https://doi.org/10.1038/s41467-021-22607-0
-Ebola                  ~1000b         ZaireEbola_V1     https://github.com/artic-network/artic-ncov2019
-Ebola                  ~500bp         ZaireEbola_V2     https://github.com/artic-network/artic-ncov2019
-Ebola                  ~400bp         ZaireEbola_V3     https://github.com/artic-network/artic-ncov2019
-HTLV-1                 ~400bp         HTLV1_V1          Fernanda Khouri [UFBA-IMS, Brazil]
-Lassa [L-segment]      ~400bp         LassaL_V1         https://github.com/zibraproject/zika-pipeline
-Lassa [S-segment]      ~400bp         LassaS_V1         https://github.com/zibraproject/zika-pipeline
-Monkeypox              ~2000bp        MPXV_V1           https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
-Nipah                  ~400bp         Nipah_V1          https://github.com/artic-network/artic-ncov2019
-Oropouche [L-segment]  ~400bp         OROV400L_V1       https://github.com/zibraproject/zika-pipeline
-Oropouche [M-segment]  ~400bp         OROV400M_V1       https://github.com/zibraproject/zika-pipeline
-Oropouche [S-segment]  ~400bp         OROV400S_V1       https://github.com/zibraproject/zika-pipeline
-SARS-CoV-2             ~400bp         ARTIC_V1          https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2             ~400bp         ARTIC_V2          https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2             ~400bp         ARTIC_V3          https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2             ~400bp         ARTIC_V4          https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2             ~400bp         ARTIC_V4_1        https://github.com/artic-network/artic-ncov2019
-SARS-CoV-2             ~400bp         ARTIC_V5_3_2      https://github.com/quick-lab/SARS-CoV-2
-SARS-CoV-2             ~1200bp        MIDNIGHT_V1       https://doi.org/10.1093/biomethods/bpaa014
-SARS-CoV-2             ~1200bp        MIDNIGHT_V2       https://doi.org/10.1093/biomethods/bpaa014
-SARS-CoV-2             ~2000bp        FIOCRUZ-IOC_V1    https://doi.org/10.1101/2020.04.30.069039
-SARS-CoV-2             ~2000bp        FIOCRUZ-IOC_V2    https://doi.org/10.1101/2020.04.30.069039
-West Nile              ~400bp         WNV400_V1         Caio França [Southern Nazarene University, USA]
-Yellow Fever           ~500bp         YFV500_V1         https://github.com/zibraproject/zika-pipeline
-Yellow Fever           ~1000bp        YFV1000_V1        https://github.com/zibraproject/zika-pipeline
-Zika                   ~400bp         ZikaAsian_V2      https://github.com/zibraproject/zika-pipeline
-----------------------------------------------------------------------------------------------------------------
->> UPDATED: 26 Nov 2023
+-------------------------------------------------------------------------------------------------------------------
+Chikungunya            ~400bp         ChikAsianECSA_V1     https://github.com/zibraproject/zika-pipeline
+Dengue [Pan-Dengue]    ~400bp         DENGUESEQPAN_V1      https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+Dengue type 1          ~400bp         DENGUESEQ1_V1        https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+Dengue type 1          ~900bp         DENV1_V1             https://doi.org/10.1038/s41467-021-22607-0
+Dengue type 2          ~400bp         DENGUESEQ2_V1        https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+Dengue type 2          ~900bp         DENV2_V1             https://doi.org/10.1038/s41467-021-22607-0
+Dengue type 3          ~400bp         DENGUESEQ3_V1        https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+Dengue type 3          ~900bp         DENV3_V1             https://doi.org/10.1038/s41467-021-22607-0
+Dengue type 4          ~400bp         DENGUESEQ4_V1        https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
+Dengue type 4          ~700bp         DENV4_V1             https://doi.org/10.1038/s41467-021-22607-0
+Ebola                  ~1000b         ZaireEbola_V1        https://github.com/artic-network/artic-ncov2019
+Ebola                  ~500bp         ZaireEbola_V2        https://github.com/artic-network/artic-ncov2019
+Ebola                  ~400bp         ZaireEbola_V3        https://github.com/artic-network/artic-ncov2019
+HIV                    ~2000bp        HIV1Sanabani2006_V1  https://doi.org/10.1089/aid.2006.22.171
+HTLV-1                 ~400bp         HTLV1_V1             Fernanda Khouri [UFBA-IMS, Brazil]
+Lassa [L-segment]      ~400bp         LassaL_V1            https://github.com/zibraproject/zika-pipeline
+Lassa [S-segment]      ~400bp         LassaS_V1            https://github.com/zibraproject/zika-pipeline
+Monkeypox              ~2000bp        MPXV_V1              https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
+Nipah                  ~400bp         Nipah_V1             https://github.com/artic-network/artic-ncov2019
+Oropouche [L-segment]  ~400bp         OROV400L_V1          https://github.com/zibraproject/zika-pipeline
+Oropouche [M-segment]  ~400bp         OROV400M_V1          https://github.com/zibraproject/zika-pipeline
+Oropouche [S-segment]  ~400bp         OROV400S_V1          https://github.com/zibraproject/zika-pipeline
+SARS-CoV-2             ~400bp         ARTIC_V1             https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2             ~400bp         ARTIC_V2             https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2             ~400bp         ARTIC_V3             https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2             ~400bp         ARTIC_V4             https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2             ~400bp         ARTIC_V4_1           https://github.com/artic-network/artic-ncov2019
+SARS-CoV-2             ~400bp         ARTIC_V5_3_2         https://github.com/quick-lab/SARS-CoV-2
+SARS-CoV-2             ~1200bp        MIDNIGHT_V1          https://doi.org/10.1093/biomethods/bpaa014
+SARS-CoV-2             ~1200bp        MIDNIGHT_V2          https://doi.org/10.1093/biomethods/bpaa014
+SARS-CoV-2             ~2000bp        FIOCRUZ-IOC_V1       https://doi.org/10.1101/2020.04.30.069039
+SARS-CoV-2             ~2000bp        FIOCRUZ-IOC_V2       https://doi.org/10.1101/2020.04.30.069039
+West Nile              ~400bp         WNV400_V1            Caio França [Southern Nazarene University, USA]
+Yellow Fever           ~500bp         YFV500_V1            https://github.com/zibraproject/zika-pipeline
+Yellow Fever           ~1000bp        YFV1000_V1           https://github.com/zibraproject/zika-pipeline
+Zika                   ~400bp         ZikaAsian_V2         https://github.com/zibraproject/zika-pipeline
+-------------------------------------------------------------------------------------------------------------------
+>> UPDATED: $UPDATED_PRIMERS
 "
     exit 1
 }
@@ -78,7 +83,7 @@ enrichment_panel                            panel_id
 Illumina Respiratory Pathogen ID/AMR Panel  RPIP
 Illumina Respiratory Virus Oligo Panel      RVOP
 ----------------------------------------------------
->> UPDATED: 06 Dec 2023
+>> UPDATED: $UPDATED_PANELS
 "
     exit 1
 }
@@ -97,16 +102,16 @@ NPROC=$(nproc)
 
     usage_dnap() {
         echo "
-Program: vigeas (VIral GEnome ASsembly pipelines for WGS)
-Updated: 05 Dec 2023
+Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
+Updated: $UPDATED_VIGEAS
 Author:  Laise de Moraes <laise.moraes@fiocruz.br>
 
 Usage:   vigeas dnap [options]
 
-Options: -d INT    Minimum depth to variant calling [10]
+Options: -d INT    Minimum depth to variant calling [default: 10]
          -i STR    Path containing the *.fastQ data
          -s STR    Path containing the Illumina samplesheet with the primer scheme in the description column
-         -t INT    Max number of threads [$((NPROC - 2))]
+         -t INT    Max number of threads [default: $((NPROC - 2))]
 "
         exit 1
     }
@@ -347,16 +352,16 @@ NPROC=$(nproc)
 
     usage_rnapenr() {
         echo "
-Program: vigeas (VIral GEnome ASsembly pipelines for WGS)
-Updated: 06 Dec 2023
+Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
+Updated: $UPDATED_VIGEAS
 Author:  Laise de Moraes <laise.moraes@fiocruz.br>
 
 Usage:   vigeas rnapenr [options]
 
-Options: -d INT    Minimum depth to variant calling [10]
+Options: -d INT    Minimum depth to variant calling [default: 10]
          -i STR    Path containing the *.fastQ data
          -s STR    Path containing the Illumina samplesheet with the primer scheme in the description column
-         -t INT    Max number of threads [$((NPROC - 2))]
+         -t INT    Max number of threads [default: $((NPROC - 2))]
 "
         exit 1
     }
@@ -493,10 +498,11 @@ Options: -d INT    Minimum depth to variant calling [10]
 ont() {
 NPROC=$(nproc)
 
+
     usage_ont() {
         echo "
-Program: vigeas (VIral GEnome ASsembly pipelines for WGS)
-Updated: 05 Dec 2023
+Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
+Updated: $UPDATED_VIGEAS
 Author:  Laise de Moraes <laise.moraes@fiocruz.br>
 
 Usage:   vigeas ont [options]
@@ -506,7 +512,7 @@ Options: -b STR    FOR BASECALLING: Guppy or Dorado
                    List supported barcoding kits: guppy_barcoder --print_kits
          -i STR    Path containing the *.fast5 data
          -s STR    Path containing the samplesheet in csv with sample identification, barcode number and primer scheme
-         -t INT    Max number of threads [$((NPROC - 2))]
+         -t INT    Max number of threads [default: $((NPROC - 2))]
 "
         exit 1
     }
@@ -515,11 +521,10 @@ Options: -b STR    FOR BASECALLING: Guppy or Dorado
         usage_ont
     fi
 
-    while getopts "b:d:g:i:s:t:" OPT; do
+    while getopts "b:d:i:s:t:" OPT; do
         case "$OPT" in
             b) BASECALLER="$OPTARG";;
             d) BARCODE_KIT="$OPTARG";;
-#           g) GPU_MEM="$OPTARG";; calc
             i) INPUT="$OPTARG";;
             s) SAMPLE_SHEET="$OPTARG";;
             t) THREADS="$OPTARG";;
@@ -560,7 +565,7 @@ Options: -b STR    FOR BASECALLING: Guppy or Dorado
                 done
                 dorado basecaller $HOME/ont-dorado/models/dna_r9.4.1_e8_fast@v3.4 "$ANALYSIS_DIR"/POD5/ -v --min-qscore 8 -r --emit-fastq > "$ANALYSIS_DIR"/BASECALL/"$LIBRARY_NAME"_BASECAL.fastq
             elif [[ "${BASECALLER,,}" == "guppy" ]]; then
-                guppy_basecaller -r -x auto --verbose_logs --disable_pings -c dna_r9.4.1_450bps_hac.cfg -i "$INPUT" -s "$ANALYSIS_DIR"/BASECALL --gpu_runners_per_device "$GPU_MEM" --chunks_per_runner 800 --chunk_size 2000 --num_callers "$THREADS" --min_qscore 8
+                guppy_basecaller -r -x auto --verbose_logs --disable_pings -c dna_r9.4.1_450bps_hac.cfg -i "$INPUT" -s "$ANALYSIS_DIR"/BASECALL --gpu_runners_per_device "$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | awk '{print $1/1024}')" --chunks_per_runner 800 --chunk_size 2000 --num_callers "$THREADS" --min_qscore 8
             fi
             guppy_barcoder -r --disable_pings --trim_adapters --barcode_kits "$BARCODE_KIT" -i "$ANALYSIS_DIR"/BASECALL/ -s "$ANALYSIS_DIR"/DEMUX -t "$THREADS"
             dos2unix "$SAMPLE_SHEET"
