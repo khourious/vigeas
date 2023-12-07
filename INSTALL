@@ -74,6 +74,7 @@ if [[ ! -z $(which dorado) ]]; then
     echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
 elif [[ $(dorado --version 2>&1 | awk -F+ '{print $1}') != "$DORADO_VERSION" ]]; then
     cd
+    rm -rf ont-dorado
     wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-"$DORADO_VERSION"-linux-x64.tar.gz -O dorado.tar.gz
     tar -vzxf dorado.tar.gz
     rm -rf dorado.tar.gz
@@ -86,3 +87,7 @@ elif [[ $(dorado --version 2>&1 | awk -F+ '{print $1}') != "$DORADO_VERSION" ]];
 else
     dorado --version
 fi
+
+# DATABASE=$HOME/vigeas/blastdb/*.fasta
+# makeblastdb -in "$DATABASE" -dbtype nucl -out $HOME/vigeas/blastdb/"$(basename "$DATABASE" | awk -F. '{print $1}')"
+# awk '/^>/{if(s) close(s); s="'"$HOME"'/vigeas/refseq/" substr($0,2) ".fasta"; print > s; next}{if(s) print >> s}' "$DATABASE"
