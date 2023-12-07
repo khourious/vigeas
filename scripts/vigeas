@@ -333,6 +333,9 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                 elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "WNV400") ]]; then
                     gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".wnv-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.wnv-coverage.pdf
                     gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".wnv-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.wnv-coverage.contamination.pdf
+                elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "HIV1Sanabani2006") ]]; then
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".hiv1-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.hiv1-coverage.pdf
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".hiv1-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/*/*.hiv1-coverage.contamination.pdf
                 fi
             done
         fi
@@ -746,6 +749,9 @@ Options: -b STR    FOR BASECALLING: Guppy or Dorado
                 elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "WNV400") ]]; then
                     gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".wnv-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*.wnv-coverage.pdf
                     gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".wnv-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*.wnv-coverage.contamination.pdf
+                elif [[ ! -z $(echo "$PRIMER_SCHEME" | egrep "HIV1Sanabani2006") ]]; then
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".hiv1-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*.hiv1-coverage.pdf
+                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".hiv1-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*.hiv1-coverage.contamination.pdf
                 fi
             done
         fi

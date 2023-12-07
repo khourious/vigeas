@@ -1,7 +1,6 @@
-# vigeas-depth-coverage
-# --> updated: 27 Nov 2023
-# ----> Laise de Moraes [https://lpmor22.github.io/]
-# ------> Khouri Lab, Gonçalo Moniz Institute, FIOCRUZ, Brazil
+# Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
+# Updated: 07 Dec 2023
+# Author: Laise de Moraes <laise.moraes@fiocruz.br>
 
 if(!interactive()) pdf(NULL)
 
@@ -37,7 +36,8 @@ ref_seq <- list(
   "DENV4" = "Genome reference: NC_002640.1 (DENV-4)",
   "ChikAsianECSA" = "Genome reference: KP164568.1 (CHIKV)",
   "HTLV1" = "Genome reference: J02029.1 (HTLV-1)",
-  "WNV400" = "Genome reference: NC_009942.1 (WNV)")
+  "WNV400" = "Genome reference: NC_009942.1 (WNV)",
+  "HIV1Sanabani2006" = "Genome reference: K03455.1 (HIV-1)")
 primer_scheme_2 <- ref_seq[[primer_scheme]]
 
 if (primer_scheme == "ARTIC" || primer_scheme == "FIOCRUZ-IOC" || primer_scheme == "MIDNIGHT") {
@@ -286,7 +286,7 @@ if (primer_scheme == "DENGUESEQ1" || primer_scheme == "DENV1") {
       labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
-                         expand = expansion(0, 0), limits = c(0, 10750)) +
+                         expand = expansion(0, 0), limits = c(0, 10810)) +
       scale_y_continuous(expand = expansion(0, 0)) +
       theme_light(base_size = 10) +
       scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
@@ -439,7 +439,7 @@ if (primer_scheme == "DENGUESEQ3" || primer_scheme == "DENV3") {
       geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
            y = "Per base coverage (x)", x = NULL) +
-      scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10707),
+      scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                          expand = expansion(0, 0), limits = c(0, 10750)) +
       scale_y_continuous(expand = expansion(0, 0)) +
       theme_light(base_size = 10) +
@@ -516,7 +516,7 @@ if (primer_scheme == "DENGUESEQ4" || primer_scheme == "DENV4") {
       geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
            y = "Per base coverage (x)", x = NULL) +
-      scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10707),
+      scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10649),
                          expand = expansion(0, 0), limits = c(0, 10750)) +
       scale_y_continuous(expand = expansion(0, 0)) +
       theme_light(base_size = 10) +
@@ -752,5 +752,97 @@ if (primer_scheme == "WNV400") {
       geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
     output2 <-  paste0(output, ".wnv-coverage.contamination.pdf")
     plot2 <- depcov2 / map1plot / map2plot + plot_layout(nrow = 3, heights = c(3, .3, .3))
+    save_plot(output2, plot2, base_height = 5, base_width = 16)
+  }}
+
+if (primer_scheme == "HIV1Sanabani2006") {
+  # https://www.hiv.lanl.gov/content/sequence/HIV/MAP/landmark.html
+  map1 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "LTR", "5'LTR", 1, 634,
+                  "gag", "gag", 790, 2292,
+                  "vif", "vif", 5041, 5619,
+                  "tat", "tat", 8379, 8424,
+                  "nef", "nef", 8797, 9417)
+  map2 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "tat", "tat", 5831, 6045,
+                  "vpu", "vpu", 6062, 6310,
+                  "rev", "rev", 8379, 8653,
+                  "LTR", "3'LTR", 9086, 9719)
+  map3 <- tribble(~"class", ~"gene", ~"start", ~"end",
+                  "pol", "pol", 2085, 5096,
+                  "vpr", "vpr", 5559, 5850,
+                  "rev", "rev", 5970, 6045,
+                  "env", "env", 6225, 8795)
+  map1plot <- map1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "LTR" = "#989898",
+      "gag" = "#008DB1",
+      "vif" = "#236A6A",
+      "tat" = "#AA518B",
+      "nef" = "#00387F"))
+  map2plot <- map2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "tat" = "#AA518B",
+      "vpu" = "#D59687",
+      "rev" = "#98AA2E",
+      "LTR" = "#5A5A5A"))
+  map3plot <- map3 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = class),
+              linewidth = .2, colour = "#000000", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c(
+      "pol" = "#E38C42",
+      "vpr" = "#008A98",
+      "rev" = "#98AA2E",
+      "env" = "#CE605F"))
+  depcov1 <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 2000, 4000, 6000, 8000, 9719),
+                       expand = expansion(0, 0), limits = c(0, 9800)) +
+    scale_y_continuous(expand = expansion(0, 0)) +
+    theme_light(base_size = 10) +
+    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
+    theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 12),
+          axis.text.x = element_text(size = 8),
+          axis.text.y = element_text(hjust = 1, size = 8)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
+  output1 <-  paste0(output, ".hiv1-coverage.pdf")
+  plot1 <- depcov1 / map1plot / map2plot / map3plot + plot_layout(nrow = 4, heights = c(3, .3, .3, .3))
+  save_plot(output1, plot1, base_height = 5, base_width = 16)
+  if (file.size(args[2]) > 0) {
+    contamination_bed <- read.delim(args[2], header = FALSE)
+    contamination_coords <- data.frame(cont_start = contamination_bed$V2, cont_end = contamination_bed$V3)
+    depcov2 <- ggplot() +
+      geom_rect(data = contamination_coords, aes(xmin = cont_start, xmax = cont_end, ymin = 0, ymax = Inf), linewidth = .01, colour = "#5A5A5A", alpha = .1) +
+      geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "#000000") +
+      labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+           y = "Per base coverage (x)", x = NULL) +
+      scale_x_continuous(breaks = c(1, 2000, 4000, 6000, 8000, 9719),
+                         expand = expansion(0, 0), limits = c(0, 9800)) +
+      scale_y_continuous(expand = expansion(0, 0)) +
+      theme_light(base_size = 10) +
+      scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
+      theme(plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+            axis.title.y = element_text(angle = 90, size = 12),
+            axis.text.x = element_text(size = 8),
+            axis.text.y = element_text(hjust = 1, size = 8)) +
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#5A5A5A")
+    output2 <-  paste0(output, ".hiv1-coverage.contamination.pdf")
+    plot2 <- depcov2 / map1plot / map2plot / map3plot + plot_layout(nrow = 4, heights = c(3, .3, .3, .3))
     save_plot(output2, plot2, base_height = 5, base_width = 16)
   }}
