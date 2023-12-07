@@ -1,9 +1,5 @@
-vigeas illumina
-$ add option to choose depth per sample
-$ compress analysis folder
-$ compress raw fastq folder
-
-vigeas ont
-% change depth
-% compress analysis folder
-% compress raw fast5 folder
+% variable depth for variant calling     ont
+% generic coverage x depth plot          dnap,rnapenr,ont
+% add option to choose depth per sample  dnap,rnapenr,ont
+% compress analysis folder               dnap,rnapenr,ont
+% compress raw fastq folder              dnap,rnapenr,ont
