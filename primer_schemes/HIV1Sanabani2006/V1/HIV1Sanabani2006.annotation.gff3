@@ -1,0 +1,31 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region K03455.1 1 9719
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11676
+K03455.1	Genbank	region	1	9719	.	+	.	ID=K03455.1:1..9719;Dbxref=taxon:11676;gb-acronym=HIV-1;gbkey=Src;genome=proviral;isolate=HXB2;mol_type=genomic RNA;note=HTLV-III/LAV;old-name=Human immunodeficiency virus type 1
+K03455.1	Genbank	long_terminal_repeat	1	634	.	+	.	ID=id-K03455.1:1..634;Note=5' LTR;gbkey=LTR
+K03455.1	Genbank	repeat_region	454	551	.	+	.	ID=id-K03455.1:454..551;Note=R repeat 5' copy;gbkey=repeat_region
+K03455.1	Genbank	primary_transcript	455	9635	.	+	.	ID=id-K03455.1:455..9635;Note=tat%2C trs%2C 27K subgenomic mRNA;gbkey=prim_transcript
+K03455.1	Genbank	mRNA	455	9635	.	+	.	ID=rna-K03455.1:455..9635;gbkey=mRNA;product=HXB2 genomic mRNA
+K03455.1	Genbank	exon	455	9635	.	+	.	ID=exon-K03455.1:455..9635-1;Parent=rna-K03455.1:455..9635;gbkey=mRNA;product=HXB2 genomic mRNA
+K03455.1	Genbank	CDS	790	2292	.	+	0	ID=cds-AAB50258.1;Parent=rna-K03455.1:455..9635;Dbxref=NCBI_GP:AAB50258.1;Name=AAB50258.1;gbkey=CDS;product=AAB50258.1;protein_id=AAB50258.1
+K03455.1	Genbank	CDS	2358	5096	.	+	0	ID=cds-AAB50259.1;Parent=rna-K03455.1:455..9635;Dbxref=NCBI_GP:AAB50259.1;Name=AAB50259.1;gbkey=CDS;product=AAB50259.1;protein_id=AAB50259.1
+K03455.1	Genbank	CDS	5041	5619	.	+	0	ID=cds-AAB50260.1;Parent=rna-K03455.1:455..9635;Dbxref=NCBI_GP:AAB50260.1;Name=AAB50260.1;gbkey=CDS;product=AAB50260.1;protein_id=AAB50260.1
+K03455.1	Genbank	CDS	5559	5795	.	+	0	ID=cds-AAB50261.1;Parent=rna-K03455.1:455..9635;Dbxref=NCBI_GP:AAB50261.1;Name=AAB50261.1;gbkey=CDS;product=AAB50261.1;protein_id=AAB50261.1
+K03455.1	Genbank	CDS	6225	8795	.	+	0	ID=cds-AAB50262.1;Parent=rna-K03455.1:455..9635;Dbxref=NCBI_GP:AAB50262.1;Name=AAB50262.1;gbkey=CDS;product=AAB50262.1;protein_id=AAB50262.1
+K03455.1	Genbank	CDS	8797	9168	.	+	0	ID=cds-AAB50263.1;Parent=rna-K03455.1:455..9635;Dbxref=NCBI_GP:AAB50263.1;Name=AAB50263.1;gbkey=CDS;product=AAB50263.1;protein_id=AAB50263.1
+K03455.1	Genbank	intron	744	5777	.	+	.	ID=id-K03455.1:744..5777;Note=tat%2C trs%2C 27K mRNA intron 1;gbkey=intron
+K03455.1	Genbank	CDS	5831	6045	.	+	0	ID=cds-AAB50256.1;Dbxref=NCBI_GP:AAB50256.1;Name=AAB50256.1;gbkey=CDS;product=AAB50256.1;protein_id=AAB50256.1
+K03455.1	Genbank	CDS	8379	8424	.	+	1	ID=cds-AAB50256.1;Dbxref=NCBI_GP:AAB50256.1;Name=AAB50256.1;gbkey=CDS;product=AAB50256.1;protein_id=AAB50256.1
+K03455.1	Genbank	exon	5831	6045	.	+	.	ID=id-K03455.1:5831..6045-2;Note=tat protein%2C first expressed exon;exon_number=2;gbkey=exon;number=2
+K03455.1	Genbank	CDS	5970	6045	.	+	0	ID=cds-AAB50257.1;Dbxref=NCBI_GP:AAB50257.1;Name=AAB50257.1;gbkey=CDS;product=AAB50257.1;protein_id=AAB50257.1
+K03455.1	Genbank	CDS	8379	8653	.	+	2	ID=cds-AAB50257.1;Dbxref=NCBI_GP:AAB50257.1;Name=AAB50257.1;gbkey=CDS;product=AAB50257.1;protein_id=AAB50257.1
+K03455.1	Genbank	exon	5970	6045	.	+	.	ID=id-K03455.1:5970..6045-2;Note=trs protein%2C first expressed exon;exon_number=2;gbkey=exon;number=2
+K03455.1	Genbank	intron	6046	8378	.	+	.	ID=id-K03455.1:6046..8378;Note=tat%2C trs%2C 27K mRNA intron 2;gbkey=intron
+K03455.1	Genbank	exon	8379	8652	.	+	.	ID=id-K03455.1:8379..8652-3;Note=trs protein;exon_number=3;gbkey=exon;number=3
+K03455.1	Genbank	exon	8379	8424	.	+	.	ID=id-K03455.1:8379..8424-3;Note=tat protein;exon_number=3;gbkey=exon;number=3
+K03455.1	Genbank	long_terminal_repeat	9086	9719	.	+	.	ID=id-K03455.1:9086..9719;Note=3' LTR;gbkey=LTR
+K03455.1	Genbank	repeat_region	9540	9636	.	+	.	ID=id-K03455.1:9540..9636;Note=R repeat 3' copy;gbkey=repeat_region
+K03455.1	Genbank	region	9612	9617	.	+	.	ID=id-K03455.1:9612..9617;Note=HXB2 mRNA polyadenyation signal;gbkey=polyA_signal
+
