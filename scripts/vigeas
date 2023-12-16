@@ -1,6 +1,6 @@
 #!/bin/bash
 
-UPDATED_VIGEAS=$(echo "07 Dec 2023")
+UPDATED_VIGEAS=$(echo "14 Dec 2023")
 UPDATED_PRIMERS=$(echo "07 Dec 2023")
 UPDATED_PANELS=$(echo "06 Dec 2023")
 
@@ -433,58 +433,61 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                     cp -v "$INPUT"/"$i".R2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
                 fi
             done
-            micromamba activate vigeas-rnapenr
             for i in $(cat "$SAMPLE_SHEET"); do
                 SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                 PANEL=$(echo "$i" | awk -F, '{print $2}')
-                echo "ref_seq#target#segment#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$OUTPUT_DIR"/"$SAMPLE_ID".summary.tsv
+                echo "ref_seq#target#segment#sample_id#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' > "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
                 mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
+                micromamba activate vigeas-rnapenr
                 fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -I "$ANALYSIS_DIR"/"$SAMPLE_ID".R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -O "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.json
                 rnaspades.py -t "$THREADS" -m 15 -k 127 -1 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -2 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo
                 if [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta ]; then
-                    blastn -query "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta -db $HOME/vigeas/blastdb/"$PANEL" -out "$OUTPUT_DIR"/"$SAMPLE_ID"/denovo/results.txt -outfmt "6 qseqid sseqid pident length"
+                    blastn -query "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta -db $HOME/vigeas/blastdb/"$PANEL" -out "$OUTPUT_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt -outfmt "6 qseqid sseqid pident length"
+                elif [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta ]; then
+                    blastn -query "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta -db $HOME/vigeas/blastdb/"$PANEL" -out "$OUTPUT_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt -outfmt "6 qseqid sseqid pident length"
                 else
-                    blastn -query "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta -db $HOME/vigeas/blastdb/"$PANEL" -out "$OUTPUT_DIR"/"$SAMPLE_ID"/denovo/results.txt -outfmt "6 qseqid sseqid pident length"
+                    seqkit fq2fa "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz | blastn -db $HOME/vigeas/blastdb/RVOP -out "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt -outfmt "6 qseqid sseqid pident length"
                 fi
-            done
-            for i in $(awk -F"\t" '$3 > 98 {print $2}' "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/results.txt | sort -u); do
-                echo "$i" | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{print $2}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{print $3}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                echo "$SAMPLE_ID" | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                bwa index $HOME/vigeas/refseq/"$i".fasta
-                bwa mem -t "$THREADS" $HOME/vigeas/refseq/"$i".fasta "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
-                samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
-                samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth.tsv
-                samtools mpileup -a --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar variants -t 0.05 -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i" -r $HOME/vigeas/refseq/"$i".fasta
-                samtools mpileup -a --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".sorted.bam | ivar consensus -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH"
-                sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH".fa
-                rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
                 micromamba deactivate
-                micromamba activate vigeas-stats
-                AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".sorted.bam | awk '{sum+=$3} END {print sum/NR}')
-                if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
-                    echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                else
-                    echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                fi
-                paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".sorted.bam | awk '{if ($3 > '"10"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}')
-                N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
-                REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/refseq/"$i".fasta | awk -F" " '{print $1}')
-                REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
-                if [[ "$N_COUNT" == 0 ]]; then
-                    echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                    echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                    echo "100.00" | awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                else
-                    echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                    echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                    echo "$N_COUNT_PER" | awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
-                fi
+                for i in $(awk -F"\t" '$3 > 98 {print $2}' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt | sort -u); do
+                    grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{if ($3 == "" || $3 == " " || gsub(/\t/, "", $3) == 0) printf $1"#"$2"#"; else printf $0}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    echo "$SAMPLE_ID" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    micromamba activate vigeas-rnapenr
+                    bwa index $HOME/vigeas/refseq/"$i".fasta
+                    bwa mem -t "$THREADS" $HOME/vigeas/refseq/"$i".fasta "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+                    samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+                    samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth.tsv
+                    samtools mpileup -a --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar variants -t 0.05 -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i" -r $HOME/vigeas/refseq/"$i".fasta
+                    samtools mpileup -a --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar consensus -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH"
+                    sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH".fa
+                    rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
+                    micromamba deactivate
+                    micromamba activate vigeas-stats
+                    AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
+                    if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
+                        echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    else
+                        echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    fi
+                    paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"10"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    N_COUNT=$(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}')
+                    N_COUNT_PER=$(paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}')
+                    REF_SEQ_LENGHT=$(fastalength $HOME/vigeas/refseq/"$i".fasta | awk -F" " '{print $1}')
+                    REF_SEQ_COV=$(paste <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}')
+                    if [[ "$N_COUNT" == 0 ]]; then
+                        echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                        echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                        echo "100.00" | awk '{printf $0"\n"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    else
+                        echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                        echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                        echo "$N_COUNT_PER" | awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/"$SAMPLE_ID".summary.tsv
+                    fi
+					micromamba deactivate
+                done
             done
         fi
         micromamba deactivate
