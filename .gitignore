@@ -1,6 +1,7 @@
 *.amb
 *.ann
 *.bwt
+*.fai
 *.pac
 *.sa
 scripts/depthCovCreate.R
