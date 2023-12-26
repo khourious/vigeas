@@ -5,7 +5,7 @@
 | Target                | Amplicon Size | Primer Scheme Name  | Reference                                                |
 | --------------------- | ------------- | ------------------- | -------------------------------------------------------- |
 | Chikungunya           | ~400pb        | ChikAsianECSA_V1    | https://github.com/zibraproject/zika-pipeline            |
-| Dengue [Pan-Dengue]   | ~400pb        | DENGUESEQ1_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
+| Dengue [Pan-Dengue]   | ~400pb        | DENGUESEQPAN_V1     | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
 | Dengue type 1         | ~400pb        | DENGUESEQ1_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
 | Dengue type 1         | ~900pb        | DENV1_V1            | https://doi.org/10.1038/s41467-021-22607-0               |
 | Dengue type 2         | ~400pb        | DENGUESEQ2_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
