@@ -448,7 +448,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                     if [[ "$N_COUNT" == 0 ]]; then
                         echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                         echo "$REF_SEQ_LENGHT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-                        echo "100.00" | awk '{printf $0"\n"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+                        echo "100.00" | awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
                     else
                         echo "$REF_SEQ_COV" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                         echo "$N_COUNT" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
