@@ -6,7 +6,7 @@
   "description": "/home/lpmor22/vigeas/blastdb/RPIP.fasta",
   "number-of-letters": 6051886,
   "number-of-sequences": 691,
-  "last-updated": "2024-04-22T08:45:00",
+  "last-updated": "2024-04-22T08:47:00",
   "number-of-volumes": 1,
   "bytes-total": 1622049,
   "bytes-to-cache": 1523194,
