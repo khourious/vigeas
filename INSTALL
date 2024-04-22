@@ -100,7 +100,3 @@ elif [[ $(dorado --version 2>&1 | awk -F+ '{print $1}') != "$DORADO_VERSION" ]];
 else
     dorado --version
 fi
-
-# DATABASE=$HOME/vigeas/blastdb/*.fasta
-# makeblastdb -in "$DATABASE" -dbtype nucl -out $HOME/vigeas/blastdb/"$(basename "$DATABASE" | awk -F. '{print $1}')"
-# awk '/^>/{if(s) close(s); s="'"$HOME"'/vigeas/refseq/" substr($0,2) ".fasta"; print > s; next}{if(s) print >> s}' "$DATABASE"
