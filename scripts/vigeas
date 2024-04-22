@@ -1,8 +1,8 @@
 #!/bin/bash
 
-UPDATED_VIGEAS=$(echo "18 Apr 2024")
+UPDATED_VIGEAS=$(echo "22 Apr 2024")
 UPDATED_PRIMERS=$(echo "07 Dec 2023")
-UPDATED_PANELS=$(echo "06 Dec 2023")
+UPDATED_PANELS=$(echo "21 Apr 2024")
 
 usage() {
     echo "
@@ -21,9 +21,24 @@ Commands:
        ont      For libraries using ONT SQK-LSK109 or similar [*.fast5/*.pod5 data]
 
   -- Misc
-       update   Update conda [micromamba] dependencies
+       makedb   Create a BLAST database in this workflow -- for <vigeas rnapenr>
        panels   List available enrichment panels in this workflow -- for <vigeas rnapenr>
        primers  List available primer schemes in this workflow -- for <vigeas dnap> and <vigeas ont>
+       update   Update conda [micromamba] dependencies
+"
+    exit 1
+}
+
+enrichment_panels() {
+    echo "
+----------------------------------------------------
+enrichment_panel                            panel_id
+----------------------------------------------------
+Illumina Respiratory Pathogen ID/AMR Panel  RPIP
+Illumina Respiratory Virus Oligo Panel      RVOP
+----------------------------------------------------
+* Included Human Influenza Vaccine Composition available on GISAID (https://gisaid.org/resources/human-influenza-vaccine-composition)
+>> UPDATED: $UPDATED_PANELS
 "
     exit 1
 }
@@ -75,19 +90,6 @@ Zika                   ~400bp         ZikaAsian_V2         https://github.com/zi
     exit 1
 }
 
-enrichment_panels() {
-    echo "
-----------------------------------------------------
-enrichment_panel                            panel_id
-----------------------------------------------------
-Illumina Respiratory Pathogen ID/AMR Panel  RPIP
-Illumina Respiratory Virus Oligo Panel      RVOP
-----------------------------------------------------
->> UPDATED: $UPDATED_PANELS
-"
-    exit 1
-}
-
 update() {
     micromamba update -y -n vigeas-dnap -c conda-forge -c bioconda --all
     micromamba update -y -n vigeas-ont -c defaults -c conda-forge -c bioconda --all
@@ -95,6 +97,50 @@ update() {
     micromamba update -y -n vigeas-sars2 -c conda-forge -c bioconda --all
     micromamba update -y -n vigeas-stats -c conda-forge -c bioconda --all
     exit 1
+}
+
+makedb() {
+
+    usage_makedb() {
+        echo "
+Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
+Updated: $UPDATED_VIGEAS
+Author:  Laise de Moraes <laise.moraes@fiocruz.br>
+
+Usage:   vigeas makedb [options]
+
+Options: -f STR    Path containing the *.fasta with the reference genomes
+         -t STR    Path containing the *.tsv metadata of the genome references
+"
+        exit 1
+    }
+
+    if [ $# -lt 1 ]; then
+        usage_makedb
+    fi
+
+    while getopts "f:t:" OPT; do
+        case "$OPT" in
+            f) FASTA="$OPTARG";;
+            t) METADATA="$OPTARG";;
+            *) usage_dnap;;
+        esac
+    done
+
+    if [[ -z "$FASTA" ]] || [[ -z "$METADATA" ]]; then
+        usage_makedb
+    else
+        eval "$(micromamba shell hook --shell bash)"
+        eval "$(micromamba shell hook --shell zsh)"
+        micromamba activate vigeas-rnapenr
+        DATABASE_NAME="$(basename "$FASTA" | awk -F/ '{print $NF}' | awk -F. '{print $1}')"
+        cp "$FASTA" $HOME/vigeas/blastdb/"$DATABASE_NAME".fasta
+        cp "$METADATA" $HOME/vigeas/blastdb/"$DATABASE_NAME".tsv
+        makeblastdb -in $HOME/vigeas/blastdb/"$DATABASE_NAME".fasta -dbtype nucl -out $HOME/vigeas/blastdb/"$DATABASE_NAME"
+        awk '/^>/{if(s) close(s); s="'"$HOME"'/vigeas/refseq/" substr($0,2) ".fasta"; print > s; next}{if(s) print >> s}' $HOME/vigeas/blastdb/"$DATABASE_NAME".fasta
+    fi
+
+    exit 0
 }
 
 dnap() {
@@ -401,7 +447,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                     cp -v "$INPUT"/"$i".R2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
                 fi
             done
-            echo "sample_id#ref_seq#target#segment#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
+            echo "sample_id#ref_seq#target#segment#flu_vaccine#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
             for i in $(cat "$SAMPLE_SHEET"); do
                 SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                 PANEL=$(echo "$i" | awk -F, '{print $2}')
@@ -419,7 +465,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                 micromamba deactivate
                 for i in $(awk -F"\t" '$3 > 98 {print $2}' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt | sort -u); do
                     echo "$SAMPLE_ID" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-                    grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{if ($3 == "" || $3 == " " || gsub(/\t/, "", $3) == 0) printf $1"#"$2"#"; else printf $0}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+                    grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{if ($3 == "" || $3 == " " || gsub(/\t/, "", $3) == 0) printf $1"#"$2"#"$3"#"$4; else printf $0}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                     micromamba activate vigeas-rnapenr
                     bwa index $HOME/vigeas/refseq/"$i".fasta
                     bwa mem -t "$THREADS" $HOME/vigeas/refseq/"$i".fasta "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
@@ -455,7 +501,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                         echo "$N_COUNT_PER" | awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
                     fi
                     sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
-					micromamba deactivate
+                    micromamba deactivate
                 done
             done
         fi
@@ -744,10 +790,11 @@ fi
 
 case "$1" in
     dnap)     shift; dnap "$@";;
-    rnapenr)  shift; rnapenr "$@";;
+    makedb)   shift; makedb "$@";;
     ont)      shift; ont "$@";;
     panels)   shift; enrichment_panels;;
     primers)  shift; primer_schemes;;
+    rnapenr)  shift; rnapenr "$@";;
     update)   shift; update;;
     *)        echo "Error: Unknown command '$1'";;
 esac
