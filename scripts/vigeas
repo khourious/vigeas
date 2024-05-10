@@ -1,6 +1,6 @@
 #!/bin/bash
 
-UPDATED_VIGEAS=$(echo "22 Apr 2024")
+UPDATED_VIGEAS=$(echo "07 May 2024")
 UPDATED_PRIMERS=$(echo "07 Dec 2023")
 UPDATED_PANELS=$(echo "21 Apr 2024")
 
@@ -192,7 +192,6 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
         eval "$(micromamba shell hook --shell bash)"
         eval "$(micromamba shell hook --shell zsh)"
         if [[ -z "$THREADS" ]]; then
-            NPROC=$(nproc)
             if ((NPROC > 2)); then
                 THREADS=$((NPROC - 2))
             else
@@ -377,6 +376,7 @@ Usage:   vigeas rnapenr [options]
 
 Options: -d INT    Minimum depth to variant calling [default: 10]
          -i STR    Path containing the *.fastQ data
+         -p INT    Percentage of identity in the BLAST used to select reference sequences for genome assembly
          -s STR    Path containing the Illumina samplesheet with the primer scheme in the description column
          -t INT    Max number of threads [default: $((NPROC - 2))]
 "
@@ -387,10 +387,11 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
         usage_rnapenr
     fi
 
-    while getopts "d:i:s:t:" OPT; do
+    while getopts "d:i:p:s:t:" OPT; do
         case "$OPT" in
             d) DEPTH="$OPTARG";;
             i) INPUT="$OPTARG";;
+            p) PIDENT="$OPTARG";;
             s) SAMPLE_SHEET="$OPTARG";;
             t) THREADS="$OPTARG";;
             *) usage_rnapenr;;
@@ -427,7 +428,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
             cat "$SAMPLE_SHEET" | tr -dc '[:print:]\n' | sed -e '1,18d' | awk -F, '{print $1","$NF}' | sort > "$ANALYSIS_DIR"/.samplesheet
             SAMPLE_SHEET="$ANALYSIS_DIR"/.samplesheet
         fi
-        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
+        if [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]] || [[ -z "$PIDENT" ]]; then
             usage_rnapenr
         else
             for i in $(awk -F, '{print $1}' "$SAMPLE_SHEET"); do
@@ -463,7 +464,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                     seqkit fq2fa "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz | blastn -db $HOME/vigeas/blastdb/RVOP -out "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt -outfmt "6 qseqid sseqid pident length"
                 fi
                 micromamba deactivate
-                for i in $(awk -F"\t" '$3 > 98 {print $2}' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt | sort -u); do
+                for i in $(awk -v pident="$PIDENT" -F"\t" '$3 >= pident {print $2}' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt | sort -u); do
                     echo "$SAMPLE_ID" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                     grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{if ($3 == "" || $3 == " " || gsub(/\t/, "", $3) == 0) printf $1"#"$2"#"$3"#"$4; else printf $0}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                     micromamba activate vigeas-rnapenr
