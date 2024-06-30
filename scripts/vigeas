@@ -336,7 +336,6 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
 						paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$PRIMER_SCHEME".reference.fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}'| awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
                     fi
                     Rscript $HOME/vigeas/scripts/depthCoverage.R "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination."$PRIMER_SCHEME".analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$PRIMER_SCHEME" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"
-                    sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
                     micromamba deactivate
                 fi
             done
@@ -347,6 +346,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
             done
         fi
         micromamba deactivate
+        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
         rm -rf "$ANALYSIS_DIR"/.samplesheet "$ANALYSIS_DIR"/.summary*
         end=$(date +%s.%N)
         runtime=$(python3 -c "print(${end} - ${start})")
@@ -490,14 +490,13 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                     else
                         paste <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                         seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-						paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}'| awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
+                        paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}'| awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
                     fi
-                    sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
-                    micromamba deactivate
                 done
+                micromamba deactivate
             done
         fi
-        micromamba deactivate
+        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
         rm -rf "$ANALYSIS_DIR"/.samplesheet "$ANALYSIS_DIR"/.summary "$ANALYSIS_DIR"/*.fastq.gz
         end=$(date +%s.%N)
         runtime=$(python3 -c "print(${end} - ${start})")
@@ -707,7 +706,6 @@ Options: -b STR    FOR BASECALLING: Guppy or Dorado
 						paste <(seqtk comp "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".consensus.fasta | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$REF_SEQ".reference.fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}'| awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary_sars2
                     fi
                     Rscript $HOME/vigeas/scripts/depthCoverage.R "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$ANALYSIS_DIR"/"$LIBRARY_NAME".contamination."$REF_SEQ".analysis.$(uname -n).$(date +'%Y-%m-%d').bed "$SAMPLE_ID" "$REF_SEQ" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"
-                    sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
                     micromamba deactivate
                 fi
             done
@@ -746,8 +744,9 @@ Options: -b STR    FOR BASECALLING: Guppy or Dorado
                     gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME".hiv1-coverage.contamination.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*.hiv1-coverage.contamination.pdf
                 fi
             done
+            micromamba deactivate
         fi
-        micromamba deactivate
+        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
         rm -rf "$ANALYSIS_DIR"/.summary* "$ANALYSIS_DIR"/ASSEMBLY/BC*fastq
         end=$(date +%s.%N)
         runtime=$(python3 -c "print(${end} - ${start})")
