@@ -6,7 +6,7 @@
   "description": "/home/lpmor22/vigeas/blastdb/RVOP.fasta",
   "number-of-letters": 5288244,
   "number-of-sequences": 870,
-  "last-updated": "2024-06-30T09:15:00",
+  "last-updated": "2024-06-30T09:33:00",
   "number-of-volumes": 1,
   "bytes-total": 1449817,
   "bytes-to-cache": 1334852,
