@@ -15,6 +15,7 @@ libclang-dev \
 libhdf5-dev \
 libssl-dev \
 libzstd-dev \
+pipx \
 zlib1g-dev \
 xz-utils
 
@@ -38,6 +39,7 @@ if [[ -z $(which $HOME/.local/bin/micromamba) ]]; then
     cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
     python3 setup.py install
 else
+    eval "$($HOME/micromamba/bin/micromamba shell hook -s posix)"
     if [[ -z $(micromamba env list | grep vigeas-dnap) ]]; then
         micromamba create -y -n vigeas-dnap -c conda-forge -c bioconda blast bwa fastp ivar mafft samtools seqkit
     fi
@@ -96,7 +98,7 @@ elif [[ $(dorado --version 2>&1 | awk -F+ '{print $1}') != "$DORADO_VERSION" ]];
     mv dorado-"$DORADO_VERSION"-linux-x64 ont-dorado
     export PATH=$HOME/ont-dorado/bin:$PATH
     dorado download --directory ont-dorado/models
-    pip install pod5
+    pipx install pod5
 else
     dorado --version
 fi
