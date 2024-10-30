@@ -25,33 +25,34 @@ if [[ -z $(grep vigeas ~/.[bz]shrc) ]]; then
     echo 'export PATH=$HOME/vigeas/scripts:$PATH' >> ~/.[bz]shrc
 fi
 
-if [[ -z $(which $HOME/.local/bin/micromamba) ]]; then
+if [[ -z $(command -v micromamba) ]]; then
+    export BIN_FOLDER="$HOME/micromamba/bin"
+    export INIT_YES="Y"
+    export CONDA_FORGE_YES="Y"
+    export PREFIX_LOCATION="$HOME/micromamba"
     "${SHELL}" <(curl -L micro.mamba.pm/install.sh) <<EOF
-    /$HOME/micromamba/bin/
-    Y
-    Y
-    /$HOME/micromamba
-    EOF
-    echo 'alias conda=micromamba' >> ~/.[bz]shrc
-    echo 'alias mamba=micromamba' >> ~/.[bz]shrc
-    echo 'export PATH=$HOME/micromamba/bin:$PATH' >> ~/.[bz]shrc
+"$BIN_FOLDER"
+"$INIT_YES"
+"$CONDA_FORGE_YES"
+"$PREFIX_LOCATION"
+EOF
+    echo 'alias mm="micromamba"' >> ~/.[bz]shrc
     export PATH=$HOME/micromamba/bin:$PATH
     micromamba create -y -n vigeas-dnap -c conda-forge -c bioconda blast bwa fastp ivar mafft samtools seqkit
-    micromamba create -y -n vigeas-ont -c defaults -c conda-forge -c bioconda artic-porechop=0.3.2pre artic-tools=0.2.6 bcftools=1.17 biopython=1.81 bwa=0.7.17 clint=0.5.1 htslib=1.17 keras-preprocessing=1.1.2 longshot=0.4.5 mafft medaka minimap2=2.26 multiqc=1.15 muscle=3.8 nanopolish=0.14.0 ncurses=6.4=hcb278e6_0 pandas=2.0.3 pip pyfaidx=0.6.0 pytest python=3.9.15 pysam=0.21.0 pyvcf=0.6.8 requests=2.31.0 samtools=1.17 seqkit tqdm=4.66.1
+    micromamba create -y -n vigeas-ont -c conda-forge -c bioconda artic-porechop artic-tools bcftools biopython bwa clint htslib keras-preprocessing longshot mafft medaka minimap2 multiqc muscle nanopolish ncurses pandas pip pyfaidx pytest python pysam pyvcf requests samtools seqkit tqdm
     micromamba create -y -n vigeas-rnapenr -c conda-forge -c bioconda blast bwa entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
     micromamba create -y -n vigeas-sars2 -c conda-forge -c bioconda nextclade pangolin
     micromamba create -y -n vigeas-stats -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
 #    cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
 #    python3 setup.py install
 else
-    eval "$($HOME/micromamba/bin/micromamba shell hook -s posix)"
     if [[ -z $(micromamba env list | grep vigeas-dnap) ]]; then
         micromamba create -y -n vigeas-dnap -c conda-forge -c bioconda blast bwa fastp ivar mafft samtools seqkit
     fi
     if [[ -z $(micromamba env list | grep vigeas-ont) ]]; then
-        micromamba create -y -n vigeas-ont -c defaults -c conda-forge -c bioconda artic-porechop=0.3.2pre artic-tools=0.2.6 bcftools=1.17 biopython=1.81 bwa=0.7.17 clint=0.5.1 htslib=1.17 keras-preprocessing=1.1.2 longshot=0.4.5 mafft medaka minimap2=2.26 multiqc=1.15 muscle=3.8 nanopolish=0.14.0 ncurses=6.4=hcb278e6_0 pandas=2.0.3 pip pyfaidx=0.6.0 pytest python=3.9.15 pysam=0.21.0 pyvcf=0.6.8 requests=2.31.0 samtools=1.17 seqkit tqdm=4.66.1
-        cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
-        python3 setup.py install
+        micromamba create -y -n vigeas-ont -c conda-forge -c bioconda artic-porechop artic-tools bcftools biopython bwa clint htslib keras-preprocessing longshot mafft medaka minimap2 multiqc muscle nanopolish ncurses pandas pip pyfaidx pytest python pysam pyvcf requests samtools seqkit tqdm
+#        cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
+#        python3 setup.py install
     fi
     if [[ -z $(micromamba env list | grep vigeas-rnapenr) ]]; then
         micromamba create -y -n vigeas-rnapenr -c conda-forge -c bioconda blast bwa entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
@@ -66,7 +67,7 @@ else
 fi
 
 GUPPY_VERSION=6.5.7 # Archived Software
-if [[ ! -z $(which guppy_basecaller) ]]; then
+if [[ -z $(command -v guppy_basecaller) ]]; then
     cd
     wget https://cdn.oxfordnanoportal.com/software/analysis/ont-guppy_"$GUPPY_VERSION"_linux64.tar.gz -O ont-guppy.tar.gz
     tar -vzxf ont-guppy.tar.gz
@@ -83,7 +84,7 @@ else
 fi
 
 DORADO_VERSION=0.6.0 # Updated 20 Apr 2024
-if [[ ! -z $(which dorado) ]]; then
+if [[ -z $(command -v dorado) ]]; then
     cd
     wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-"$DORADO_VERSION"-linux-x64.tar.gz -O dorado.tar.gz
     tar -vzxf dorado.tar.gz
