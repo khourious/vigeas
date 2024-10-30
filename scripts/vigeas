@@ -1,8 +1,10 @@
 #!/bin/bash
 
-UPDATED_VIGEAS=$(echo "29 Jun 2024")
+eval "$($HOME/micromamba/bin/micromamba shell hook -s posix)"
+
+UPDATED_VIGEAS=$(echo "30 Oct 2024")
 UPDATED_PRIMERS=$(echo "07 Dec 2023")
-UPDATED_PANELS=$(echo "21 Apr 2024")
+UPDATED_PANELS=$(echo "30 Oct 2024")
 
 usage() {
     echo "
@@ -32,10 +34,11 @@ Commands:
 enrichment_panels() {
     echo "
 ----------------------------------------------------
-enrichment_panel                            panel_id
+enrichment_panel                             panel_id
 ----------------------------------------------------
-Illumina Respiratory Pathogen ID/AMR Panel  RPIP
-Illumina Respiratory Virus Oligo Panel      RVOP
+Illumina Respiratory Pathogen ID/AMR Panel*  RPIP
+Illumina Respiratory Virus Oligo Panel*      RVOP
+Influenza*                                   FLU
 ----------------------------------------------------
 * Included Human Influenza Vaccine Composition available on GISAID (https://gisaid.org/resources/human-influenza-vaccine-composition)
 >> UPDATED: $UPDATED_PANELS
@@ -130,8 +133,6 @@ Options: -f STR    Path containing the *.fasta with the reference genomes
     if [[ -z "$FASTA" ]] || [[ -z "$METADATA" ]]; then
         usage_makedb
     else
-        eval "$(micromamba shell hook --shell bash)"
-        eval "$(micromamba shell hook --shell zsh)"
         micromamba activate vigeas-rnapenr
         DATABASE_NAME="$(basename "$FASTA" | awk -F/ '{print $NF}' | awk -F. '{print $1}')"
         cp "$FASTA" $HOME/vigeas/blastdb/"$DATABASE_NAME".fasta
@@ -189,8 +190,6 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
 
     bg() {
         start=$(date +%s.%N)
-        eval "$(micromamba shell hook --shell bash)"
-        eval "$(micromamba shell hook --shell zsh)"
         if [[ -z "$THREADS" ]]; then
             if ((NPROC > 2)); then
                 THREADS=$((NPROC - 2))
@@ -214,8 +213,8 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                         cp -v "$INPUT"/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
                         cp -v "$INPUT"/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
                     else
-                        cp -v "$INPUT"/"$i"*/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
-                        cp -v "$INPUT"/"$i"*/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                        cp -v "$INPUT"/"$i"_*/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                        cp -v "$INPUT"/"$i"_*/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
                     fi
                 elif [[ $(find "$INPUT" -type f -name '*_[1-2].fastq.gz') ]]; then
                     cp -v "$INPUT"/"$i"_1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
@@ -265,7 +264,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                 samtools mpileup -a --reference $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$PRIMER_SCHEME".reference.fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | ivar variants -q 20 -t 0.05 -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID" -r $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$PRIMER_SCHEME".reference.fasta -g $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$PRIMER_SCHEME".annotation.gff3
                 samtools mpileup -a --reference $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$PRIMER_SCHEME".reference.fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | ivar consensus -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH"
                 sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa
-                mafft --thread "$THREADS" --quiet --auto --keeplength --inputorder --6merpair --leavegappyregion --addfragments "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$PRIMER_SCHEME".reference.fasta | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$PRIMER_SCHEME".$(uname -n).$(date +'%Y-%m-%d').fasta
+                mafft --thread "$THREADS" --quiet --auto --inputorder --6merpair --leavegappyregion --addfragments "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".depth"$DEPTH".fa $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_DIR"/"$PRIMER_SCHEME".reference.fasta | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ANALYSIS_DIR"/"$LIBRARY_NAME".consensus."$PRIMER_SCHEME".$(uname -n).$(date +'%Y-%m-%d').fasta
                 rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
                 micromamba deactivate
                 micromamba activate vigeas-stats
@@ -279,7 +278,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                     echo -n "$PRIMER_SCHEME""_""$PRIMER_SCHEME_VER""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2
                     echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2
                     samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2
-                    samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2
+                    samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary_sars2
                     AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                     if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
                         echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary_sars2
@@ -315,7 +314,7 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                     echo -n "$PRIMER_SCHEME""_""$PRIMER_SCHEME_VER""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                     echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                     samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
-                    samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
+                    samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                     AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                     if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
                         echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
@@ -405,8 +404,6 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
 
     bg() {
         start=$(date +%s.%N)
-        eval "$(micromamba shell hook --shell bash)"
-        eval "$(micromamba shell hook --shell zsh)"
         if [[ -z "$THREADS" ]]; then
             NPROC=$(nproc)
             if ((NPROC > 2)); then
@@ -431,8 +428,8 @@ Options: -d INT    Minimum depth to variant calling [default: 10]
                         cp -v "$INPUT"/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
                         cp -v "$INPUT"/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
                     else
-                        cp -v "$INPUT"/"$i"*/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
-                        cp -v "$INPUT"/"$i"*/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                        cp -v "$INPUT"/"$i"_*/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                        cp -v "$INPUT"/"$i"_*/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
                     fi
                 elif [[ $(find "$INPUT" -type f -name '*_[1-2].fastq.gz') ]]; then
                     cp -v "$INPUT"/"$i"_1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
@@ -557,8 +554,6 @@ Options: -b STR    FOR BASECALLING: Guppy or Dorado
 
     bg() {
         start=$(date +%s.%N)
-        eval "$(micromamba shell hook --shell bash)"
-        eval "$(micromamba shell hook --shell zsh)"
         export PATH=$HOME/ont-guppy/bin:$PATH
         if [[ -z "$THREADS" ]]; then
             NPROC=$(nproc)
