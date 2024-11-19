@@ -1,8 +1,15 @@
 A10937.1	Human rhinovirus A89 (RV-A89)		
 AB012132.1	Human parainfluenza virus 3 (HPIV-3)		
 AB016162.1	Measles virus (MV)		
+AB034155.1	"Influenza C virus (ICV), strain C/Yamagata/64"	segment 7 (NS)	
 AB040874.1	Mumps virus (MuV)		
 AB084913.1	Human parechovirus 3 (HPeV-3)		
+AB126191.2	"Influenza C virus (ICV), strain C/Ann Arbor/1/50"	segment 1 (PB2)	
+AB126192.2	"Influenza C virus (ICV), strain C/Ann Arbor/1/50"	segment 2 (PB1)	
+AB126193.2	"Influenza C virus (ICV), strain C/Ann Arbor/1/50"	segment 3 (P3)	
+AB126194.2	"Influenza C virus (ICV), strain C/Ann Arbor/1/50"	segment 4 (HEF)	
+AB126195.1	"Influenza C virus (ICV), strain C/Ann Arbor/1/50"	segment 5 (NP)	
+AB126196.2	"Influenza C virus (ICV), strain C/Ann Arbor/1/50"	segment 6 (M/CM2)	
 AB252582.1	Human parechovirus 6 (HPeV-6)		
 AB333801.2	Human adenovirus 54 (HAdV-54)		
 AB426608.1	Enterovirus B98 (EV-B98)		
@@ -16,7 +23,6 @@ AC_000017.1	Human adenovirus 1 (HAdV-1)
 AC_000018.1	Human adenovirus 7 (HAdV-7)		
 AC_000019.1	Human adenovirus 35 (HAdV-35)		
 AF013254.1	Human respiratory syncytial virus type B (hRSV-B)		
-MK481079.1	Human respiratory syncytial virus type B wDup (hRSV-B)		
 AF029859.2	Echovirus 1 (E1)		
 AF039205.1	Coxsackievirus B6 (CV-B6)		
 AF055846.1	Human parechovirus 5 (HPeV-5)		
@@ -171,6 +177,8 @@ D00214.1	Enterovirus E1 (EV-E1)
 D00239.1	Human rhinovirus A1B (RV-A1B)		
 D00627.1	Coxsackievirus A9 (CV-A9)		
 D00820.1	Enterovirus D70 (EV-D70)		
+D16258.1	"Influenza C virus (ICV), strain C/Yamagata/64"	segment 6 (M/CM2)	
+D63467.1	"Influenza C virus (ICV), strain C/Yamagata/64"	segment 4 (HEF)	
 DQ086466.1	Human adenovirus 3 (HAdV-3)		
 DQ092770.1	Enterovirus F1 (EV-F1)		
 DQ092786.1	Enterovirus E3 (EV-E3)		
@@ -400,6 +408,13 @@ JQ245971.1	Human rhinovirus A106 (RV-A106)
 JQ277724.1	Enterovirus G5 (EV-G5)		
 JQ326209.1	Human adenovirus 19 (HAdV-19)		
 JQ818253.1	Enterovirus G6 (EV-G6)		
+JQ922305.1	"Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 1 (PB2)	
+JQ922306.1	"Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 2 (PB1)	
+JQ922307.1	"Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 3 (P3)	
+JQ922308.1	"Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 4 (HEF)	
+JQ922309.1	"Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 5 (NP)	
+JQ922310.1	"Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 6 (P42)	
+JQ922311.1	"Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 7 (NS)	
 JQ923422.1	Human bocavirus 1 (HBoV1)		
 JX074053.1	Human rhinovirus B102 (RV-B102)		
 JX219567.1	Human parechovirus 12 (HPeV-12)		
@@ -474,6 +489,10 @@ L19443.1	Human adenovirus 40 (HAdV-40)
 L24917.1	Human rhinovirus A16 (RV-A16)		
 LC004772.1	Human rhinovirus C56 (RV-C56)		
 LC038188.1	Enterovirus AN12  (EV-AN12)		
+LC123285.1	"Influenza C virus (ICV), strain C/Yamagata/64"	segment 1 (PB2)	
+LC123387.1	"Influenza C virus (ICV), strain C/Yamagata/64"	segment 2 (PB1)	
+LC123489.1	"Influenza C virus (ICV), strain C/Yamagata/64"	segment 3 (P3)	
+LC123724.1	"Influenza C virus (ICV), strain C/Yamagata/64"	segment 5 (NP)	
 LK021688.1	Enterovirus A120 (EV-A120)		
 M14880.1	"Influenza B virus (IBV), strain B/Lee/1940"	segment 2 (PB1)	
 M15240.2	Rubella virus (RuV)		
@@ -483,13 +502,14 @@ M26079.1	"Influenza A virus (IAV), strain A/Korea/426/1968(H2N2)"	segment 3 (PA)
 M63531.1	"Influenza A virus (IAV), strain A/Korea/426/1968(H2N2)"	segment 7 (MP)	
 M73524.1	"Influenza A virus (IAV), strain A/Korea/426/1968(H2N2)"	segment 1 (PB2)	
 M74568.1	Human respiratory syncytial virus type A (hRSV-A)		
-MN163126.1	Human respiratory syncytial virus type A wDup (hRSV-A)		
 M88483.1	Coxsackievirus B3 (CV-B3)		
 MF113370.1	Enterovirus G18 (EV-G18)		
 MF113372.1	Enterovirus G19 (EV-G19)		
 MF775367.1	Human rhinovirus C53 (RV-C53)		
 MG958646.1	Enterovirus G7 (EV-G7)		
 MH118029.1	Enterovirus B76 (EV-B76)		
+MK481079.1	Human respiratory syncytial virus type B wDup (hRSV-B)		
+MN163126.1	Human respiratory syncytial virus type A wDup (hRSV-A)		
 MN547623.1	Ruhugu virus (RuhV)		
 MN552442.2	Rustrela virus (RusV)		
 MN908947.3	Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)		
@@ -501,147 +521,6 @@ V00603.1	"Influenza A virus (IAV), strain A/Puerto Rico/8/1934(H1N1)"	segment 1 
 V01088.1	"Influenza A virus (IAV), strain A/Puerto Rico/8/1934(H1N1)"	segment 4 (HA)	
 V01099.1	"Influenza A virus (IAV), strain A/Puerto Rico/8/1934(H1N1)"	segment 7 (MP)	
 V01106.1	"Influenza A virus (IAV), strain A/Puerto Rico/8/1934(H1N1)"	segment 3 (PA)	
-X02316.1	Human rhinovirus A2 (RV-A2)		
-X04370.1	Human alphaherpesvirus 3 (HuAHV3) / Varicella-zoster virus (VZV)		
-X05690.1	Coxsackievirus B4 (CV-B4)		
-X57559.1	Human parainfluenza virus 2 (HPIV-2)		
-X73487.1	Human adenovirus 12 (HAdV-12)		
-X79047.1	Echovirus 12 (E12)		
-X80059.1	Echovirus 11 (E11)		
-X83413.2	Human betaherpesvirus 6A (HuBHV6A) / Human herpesvirus 6A (HHV6A)		
-X84981.1	Echovirus 9 (E9)		
-WSS3510989	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 5 (NP)	
-WSS3510990	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 8 (NS)	
-WSS3510991	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 7 (MP)	
-WSS3510992	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 3 (PA)	
-WSS3510993	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 1 (PB2)	
-WSS3510994	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 2 (PB1)	
-WSS3510995	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 6 (NA)	
-WSS3510996	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 4 (HA)	
-WSS3511005	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 4 (HA)	
-WSS3511006	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 7 (MP)	
-WSS3511007	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 6 (NA)	
-WSS3511008	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 5 (NP)	
-WSS3511009	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 8 (NS)	
-WSS3511010	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 3 (PA)	
-WSS3511011	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 2 (PB1)	
-WSS3511012	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 1 (PB2)	
-WSS3511013	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 1 (PB2)	
-WSS3511014	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 2 (PB1)	
-WSS3511015	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 3 (PA)	
-WSS3511016	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 4 (HA)	
-WSS3511017	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 5 (NP)	
-WSS3511018	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 6 (NA)	
-WSS3511019	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 7 (MP)	
-WSS3511020	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 8 (NS)	
-WSS3945507	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 1 (PB2)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945508	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 2 (PB1)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945509	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 3 (PA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945510	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945511	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 5 (NP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945512	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945513	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945514	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 8 (NS)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945515	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 1 (PB2)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945516	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 2 (PB1)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945517	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 3 (PA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945518	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945519	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 5 (NP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945520	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945521	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945522	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 8 (NS)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945523	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 1 (PB2)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945524	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 2 (PB1)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945525	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 3 (PA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945526	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945527	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 5 (NP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945528	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945529	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945530	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 8 (NS)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945531	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945532	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945533	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 1 (PB2)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945534	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 2 (PB1)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945535	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 3 (PA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945536	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945537	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 5 (NP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945538	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945539	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945540	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 8 (NS)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945541	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945542	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945543	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945544	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 1 (PB2)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945545	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 2 (PB1)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945546	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 3 (PA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945547	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945548	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 5 (NP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945549	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945550	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945551	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 8 (NS)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945552	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 1 (PB2)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945553	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 2 (PB1)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945554	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 3 (PA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945555	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945556	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 5 (NP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945557	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945558	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945559	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 8 (NS)	2021-2022 Northern Hemisphere Influenza Season
-WSS3945560	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
-WSS3945561	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
-WSS3945562	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
-WSS3945563	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
-WSS3945564	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
-WSS3945565	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
-WSS3945566	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
-WSS3945567	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
-WSS3945576	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
-WSS3945577	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
-WSS3945578	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
-WSS3945579	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
-WSS3945580	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
-WSS3945581	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
-WSS3945582	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
-WSS3945583	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
-WSS3945584	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
-WSS3945585	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
-WSS3945586	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
-WSS3945587	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
-WSS3945588	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
-WSS3945589	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
-WSS3945590	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
-WSS3945591	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
-WSS3945592	"Influenza B virus (IBV), Egg-based Vaccines, B/PHUKET/3073/2013"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
-WSS3945593	"Influenza B virus (IBV), Egg-based Vaccines, B/PHUKET/3073/2013"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
-WSS3945594	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
-WSS3945595	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
-WSS3945596	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
-WSS3945597	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
-WSS3945598	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
-WSS3945599	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
-WSS3945600	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
-WSS3945601	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
-WSS3945602	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
-WSS3945603	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
-WSS3945604	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
-WSS3945605	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
-WSS3945606	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
-WSS3945607	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
-WSS3945608	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
-WSS3945609	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
-WSS3945610	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
-WSS3945611	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
-WSS3945612	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
-WSS3945613	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
-WSS3945614	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
-WSS3945615	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
-WSS3945616	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
-WSS3945617	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
-WSS3945618	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
-WSS3945619	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
-WSS3945620	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
-WSS3945621	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
-WSS3945622	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
 WSS3510840	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 1 (PB2)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510841	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 2 (PB1)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510842	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 3 (PA)	2022-2023 Northern Hemisphere Influenza Season
@@ -650,24 +529,6 @@ WSS3510844	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/
 WSS3510845	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 6 (NA)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510846	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 7 (MP)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510847	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 8 (NS)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510848	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 1 (PB2)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510849	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 2 (PB1)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510850	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 3 (PA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510851	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 4 (HA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510852	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 5 (NP)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510853	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 6 (NA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510854	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 7 (MP)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510855	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 8 (NS)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510856	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 1 (PB2)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510857	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 2 (PB1)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510858	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510859	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510860	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510861	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510862	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510863	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510864	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510865	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510866	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 1 (PB2)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510867	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 2 (PB1)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510868	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 3 (PA)	2022-2023 Northern Hemisphere Influenza Season
@@ -684,64 +545,13 @@ WSS3510878	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain
 WSS3510879	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 6 (NA)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510880	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 7 (MP)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510881	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 8 (NS)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510882	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510883	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510884	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510885	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510886	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510887	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510888	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 1 (PB2)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510889	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 2 (PB1)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510890	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 3 (PA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510891	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510892	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 5 (NP)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510893	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510894	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 7 (MP)	2022-2023 Northern Hemisphere Influenza Season
-WSS3510895	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 8 (NS)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510896	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Sydney/5/2021(H1N1)"	segment 4 (HA)	2023 Southern Hemisphere Influenza Season
 WSS3510897	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Sydney/5/2021(H1N1)"	segment 6 (NA)	2023 Southern Hemisphere Influenza Season
-WSS3510898	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 1 (PB2)	2023 Southern Hemisphere Influenza Season
-WSS3510899	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 2 (PB1)	2023 Southern Hemisphere Influenza Season
-WSS3510900	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 3 (PA)	2023 Southern Hemisphere Influenza Season
-WSS3510901	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 4 (HA)	2023 Southern Hemisphere Influenza Season
-WSS3510902	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 5 (NP)	2023 Southern Hemisphere Influenza Season
-WSS3510903	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 6 (NA)	2023 Southern Hemisphere Influenza Season
-WSS3510904	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 7 (MP)	2023 Southern Hemisphere Influenza Season
-WSS3510905	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 8 (NS)	2023 Southern Hemisphere Influenza Season
-WSS3510906	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 1 (PB2)	2023 Southern Hemisphere Influenza Season
-WSS3510907	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 2 (PB1)	2023 Southern Hemisphere Influenza Season
-WSS3510908	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2023 Southern Hemisphere Influenza Season
-WSS3510909	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2023 Southern Hemisphere Influenza Season
-WSS3510910	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2023 Southern Hemisphere Influenza Season
-WSS3510911	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2023 Southern Hemisphere Influenza Season
-WSS3510912	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2023 Southern Hemisphere Influenza Season
-WSS3510913	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2023 Southern Hemisphere Influenza Season
-WSS3510914	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2023 Southern Hemisphere Influenza Season
-WSS3510915	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2023 Southern Hemisphere Influenza Season
 WSS3510916	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Sydney/5/2021(H1N1)"	segment 4 (HA)	2023 Southern Hemisphere Influenza Season
 WSS3510917	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Sydney/5/2021(H1N1)"	segment 6 (NA)	2023 Southern Hemisphere Influenza Season
 WSS3510918	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Sydney/5/2021(H1N1)"	segment 7 (MP)	2023 Southern Hemisphere Influenza Season
-WSS3510919	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 1 (PB2)	2023 Southern Hemisphere Influenza Season
 WSS3510920	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 2 (PB1)	2023 Southern Hemisphere Influenza Season
 WSS3510921	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 4 (HA)	2023 Southern Hemisphere Influenza Season
-WSS3510922	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 5 (NP)	2023 Southern Hemisphere Influenza Season
-WSS3510923	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 6 (NA)	2023 Southern Hemisphere Influenza Season
-WSS3510924	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 7 (MP)	2023 Southern Hemisphere Influenza Season
-WSS3510925	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 8 (NS)	2023 Southern Hemisphere Influenza Season
-WSS3510926	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2023 Southern Hemisphere Influenza Season
-WSS3510927	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2023 Southern Hemisphere Influenza Season
-WSS3510928	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2023 Southern Hemisphere Influenza Season
-WSS3510929	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2023 Southern Hemisphere Influenza Season
-WSS3510930	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2023 Southern Hemisphere Influenza Season
-WSS3510931	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2023 Southern Hemisphere Influenza Season
-WSS3510932	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 1 (PB2)	2023 Southern Hemisphere Influenza Season
-WSS3510933	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 2 (PB1)	2023 Southern Hemisphere Influenza Season
-WSS3510934	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 3 (PA)	2023 Southern Hemisphere Influenza Season
-WSS3510935	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2023 Southern Hemisphere Influenza Season
-WSS3510936	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 5 (NP)	2023 Southern Hemisphere Influenza Season
-WSS3510937	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2023 Southern Hemisphere Influenza Season
-WSS3510938	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 7 (MP)	2023 Southern Hemisphere Influenza Season
-WSS3510939	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 8 (NS)	2023 Southern Hemisphere Influenza Season
 WSS3510940	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/4897/2022(H1N1)"	segment 4 (HA)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510941	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/4897/2022(H1N1)"	segment 6 (NA)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510942	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 1 (PB2)	2023-2024 Northern Hemisphere Influenza Season
@@ -771,18 +581,12 @@ WSS3510965	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain
 WSS3510966	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 7 (MP)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510967	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 8 (NS)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510968	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 1 (PB2)	2023-2024 Northern Hemisphere Influenza Season
-WSS3510969	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 2 (PB1)	2023-2024 Northern Hemisphere Influenza Season
-WSS3510970	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 4 (HA)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510971	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 5 (NP)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510972	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 6 (NA)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510973	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 7 (MP)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510974	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 8 (NS)	2023-2024 Northern Hemisphere Influenza Season
-WSS3510975	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2023-2024 Northern Hemisphere Influenza Season
-WSS3510976	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510977	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2023-2024 Northern Hemisphere Influenza Season
-WSS3510978	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510979	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2023-2024 Northern Hemisphere Influenza Season
-WSS3510980	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510981	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 1 (PB2)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510982	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 2 (PB1)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510983	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 3 (PA)	2023-2024 Northern Hemisphere Influenza Season
@@ -791,91 +595,144 @@ WSS3510985	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain
 WSS3510986	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510987	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 7 (MP)	2023-2024 Northern Hemisphere Influenza Season
 WSS3510988	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 8 (NS)	2023-2024 Northern Hemisphere Influenza Season
-WSS3945623	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/4897/2022(H1N1)"	segment 4 (HA)	2024 Southern Hemisphere Influenza Season
-WSS3945624	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/4897/2022(H1N1)"	segment 6 (NA)	2024 Southern Hemisphere Influenza Season
+WSS3510989	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 5 (NP)	
+WSS3510990	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 8 (NS)	
+WSS3510991	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 7 (MP)	
+WSS3510992	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 3 (PA)	
+WSS3510993	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 1 (PB2)	
+WSS3510994	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 2 (PB1)	
+WSS3510995	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 6 (NA)	
+WSS3510996	"Influenza A virus (IAV), strain A/Sydney/5/2021(H1N1)"	segment 4 (HA)	
+WSS3511005	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 4 (HA)	
+WSS3511006	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 7 (MP)	
+WSS3511007	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 6 (NA)	
+WSS3511008	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 5 (NP)	
+WSS3511009	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 8 (NS)	
+WSS3511010	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 3 (PA)	
+WSS3511011	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 2 (PB1)	
+WSS3511012	"Influenza A virus (IAV), strain A/Blackwood/1563/2021(H3N2)"	segment 1 (PB2)	
+WSS3511013	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 1 (PB2)	
+WSS3511014	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 2 (PB1)	
+WSS3511015	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 3 (PA)	
+WSS3511016	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 4 (HA)	
+WSS3511017	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 5 (NP)	
+WSS3511018	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 6 (NA)	
+WSS3511019	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 7 (MP)	
+WSS3511020	"Influenza A virus (IAV), strain A/Acre/182037-IEC/2022(H3N2)"	segment 8 (NS)	
+WSS3945515	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 1 (PB2)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945516	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 2 (PB1)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945517	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 3 (PA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945518	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945519	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 5 (NP)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945520	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945521	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945522	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 8 (NS)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945523	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 1 (PB2)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945524	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 2 (PB1)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945525	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 3 (PA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945526	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945527	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 5 (NP)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945528	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945529	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 7 (MP)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945530	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Washington/02/2019"	segment 8 (NS)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945541	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945542	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Cambodia/e0826360/2020(H3N2)"	segment 6 (NA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945547	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Washington/02/2019"	segment 4 (HA)	2021-2022 Northern Hemisphere Influenza Season
+WSS3945560	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
+WSS3945561	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
+WSS3945562	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
+WSS3945563	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
+WSS3945564	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
+WSS3945565	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
+WSS3945566	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
+WSS3945567	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/2570/2019(H1N1)"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
+WSS3945576	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
+WSS3945577	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
+WSS3945578	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
+WSS3945579	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
+WSS3945580	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
+WSS3945581	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
+WSS3945582	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
+WSS3945583	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Darwin/9/2021(H3N2)"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
+WSS3945594	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
+WSS3945595	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
+WSS3945596	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 3 (PA)	2022 Southern Hemisphere Influenza Season
+WSS3945597	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
+WSS3945598	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
+WSS3945599	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
+WSS3945600	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
+WSS3945601	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/588/2019(H1N1)"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
+WSS3945602	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 1 (PB2)	2022 Southern Hemisphere Influenza Season
+WSS3945603	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 2 (PB1)	2022 Southern Hemisphere Influenza Season
+WSS3945604	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 4 (HA)	2022 Southern Hemisphere Influenza Season
+WSS3945605	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 5 (NP)	2022 Southern Hemisphere Influenza Season
+WSS3945606	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 6 (NA)	2022 Southern Hemisphere Influenza Season
+WSS3945607	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 7 (MP)	2022 Southern Hemisphere Influenza Season
+WSS3945608	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Darwin/6/2021(H3N2)"	segment 8 (NS)	2022 Southern Hemisphere Influenza Season
 WSS3945625	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Thailand/8/2022(H3N2)"	segment 4 (HA)	2024 Southern Hemisphere Influenza Season
 WSS3945626	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Thailand/8/2022(H3N2)"	segment 6 (NA)	2024 Southern Hemisphere Influenza Season
-WSS3945627	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 1 (PB2)	2024 Southern Hemisphere Influenza Season
-WSS3945628	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 2 (PB1)	2024 Southern Hemisphere Influenza Season
-WSS3945629	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2024 Southern Hemisphere Influenza Season
-WSS3945630	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2024 Southern Hemisphere Influenza Season
-WSS3945631	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2024 Southern Hemisphere Influenza Season
-WSS3945632	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2024 Southern Hemisphere Influenza Season
-WSS3945633	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2024 Southern Hemisphere Influenza Season
-WSS3945634	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2024 Southern Hemisphere Influenza Season
-WSS3945657	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2024 Southern Hemisphere Influenza Season
-WSS3945658	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2024 Southern Hemisphere Influenza Season
-WSS3945635	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 1 (PB2)	2024 Southern Hemisphere Influenza Season
-WSS3945636	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 2 (PB1)	2024 Southern Hemisphere Influenza Season
-WSS3945637	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 3 (PA)	2024 Southern Hemisphere Influenza Season
-WSS3945638	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 4 (HA)	2024 Southern Hemisphere Influenza Season
-WSS3945639	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 5 (NP)	2024 Southern Hemisphere Influenza Season
-WSS3945640	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 6 (NA)	2024 Southern Hemisphere Influenza Season
-WSS3945641	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 7 (MP)	2024 Southern Hemisphere Influenza Season
-WSS3945642	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 8 (NS)	2024 Southern Hemisphere Influenza Season
-WSS3945643	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 1 (PB2)	2024 Southern Hemisphere Influenza Season
 WSS3945644	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 2 (PB1)	2024 Southern Hemisphere Influenza Season
 WSS3945645	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 3 (PA)	2024 Southern Hemisphere Influenza Season
 WSS3945646	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 4 (HA)	2024 Southern Hemisphere Influenza Season
-WSS3945647	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 5 (NP)	2024 Southern Hemisphere Influenza Season
 WSS3945648	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 6 (NA)	2024 Southern Hemisphere Influenza Season
 WSS3945649	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 7 (MP)	2024 Southern Hemisphere Influenza Season
-WSS3945650	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 8 (NS)	2024 Southern Hemisphere Influenza Season
 WSS3945651	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2024 Southern Hemisphere Influenza Season
-WSS3945652	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2024 Southern Hemisphere Influenza Season
-WSS3945653	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2024 Southern Hemisphere Influenza Season
-WSS3945654	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2024 Southern Hemisphere Influenza Season
-WSS3945655	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2024 Southern Hemisphere Influenza Season
-WSS3945656	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2024 Southern Hemisphere Influenza Season
-WSS3945659	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 1 (PB2)	2024 Southern Hemisphere Influenza Season
-WSS3945660	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 2 (PB1)	2024 Southern Hemisphere Influenza Season
-WSS3945661	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 3 (PA)	2024 Southern Hemisphere Influenza Season
-WSS3945662	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2024 Southern Hemisphere Influenza Season
-WSS3945663	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 5 (NP)	2024 Southern Hemisphere Influenza Season
-WSS3945664	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2024 Southern Hemisphere Influenza Season
-WSS3945665	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 7 (MP)	2024 Southern Hemisphere Influenza Season
-WSS3945666	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 8 (NS)	2024 Southern Hemisphere Influenza Season
-WSS3945667	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/4897/2022(H1N1)"	segment 4 (HA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945668	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/4897/2022(H1N1)"	segment 6 (NA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945669	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Thailand/8/2022(H3N2)"	segment 4 (HA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945670	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Thailand/8/2022(H3N2)"	segment 6 (NA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945671	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 1 (PB2)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945672	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 2 (PB1)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945673	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945674	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945675	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945676	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945677	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945678	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945701	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945702	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945679	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 1 (PB2)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945680	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 2 (PB1)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945681	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 3 (PA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945682	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 4 (HA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945683	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 5 (NP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945684	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 6 (NA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945685	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 7 (MP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945686	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 8 (NS)	2024-2025 Northern Hemisphere Influenza Season
 WSS3945687	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 1 (PB2)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945688	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 2 (PB1)	2024-2025 Northern Hemisphere Influenza Season
 WSS3945689	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 3 (PA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945690	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 4 (HA)	2024-2025 Northern Hemisphere Influenza Season
 WSS3945691	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 5 (NP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945692	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 6 (NA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945693	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 7 (MP)	2024-2025 Northern Hemisphere Influenza Season
 WSS3945694	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Massachusetts/18/2022(H3N2)"	segment 8 (NS)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945695	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945696	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945697	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945698	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945699	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945700	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945703	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 1 (PB2)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945704	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 2 (PB1)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945705	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 3 (PA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945706	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945707	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 5 (NP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945708	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945709	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 7 (MP)	2024-2025 Northern Hemisphere Influenza Season
-WSS3945710	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 8 (NS)	2024-2025 Northern Hemisphere Influenza Season
+WSS4402540	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/4897/2022(H1N1)"	segment 6 (NA)	2025 Southern Hemisphere Influenza Season
+WSS4402541	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Victoria/4897/2022(H1N1)"	segment 4 (HA)	2025 Southern Hemisphere Influenza Season
+WSS4402542	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Croatia/10136RV/2023(H3N2)"	segment 6 (NA)	2025 Southern Hemisphere Influenza Season
+WSS4402543	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Croatia/10136RV/2023(H3N2)"	segment 3 (PA)	2025 Southern Hemisphere Influenza Season
+WSS4402544	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Croatia/10136RV/2023(H3N2)"	segment 4 (HA)	2025 Southern Hemisphere Influenza Season
+WSS4402545	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Croatia/10136RV/2023(H3N2)"	segment 5 (NP)	2025 Southern Hemisphere Influenza Season
+WSS4402546	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Croatia/10136RV/2023(H3N2)"	segment 2 (PB1)	2025 Southern Hemisphere Influenza Season
+WSS4402547	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Croatia/10136RV/2023(H3N2)"	segment 8 (NS)	2025 Southern Hemisphere Influenza Season
+WSS4402548	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Croatia/10136RV/2023(H3N2)"	segment 1 (PB2)	2025 Southern Hemisphere Influenza Season
+WSS4402549	"Influenza A virus (IAV), Egg-based Vaccines, strain A/Croatia/10136RV/2023(H3N2)"	segment 7 (MP)	2025 Southern Hemisphere Influenza Season
+WSS4402550	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 4 (HA)	2025 Southern Hemisphere Influenza Season
+WSS4402551	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 6 (NA)	2025 Southern Hemisphere Influenza Season
+WSS4402552	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 8 (NS)	2025 Southern Hemisphere Influenza Season
+WSS4402553	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2025 Southern Hemisphere Influenza Season
+WSS4402554	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2025 Southern Hemisphere Influenza Season
+WSS4402555	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 2 (PB1)	2025 Southern Hemisphere Influenza Season
+WSS4402556	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 1 (PB2)	2025 Southern Hemisphere Influenza Season
+WSS4402557	"Influenza B virus (IBV), Egg-based Vaccines, strain B/Austria/1359417/2021"	segment 3 (PA)	2025 Southern Hemisphere Influenza Season
+WSS4402558	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 5 (NP)	2025 Southern Hemisphere Influenza Season
+WSS4402559	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 8 (NS)	2025 Southern Hemisphere Influenza Season
+WSS4402560	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 7 (MP)	2025 Southern Hemisphere Influenza Season
+WSS4402561	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 6 (NA)	2025 Southern Hemisphere Influenza Season
+WSS4402562	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 4 (HA)	2025 Southern Hemisphere Influenza Season
+WSS4402563	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 3 (PA)	2025 Southern Hemisphere Influenza Season
+WSS4402564	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 1 (PB2)	2025 Southern Hemisphere Influenza Season
+WSS4402565	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/Wisconsin/67/2022(H1N1)"	segment 2 (PB1)	2025 Southern Hemisphere Influenza Season
+WSS4402566	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/District_Of_Columbia/27/2023(H3N2)"	segment 6 (NA)	2025 Southern Hemisphere Influenza Season
+WSS4402567	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/District_Of_Columbia/27/2023(H3N2)"	segment 3 (PA)	2025 Southern Hemisphere Influenza Season
+WSS4402568	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/District_Of_Columbia/27/2023(H3N2)"	segment 4 (HA)	2025 Southern Hemisphere Influenza Season
+WSS4402569	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/District_Of_Columbia/27/2023(H3N2)"	segment 5 (NP)	2025 Southern Hemisphere Influenza Season
+WSS4402570	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/District_Of_Columbia/27/2023(H3N2)"	segment 2 (PB1)	2025 Southern Hemisphere Influenza Season
+WSS4402571	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/District_Of_Columbia/27/2023(H3N2)"	segment 8 (NS)	2025 Southern Hemisphere Influenza Season
+WSS4402572	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/District_Of_Columbia/27/2023(H3N2)"	segment 1 (PB2)	2025 Southern Hemisphere Influenza Season
+WSS4402573	"Influenza A virus (IAV), Cell- or recombinant-based Vaccines, strain A/District_Of_Columbia/27/2023(H3N2)"	segment 7 (MP)	2025 Southern Hemisphere Influenza Season
+WSS4402578	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 7 (MP)	2025 Southern Hemisphere Influenza Season
+WSS4402579	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/Austria/1359417/2021"	segment 5 (NP)	2025 Southern Hemisphere Influenza Season
+WSS4402580	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2025 Southern Hemisphere Influenza Season
+WSS4402581	"Influenza B virus (IBV), Egg-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2025 Southern Hemisphere Influenza Season
+WSS4402582	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 5 (NP)	2025 Southern Hemisphere Influenza Season
+WSS4402583	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 8 (NS)	2025 Southern Hemisphere Influenza Season
+WSS4402584	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 7 (MP)	2025 Southern Hemisphere Influenza Season
+WSS4402585	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 3 (PA)	2025 Southern Hemisphere Influenza Season
+WSS4402586	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 1 (PB2)	2025 Southern Hemisphere Influenza Season
+WSS4402587	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 2 (PB1)	2025 Southern Hemisphere Influenza Season
+WSS4402588	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 6 (NA)	2025 Southern Hemisphere Influenza Season
+WSS4402589	"Influenza B virus (IBV), Cell- or recombinant-based Vaccines, strain B/PHUKET/3073/2013"	segment 4 (HA)	2025 Southern Hemisphere Influenza Season
+X02316.1	Human rhinovirus A2 (RV-A2)		
+X04370.1	Human alphaherpesvirus 3 (HuAHV3) / Varicella-zoster virus (VZV)		
+X05690.1	Coxsackievirus B4 (CV-B4)		
+X57559.1	Human parainfluenza virus 2 (HPIV-2)		
+X73487.1	Human adenovirus 12 (HAdV-12)		
+X79047.1	Echovirus 12 (E12)		
+X80059.1	Echovirus 11 (E11)		
+X83413.2	Human betaherpesvirus 6A (HuBHV6A) / Human herpesvirus 6A (HHV6A)		
+X84981.1	Echovirus 9 (E9)		
