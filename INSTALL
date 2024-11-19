@@ -38,24 +38,20 @@ if [[ -z $(command -v micromamba) ]]; then
 EOF
     echo 'alias mm="micromamba"' >> ~/.[bz]shrc
     export PATH=$HOME/micromamba/bin:$PATH
-    micromamba create -y -n vigeas-dnap -c conda-forge -c bioconda blast bwa fastp ivar mafft samtools seqkit
+    micromamba create -y -n vigeas-ill -c conda-forge -c bioconda bbmap blast bwa-mem2 entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
     micromamba create -y -n vigeas-ont -c conda-forge -c bioconda artic-porechop artic-tools bcftools biopython bwa clint htslib keras-preprocessing longshot mafft medaka minimap2 multiqc muscle nanopolish ncurses pandas pip pyfaidx pytest python pysam pyvcf requests samtools seqkit tqdm
-    micromamba create -y -n vigeas-rnapenr -c conda-forge -c bioconda blast bwa entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
     micromamba create -y -n vigeas-sars2 -c conda-forge -c bioconda nextclade pangolin
     micromamba create -y -n vigeas-stats -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
 #    cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
 #    python3 setup.py install
 else
-    if [[ -z $(micromamba env list | grep vigeas-dnap) ]]; then
-        micromamba create -y -n vigeas-dnap -c conda-forge -c bioconda blast bwa fastp ivar mafft samtools seqkit
+    if [[ -z $(micromamba env list | grep vigeas-ill) ]]; then
+        micromamba create -y -n vigeas-ill -c conda-forge -c bioconda bbmap blast bwa-mem2 entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
     fi
     if [[ -z $(micromamba env list | grep vigeas-ont) ]]; then
         micromamba create -y -n vigeas-ont -c conda-forge -c bioconda artic-porechop artic-tools bcftools biopython bwa clint htslib keras-preprocessing longshot mafft medaka minimap2 multiqc muscle nanopolish ncurses pandas pip pyfaidx pytest python pysam pyvcf requests samtools seqkit tqdm
 #        cd; git clone https://github.com/artic-network/fieldbioinformatics; cd fieldbioinformatics
 #        python3 setup.py install
-    fi
-    if [[ -z $(micromamba env list | grep vigeas-rnapenr) ]]; then
-        micromamba create -y -n vigeas-rnapenr -c conda-forge -c bioconda blast bwa entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
     fi
     if [[ -z $(micromamba env list | grep vigeas-sars2) ]]; then
         micromamba create -y -n vigeas-sars2 -c conda-forge -c bioconda nextclade pangolin
@@ -83,7 +79,7 @@ else
     guppy_basecaller --version
 fi
 
-DORADO_VERSION=0.6.0 # Updated 20 Apr 2024
+DORADO_VERSION=0.8.3 # Updated 20 Apr 2024
 if [[ -z $(command -v dorado) ]]; then
     cd
     wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-"$DORADO_VERSION"-linux-x64.tar.gz -O dorado.tar.gz
