@@ -6,7 +6,7 @@
   "description": "/home/lpmor22/vigeas/blastdb/DENGUESEQPAN.fasta",
   "number-of-letters": 42814,
   "number-of-sequences": 4,
-  "last-updated": "2024-06-30T09:29:00",
+  "last-updated": "2024-11-18T23:27:00",
   "number-of-volumes": 1,
   "bytes-total": 48126,
   "bytes-to-cache": 10894,
