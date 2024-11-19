@@ -1,7 +1,6 @@
+*.0123
 *.amb
 *.ann
-*.bwt
-*.fai
+*.bwt.2bit.64
 *.pac
-*.sa
 scripts/depthCovCreate.R
