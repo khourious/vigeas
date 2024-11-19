@@ -1,3 +1,6 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
 ##sequence-region MT903345.1 1 197205
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=10244
 MT903345.1	Genbank	region	1	197205	.	+	.	ID=MT903345.1:1..197205;Dbxref=taxon:10244;country=United Kingdom: Great Britain;gbkey=Src;genome=genomic;isolate=MPXV-UK_P3;mol_type=genomic DNA;nat-host=Homo sapiens

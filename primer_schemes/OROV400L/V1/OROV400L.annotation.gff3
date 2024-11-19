@@ -1,3 +1,6 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
 ##sequence-region KP691612.1 1 6852
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=118655
 KP691612.1	Genbank	region	1	6852	.	+	.	ID=KP691612.1:1..6852;Dbxref=taxon:118655;Name=L;collection-date=24-Jul-2009;country=Brazil;gbkey=Src;genome=genomic;isolate=BeH759025;mol_type=viral cRNA;nat-host=Homo sapiens;segment=L

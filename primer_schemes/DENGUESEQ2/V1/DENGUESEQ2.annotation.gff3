@@ -1,3 +1,6 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
 ##sequence-region NC_001474.2 1 10723
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=11060
 NC_001474.2	RefSeq	region	1	10723	.	+	.	ID=NC_001474.2:1..10723;Dbxref=taxon:11060;collection-date=1964;country=Thailand;gbkey=Src;genome=genomic;mol_type=genomic RNA;strain=16681
@@ -7,7 +10,7 @@ NC_001474.2	RefSeq	regulatory_region	71	80	.	+	.	ID=id-NC_001474.2:71..80;Note=o
 NC_001474.2	RefSeq	promoter	81	96	.	+	.	ID=id-NC_001474.2:81..96;Note=5' upstream AUG region (UAR);gbkey=regulatory;regulatory_class=promoter
 NC_001474.2	RefSeq	stem_loop	81	95	.	+	.	ID=id-NC_001474.2:81..95;Note=stem-loop B (SLB);gbkey=stem_loop
 NC_001474.2	RefSeq	gene	97	10272	.	+	.	ID=gene-DENV_gp1;Dbxref=GeneID:1494449;Name=POLY;gbkey=Gene;gene=POLY;gene_biotype=protein_coding;gene_synonym=polyprotein gene;locus_tag=DENV_gp1
-NC_001474.2	RefSeq	CDS	97	10272	.	+	0	ID=cds-NP_056776.2;Parent=gene-DENV_gp1;Dbxref=Genbank:NP_056776.2,GeneID:1494449;Name=NP_056776.2;Note=contains structural proteins%2C C-prM/M-E and non-structural proteins%2C NS1-NS2A/B-NS3-NS4A/B-NS5;gbkey=CDS;gene=POLY;locus_tag=DENV_gp1;product=polyprotein;protein_id=NP_056776.2
+NC_001474.2	RefSeq	CDS	97	10272	.	+	0	ID=cds-NP_056776.2;Parent=gene-DENV_gp1;Dbxref=GenBank:NP_056776.2,GeneID:1494449;Name=NP_056776.2;Note=contains structural proteins%2C C-prM/M-E and non-structural proteins%2C NS1-NS2A/B-NS3-NS4A/B-NS5;gbkey=CDS;gene=POLY;locus_tag=DENV_gp1;product=polyprotein;protein_id=NP_056776.2
 NC_001474.2	RefSeq	mature_protein_region_of_CDS	97	438	.	+	.	ID=id-NP_056776.2:1..114;Dbxref=VBRC:35917;Parent=cds-NP_056776.2;gbkey=Prot;product=anchored capsid protein ancC;protein_id=NP_739581.2
 NC_001474.2	RefSeq	mature_protein_region_of_CDS	97	396	.	+	.	ID=id-NP_056776.2:1..100;Dbxref=VBRC:35918;Parent=cds-NP_056776.2;gbkey=Prot;product=capsid protein C;protein_id=NP_739591.2
 NC_001474.2	RefSeq	mature_protein_region_of_CDS	439	936	.	+	.	ID=id-NP_056776.2:115..280;Dbxref=VBRC:35919;Parent=cds-NP_056776.2;gbkey=Prot;product=membrane glycoprotein precursor prM;protein_id=NP_739582.2

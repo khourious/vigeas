@@ -1,3 +1,6 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
 ##sequence-region KP691622.1 1 4385
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=118655
 KP691622.1	Genbank	region	1	4385	.	+	.	ID=KP691622.1:1..4385;Dbxref=taxon:118655;Name=M;collection-date=23-Jun-2009;country=Brazil;gbkey=Src;genome=genomic;isolate=BeH759620;mol_type=viral cRNA;nat-host=Homo sapiens;segment=M

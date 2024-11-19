@@ -1,3 +1,6 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
 ##sequence-region KP164568.1 1 11812
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=37124
 KP164568.1	Genbank	region	1	11812	.	+	.	ID=KP164568.1:1..11812;Dbxref=taxon:37124;collection-date=26-Aug-2014;country=Brazil: Feira de Santana-BA;gbkey=Src;isolate=BHI3734/H804698;lat-lon=12.24 S 38.97 W;mol_type=genomic RNA;nat-host=Homo sapiens

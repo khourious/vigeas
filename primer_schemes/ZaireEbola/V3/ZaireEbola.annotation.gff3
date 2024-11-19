@@ -1,3 +1,6 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
 ##sequence-region KR063671.1 1 18957
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1570291
 KR063671.1	Genbank	region	1	18957	.	+	.	ID=KR063671.1:1..18957;Dbxref=taxon:1570291;collection-date=01-Oct-1976;country=Democratic Republic of the Congo;gb-acronym=EBOV;gbkey=Src;genome=genomic;genotype=7U;isolate=Ebola virus/H.sapiens-tc/COD/1976/Yambuku-Mayinga;lab-host=VeroE6 cells;mol_type=viral cRNA;nat-host=Homo sapiens%3B sex: F%3B age: 23Y

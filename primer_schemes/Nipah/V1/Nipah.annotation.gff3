@@ -1,16 +1,19 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
 ##sequence-region AJ564622.1 1 18246
-##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=121791
-AJ564622.1	EMBL	region	1	18246	.	+	.	ID=AJ564622.1:1..18246;Dbxref=taxon:121791;gbkey=Src;isolate=NV/MY/99/VRI-1413;mol_type=genomic RNA;old-name=Nipah virus
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3052225
+AJ564622.1	EMBL	region	1	18246	.	+	.	ID=AJ564622.1:1..18246;Dbxref=taxon:3052225;gbkey=Src;isolate=NV/MY/99/VRI-1413;mol_type=genomic RNA
 AJ564622.1	EMBL	gene	113	1711	.	+	.	ID=gene-N;Name=N;gbkey=Gene;gene=N;gene_biotype=protein_coding
-AJ564622.1	EMBL	CDS	113	1711	.	+	0	ID=cds-CAD92353.1;Parent=gene-N;Dbxref=GOA:Q9IK92,InterPro:IPR002021,UniProtKB/Swiss-Prot:Q9IK92,NCBI_GP:CAD92353.1;Name=CAD92353.1;gbkey=CDS;gene=N;product=nucleocapsid protein;protein_id=CAD92353.1
+AJ564622.1	EMBL	CDS	113	1711	.	+	0	ID=cds-CAD92353.1;Parent=gene-N;Dbxref=GOA:Q9IK92,InterPro:IPR002021,PDB:4CO6,UniProtKB/Swiss-Prot:Q9IK92,NCBI_GP:CAD92353.1;Name=CAD92353.1;gbkey=CDS;gene=N;product=nucleocapsid protein;protein_id=CAD92353.1
 AJ564622.1	EMBL	gene	2406	4535	.	+	.	ID=gene-P;Name=P;gbkey=Gene;gene=P;gene_biotype=protein_coding
-AJ564622.1	EMBL	CDS	2406	4535	.	+	0	ID=cds-CAD92354.1;Parent=gene-P;Dbxref=GOA:Q9IK91,InterPro:IPR004897,UniProtKB/Swiss-Prot:Q9IK91,NCBI_GP:CAD92354.1;Name=CAD92354.1;gbkey=CDS;gene=P;product=phosphoprotein;protein_id=CAD92354.1
+AJ564622.1	EMBL	CDS	2406	4535	.	+	0	ID=cds-CAD92354.1;Parent=gene-P;Dbxref=GOA:Q9IK91,InterPro:IPR004897,InterPro:IPR025909,InterPro:IPR028243,InterPro:IPR035430,PDB:4CO6,PDB:4GJW,PDB:6EB8,PDB:6EB9,UniProtKB/Swiss-Prot:Q9IK91,NCBI_GP:CAD92354.1;Name=CAD92354.1;gbkey=CDS;gene=P;product=phosphoprotein;protein_id=CAD92354.1
 AJ564622.1	EMBL	gene	5108	6166	.	+	.	ID=gene-M;Name=M;gbkey=Gene;gene=M;gene_biotype=protein_coding
-AJ564622.1	EMBL	CDS	5108	6166	.	+	0	ID=cds-CAD92355.1;Parent=gene-M;Dbxref=GOA:Q9IK90,InterPro:IPR000982,UniProtKB/Swiss-Prot:Q9IK90,NCBI_GP:CAD92355.1;Name=CAD92355.1;gbkey=CDS;gene=M;product=matrix protein;protein_id=CAD92355.1
+AJ564622.1	EMBL	CDS	5108	6166	.	+	0	ID=cds-CAD92355.1;Parent=gene-M;Dbxref=GOA:Q9IK90,InterPro:IPR000982,InterPro:IPR042539,InterPro:IPR042540,UniProtKB/Swiss-Prot:Q9IK90,NCBI_GP:CAD92355.1;Name=CAD92355.1;gbkey=CDS;gene=M;product=matrix protein;protein_id=CAD92355.1
 AJ564622.1	EMBL	gene	6654	8294	.	+	.	ID=gene-F;Name=F;gbkey=Gene;gene=F;gene_biotype=protein_coding
-AJ564622.1	EMBL	CDS	6654	8294	.	+	0	ID=cds-CAD92356.1;Parent=gene-F;Dbxref=GOA:Q9IH63,InterPro:IPR000776,PDB:1WP7,UniProtKB/Swiss-Prot:Q9IH63,NCBI_GP:CAD92356.1;Name=CAD92356.1;gbkey=CDS;gene=F;product=fusion protein;protein_id=CAD92356.1
+AJ564622.1	EMBL	CDS	6654	8294	.	+	0	ID=cds-CAD92356.1;Parent=gene-F;Dbxref=GOA:Q9IH63,InterPro:IPR000776,PDB:1WP7,PDB:3N27,PDB:5EVM,UniProtKB/Swiss-Prot:Q9IH63,NCBI_GP:CAD92356.1;Name=CAD92356.1;gbkey=CDS;gene=F;product=fusion protein;protein_id=CAD92356.1
 AJ564622.1	EMBL	gene	8943	10751	.	+	.	ID=gene-G;Name=G;gbkey=Gene;gene=G;gene_biotype=protein_coding
-AJ564622.1	EMBL	CDS	8943	10751	.	+	0	ID=cds-CAD92357.1;Parent=gene-G;Dbxref=GOA:Q9IH62,InterPro:IPR000665,InterPro:IPR011040,InterPro:IPR016285,PDB:2VSM,PDB:2VWD,PDB:3D11,PDB:3D12,UniProtKB/Swiss-Prot:Q9IH62,NCBI_GP:CAD92357.1;Name=CAD92357.1;gbkey=CDS;gene=G;product=glycoprotein;protein_id=CAD92357.1
+AJ564622.1	EMBL	CDS	8943	10751	.	+	0	ID=cds-CAD92357.1;Parent=gene-G;Dbxref=GOA:Q9IH62,InterPro:IPR000665,InterPro:IPR016285,InterPro:IPR036278,PDB:2VSM,PDB:2VWD,PDB:3D11,PDB:3D12,UniProtKB/Swiss-Prot:Q9IH62,NCBI_GP:CAD92357.1;Name=CAD92357.1;gbkey=CDS;gene=G;product=glycoprotein;protein_id=CAD92357.1
 AJ564622.1	EMBL	gene	11412	18146	.	+	.	ID=gene-L;Name=L;gbkey=Gene;gene=L;gene_biotype=protein_coding
-AJ564622.1	EMBL	CDS	11412	18146	.	+	0	ID=cds-CAD92358.1;Parent=gene-L;Dbxref=GOA:Q997F0,InterPro:IPR001016,InterPro:IPR014023,InterPro:IPR016269,UniProtKB/Swiss-Prot:Q997F0,NCBI_GP:CAD92358.1;Name=CAD92358.1;gbkey=CDS;gene=L;product=polymerase;protein_id=CAD92358.1
+AJ564622.1	EMBL	CDS	11412	18146	.	+	0	ID=cds-CAD92358.1;Parent=gene-L;Dbxref=GOA:Q997F0,InterPro:IPR014023,InterPro:IPR016269,InterPro:IPR024352,InterPro:IPR025786,InterPro:IPR026890,InterPro:IPR039736,UniProtKB/Swiss-Prot:Q997F0,NCBI_GP:CAD92358.1;Name=CAD92358.1;gbkey=CDS;gene=L;product=polymerase;protein_id=CAD92358.1
 
