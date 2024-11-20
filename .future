@@ -1,5 +1,2 @@
-% variable depth for variant calling       ont
-% generic coverage x depth plot            ill-amp,ill-hyb,ont
-% add option to choose depth per sample    ill-amp,ill-hyb,ont
-% compress analysis folder                 ill-amp,ill-hyb,ont
-% compress raw fastq folder                ill-amp,ill-hyb,ont
+% compress analysis folder                 ill -x amp, ill -x hyb, ont
+% compress raw fastq folder                ill -x amp, ill -x hyb, ont
