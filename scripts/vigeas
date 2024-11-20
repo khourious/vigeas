@@ -725,18 +725,18 @@ Options: -b STR   Barcoding kit name -- see <vigeas cfg>
                 fi
                 Rscript $HOME/vigeas/scripts/depthCoverage.R "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".depth.tsv "$SAMPLE_ID" "$PRIMER_SCHEME" "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"
                 micromamba deactivate
-			fi
-		done
-		micromamba activate vigeas-stats
-		for i in $(find "$ANALYSIS_DIR" -type f -name '*coverage.pdf' | awk -F. '{print $2}' | awk -F- '{print $1}' | sort -u); do
-			gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME"."$i"-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*."$i"-coverage.pdf
-		done
-		micromamba deactivate
-		sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
-		rm -rf "$ANALYSIS_DIR"/.summary*
-		end=$(date +%s.%N)
-		runtime=$(python3 -c "print(${end} - ${start})")
-		echo "" && echo "Done. The runtime was "$runtime" seconds." && echo ""
+            fi
+        done
+        micromamba activate vigeas-stats
+        for i in $(find "$ANALYSIS_DIR" -type f -name '*coverage.pdf' | awk -F. '{print $2}' | awk -F- '{print $1}' | sort -u); do
+            gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR"/"$LIBRARY_NAME"."$i"-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf "$ANALYSIS_DIR"/ASSEMBLY/*/*."$i"-coverage.pdf
+        done
+        micromamba deactivate
+        sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
+        rm -rf "$ANALYSIS_DIR"/.summary*
+        end=$(date +%s.%N)
+        runtime=$(python3 -c "print(${end} - ${start})")
+        echo "" && echo "Done. The runtime was "$runtime" seconds." && echo ""
     }
 
     bg &>>"$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt &
