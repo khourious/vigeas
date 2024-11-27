@@ -321,7 +321,6 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                                 echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary
                                 echo -n "$PRIMER_SCHEME""_V""$PRIMER_SCHEME_VER""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                                 echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
-                                samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$PRIMER_SCHEME".trimmed.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                                 samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$PRIMER_SCHEME".trimmed.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                                 AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$PRIMER_SCHEME".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                                 if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
@@ -385,7 +384,6 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary
                         echo -n "$PRIMER_SCHEME""_""$PRIMER_SCHEME_VER""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
-                        samtools view -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                         samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                         AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                         if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
@@ -416,7 +414,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                 done
                 micromamba deactivate
             elif [[ "${PRESET,,}" == "hyb" ]]; then
-                echo "sample_id#PRIMER_SCHEME#target#segment#flu_vaccine#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
+                echo "sample_id#ref_seq#target#segment#flu_vaccine#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                 for i in $(cat "$SAMPLE_SHEET"); do
                     SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
                     PANEL=$(echo "$i" | awk -F, '{print $2}')
@@ -438,13 +436,13 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                         echo "$SAMPLE_ID" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                         grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{if ($3 == "" || $3 == " " || gsub(/\t/, "", $3) == 0) printf $1"#"$2"#"$3"#"$4; else printf $0}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                         micromamba activate vigeas-ill
-                        bwa index $HOME/vigeas/refseq/"$i".fasta
-                        bwa mem -t "$THREADS" $HOME/vigeas/refseq/"$i".fasta "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+						bwa-mem2 index -p $HOME/vigeas/refseq/"$i" $HOME/vigeas/refseq/"$i".fasta
+						bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
                         samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
                         samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
                         samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth.tsv
-                        samtools mpileup -a --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar variants -t 0.05 -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i" -r $HOME/vigeas/refseq/"$i".fasta
-                        samtools mpileup -a --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar consensus -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH"
+                        samtools mpileup -a -A -d 0 --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar variants -q 20 -t 0.03 -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i" -r $HOME/vigeas/refseq/"$i".fasta -g $HOME/vigeas/refseq/"$i".annotation.gff3
+                        samtools mpileup -a -A -d 0 --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar consensus -t 0 -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH"
                         sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH".fa
                         rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
                         micromamba deactivate
@@ -632,7 +630,6 @@ Options: -b STR   Barcoding kit name -- see <vigeas cfg>
                         echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary
                         echo -n "$PRIMER_SCHEME""_""$PRIMER_SCHEME_VER""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                         echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
-                        samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"."$PRIMER_SCHEME".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                         samtools view -F 4 -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"."$PRIMER_SCHEME".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                         AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID"."$PRIMER_SCHEME".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                         if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
@@ -705,7 +702,6 @@ Options: -b STR   Barcoding kit name -- see <vigeas cfg>
                 echo -n "#" | tr '#' '\n' >> "$ANALYSIS_DIR"/.summary
                 echo -n "$PRIMER_SCHEME""_""$PRIMER_SCHEME_VER""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                 echo -n "$SAMPLE_ID""#" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
-                samtools view -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                 samtools view -F 4 -c "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
                 AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/ASSEMBLY/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
                 if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
