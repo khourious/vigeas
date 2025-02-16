@@ -13,6 +13,7 @@ dos2unix \
 git \
 libclang-dev \
 libhdf5-dev \
+libhts-dev \
 libssl-dev \
 libzstd-dev \
 pipx \
