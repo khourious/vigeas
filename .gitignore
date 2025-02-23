@@ -2,5 +2,6 @@
 *.amb
 *.ann
 *.bwt.2bit.64
+*.fai
 *.pac
 scripts/depthCovCreate.R
