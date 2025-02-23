@@ -6,7 +6,7 @@
   "description": "/home/lpmor22/vigeas/blastdb/VSP1.fasta",
   "number-of-letters": 11129593,
   "number-of-sequences": 1502,
-  "last-updated": "2025-02-22T16:58:00",
+  "last-updated": "2025-02-23T08:31:00",
   "number-of-volumes": 1,
   "bytes-total": 2981667,
   "bytes-to-cache": 2810072,
