@@ -1,2 +1,14 @@
 # HPV
 https://pave.niaid.nih.gov/explore/reference_genomes/human_genomes
+
+# HIV
+https://www.hiv.lanl.gov/content/sequence/NEWALIGN/align.html
+
+# Anelloviridae taxonomy update 2023
+Arvind Varsani, Simona Kraberger, Tanja Opriessnig, Fabrizio Maggi, Vladimir Celer, et al. Anelloviridae taxonomy update 2023. Archives of Virology, 2023, 168 (11), pp.277. 10.1007/s00705-023-05903-6 hal-04255836
+
+# RSV-A duplication
+GTCAAGAGGAAACCCTCCACTCAACCACCTCCGAAGGCTATCTAAGCCCATCACAAGTCTATACAACATCCG
+
+# RSV-B duplication
+GAAAGGGACACCAGCACCTCACAATCCATTGCGCTTGACACAACCACATCAAAACACACA
