@@ -1,0 +1,153 @@
+#!/bin/bash
+
+# ill-hyb-direct-assembly <fastq_folder> <sample_sheet> <ref_seq_list> <se>
+
+eval "$($HOME/micromamba/bin/micromamba shell hook -s posix)"
+
+INPUT=$1
+SAMPLE_SHEET=$2
+REF_SEQ_LIST=$3
+THREADS=$(nproc)
+DEPTH=5
+SE=0 # 0 = paired-end; 1 = single-end
+
+LIBRARY_NAME="$(basename "$SAMPLE_SHEET" | awk -F. '{print $1}')"
+ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
+[[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
+echo "" && echo "Output path: "$ANALYSIS_DIR""
+echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
+echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt" && echo ""
+
+if [[ $(grep "Experiment Name" "$SAMPLE_SHEET") ]]; then
+    cat "$SAMPLE_SHEET" | tr -dc '[:print:]\n' | sed -e '1,18d' | awk -F, '{print $1","$NF}' | sort > "$ANALYSIS_DIR"/.samplesheet
+    SAMPLE_SHEET="$ANALYSIS_DIR"/.samplesheet
+fi
+
+bg() {
+    for i in $(awk -F, '{print $1}' "$SAMPLE_SHEET"); do
+        if [[ $(find "$INPUT" -type f -name '*001.*') ]]; then
+            if [[ -z $(find "$INPUT" -mindepth 1 -type d) ]]; then
+                cp -v "$INPUT"/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                if [[ $(find "$INPUT" -type f -name '*R2*') ]]; then
+                    cp -v "$INPUT"/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                fi
+            else
+                cp -v "$INPUT"/"$i"_*/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+                if [[ $(find "$INPUT" -type f -name '*R2*') ]]; then
+                    cp -v "$INPUT"/"$i"_*/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+                fi
+            fi
+        elif [[ $(find "$INPUT" -type f -name '*_[1-2].fastq.gz') ]]; then
+            cp -v "$INPUT"/"$i"_1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+            if [[ $(find "$INPUT" -type f -name '*_2.fastq.gz') ]]; then
+                cp -v "$INPUT"/"$i"_2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+            fi
+        elif [[ $(find "$INPUT" -type f -name '*.R[1-2].fastq.gz') ]]; then
+            cp -v "$INPUT"/"$i".R1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
+            if [[ $(find "$INPUT" -type f -name '*.R2.fastq.gz') ]]; then
+                cp -v "$INPUT"/"$i".R2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
+            fi
+        fi
+    done
+    echo "sample_id#ref_seq#target#segment#flu_vaccine#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
+    for i in $(cat "$SAMPLE_SHEET"); do
+        SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
+        PANEL=$(echo "$i" | awk -F, '{print $2}')
+        echo "$SAMPLE_ID"
+        echo "$PANEL"
+        mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
+        micromamba activate vigeas-ill
+        if [[ "$SE" == 1 ]]; then
+            fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.json
+            spades.py -t "$THREADS" --metaviral -s "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo
+        else
+            fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -I "$ANALYSIS_DIR"/"$SAMPLE_ID".R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -O "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.json
+            spades.py -t "$THREADS" --metaviral -1 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -2 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo
+        fi
+        if [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta ]; then
+            blastn -num_threads "$THREADS" -word_size 21 -query "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta -db $HOME/vigeas/blastdb/"$PANEL" -out "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt -outfmt "6 qseqid sseqid pident length"
+            seqtk seq -F '!' "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta > "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fastq
+            gzip "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fastq
+            cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fastq > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz
+        elif [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta ]; then
+            blastn -num_threads "$THREADS" -word_size 21 -query "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta -db $HOME/vigeas/blastdb/"$PANEL" -out "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt -outfmt "6 qseqid sseqid pident length"
+            seqtk seq -F '!' "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta > "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fastq
+            gzip "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fastq
+            cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fastq.gz > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz
+        fi
+        micromamba deactivate
+        for i in $(cat "$REF_SEQ_LIST"); do
+            echo ""
+            echo "$SAMPLE_ID" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+            grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{if ($3 == "" || $3 == " " || gsub(/\t/, "", $3) == 0) printf $1"#"$2"#"$3"#"$4; else printf $0}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+            micromamba activate vigeas-ill
+            bwa-mem2 index -p $HOME/vigeas/refseq/"$i" $HOME/vigeas/refseq/"$i".fasta
+            if [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/*.fasta ]; then
+                if [[ "$SE" == 1 ]]; then
+                    bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
+                else
+                    bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
+                fi
+            else
+                if [[ "$SE" == 1 ]]; then
+                    bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
+                else
+                    bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
+                fi
+            fi
+            samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
+            samtools consensus -m simple -a -aa -A -d 1 -@ "$THREADS" --show-del no --show-ins yes -f fasta "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre.fasta
+            bwa-mem2 index -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre.fasta
+            if [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/*.fasta ]; then
+                if [[ "$SE" == 1 ]]; then
+                    bwa-mem2 mem -t "$THREADS" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.concat.R1.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+                else
+                    bwa-mem2 mem -t "$THREADS" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+                fi
+            else
+                if [[ "$SE" == 1 ]]; then
+                    bwa-mem2 mem -t "$THREADS" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+                else
+                    bwa-mem2 mem -t "$THREADS" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+                fi
+            fi
+            samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+            samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+            samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth.tsv
+            samtools mpileup -a -A -d 0 --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar variants -q 20 -t 0.03 -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i" -r $HOME/vigeas/refseq/"$i".fasta
+            samtools mpileup -a -A -d 0 --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar consensus -t 0 -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH"
+            sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH".fa
+            rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
+            micromamba deactivate
+            micromamba activate vigeas-stats
+            AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
+            if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
+                echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+            else
+                echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+            fi
+            paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"10"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+            paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+            paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+            COVERAGE=$(fastalength "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa 2> /dev/null | awk '{print $1}')
+            if [[ "$COVERAGE" == 0 ]]; then
+                echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+                fastalength $HOME/vigeas/refseq/"$i".fasta | awk -F" " '{print $1}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+                echo "100.00" | awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
+            else
+                paste <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+                seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
+                paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}'| awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
+            fi
+        done
+    done
+    micromamba deactivate
+    sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
+    rm -rf "$ANALYSIS_DIR"/.samplesheet "$ANALYSIS_DIR"/.summary*
+    end=$(date +%s.%N)
+    runtime=$(python3 -c "print(${end} - ${start})")
+    echo "" && echo "Done. The runtime was "$runtime" seconds." && echo ""
+}
+
+bg &>>"$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt &
+exit 0
