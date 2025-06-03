@@ -41,7 +41,6 @@ EOF
     export PATH=$HOME/micromamba/bin:$PATH
     micromamba create -y -n vigeas-ill -c conda-forge -c bioconda bbmap blast bwa-mem2 entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
     micromamba create -y -n vigeas-ont -c conda-forge -c bioconda bbmap bcftools clair3 minimap2 muscle samtools seqkit seqtk
-    micromamba create -y -n vigeas-sars2 -c conda-forge -c bioconda nextclade pangolin
     micromamba create -y -n vigeas-stats -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
 else
     if [[ -z $(micromamba env list | grep vigeas-ill) ]]; then
@@ -50,58 +49,21 @@ else
     if [[ -z $(micromamba env list | grep vigeas-ont) ]]; then
         micromamba create -y -n vigeas-ont -c conda-forge -c bioconda bbmap bcftools clair3 minimap2 muscle samtools seqkit seqtk
     fi
-    if [[ -z $(micromamba env list | grep vigeas-sars2) ]]; then
-        micromamba create -y -n vigeas-sars2 -c conda-forge -c bioconda nextclade pangolin
-    fi
     if [[ -z $(micromamba env list | grep vigeas-stats) ]]; then
         micromamba create -y -n vigeas-stats -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
     fi
     echo "micromamba:" && micromamba --version && echo "" && echo "environments:" && micromamba env list | grep vigeas
 fi
 
-DORADO_VERSION=0.8.3 # Updated November 20, 2024
-if [[ -z $(command -v dorado) ]]; then
-    cd; wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-"$DORADO_VERSION"-linux-x64.tar.gz -O dorado.tar.gz
-    tar -vzxf dorado.tar.gz; rm -rf dorado.tar.gz
-    mv dorado-"$DORADO_VERSION"-linux-x64 ont-dorado
-    echo 'export PATH=$HOME/ont-dorado/bin:$PATH' >> ~/.$(basename $SHELL)rc
-    export PATH=$HOME/ont-dorado/bin:$PATH
-    dorado download --directory ont-dorado/models
-    if ! ls | grep -q 'rerio'; then
-        cd; git clone https://github.com/nanoporetech/rerio.git; cd rerio/
-        python3 download_model.py --clair3
-        python3 download_model.py --dorado
-        ln -s $HOME/micromamba/envs/vigeas-ont/bin/models/* $HOME/rerio/clair3_models/
-        ln -s $HOME/ont-dorado/models/* $HOME/rerio/dorado_models/
-    else
-       cd; rm -rf ~/rerio; git clone https://github.com/nanoporetech/rerio.git; cd rerio/
-       python3 download_model.py --clair3
-       python3 download_model.py --dorado
-       ln -s $HOME/micromamba/envs/vigeas-ont/bin/models/* $HOME/rerio/clair3_models/
-       ln -s $HOME/ont-dorado/models/* $HOME/rerio/dorado_models/
-    fi
-    pipx install pod5
-    echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.$(basename $SHELL)rc
-elif [[ $(dorado --version 2>&1 | awk -F+ '{print $1}') != "$DORADO_VERSION" ]]; then
-    cd; rm -rf ont-dorado; wget https://cdn.oxfordnanoportal.com/software/analysis/dorado-"$DORADO_VERSION"-linux-x64.tar.gz -O dorado.tar.gz
-    tar -vzxf dorado.tar.gz; rm -rf dorado.tar.gz
-    mv dorado-"$DORADO_VERSION"-linux-x64 ont-dorado
-    export PATH=$HOME/ont-dorado/bin:$PATH
-    dorado download --directory ont-dorado/models
-    if ! ls | grep -q 'rerio'; then
-       cd; git clone https://github.com/nanoporetech/rerio.git; cd rerio/
-       python3 download_model.py --clair3
-       python3 download_model.py --dorado
-       ln -s $HOME/micromamba/envs/vigeas-ont/bin/models/* $HOME/rerio/clair3_models/
-       ln -s $HOME/ont-dorado/models/* $HOME/rerio/dorado_models/
-    else
-       cd; rm -rf ~/rerio; git clone https://github.com/nanoporetech/rerio.git; cd rerio/
-       python3 download_model.py --clair3
-       python3 download_model.py --dorado
-       ln -s $HOME/micromamba/envs/vigeas-ont/bin/models/* $HOME/rerio/clair3_models/
-       ln -s $HOME/ont-dorado/models/* $HOME/rerio/dorado_models/
-    fi
-    pipx install pod5
+if ! ls | grep -q 'rerio'; then
+    cd; git clone https://github.com/nanoporetech/rerio.git; cd rerio/
+    python3 download_model.py --clair3
+    python3 download_model.py --dorado
+    ln -s $HOME/micromamba/envs/vigeas-ont/bin/models/* $HOME/rerio/clair3_models/
 else
-    dorado --version
+    cd; rm -rf ~/rerio; git clone https://github.com/nanoporetech/rerio.git; cd rerio/
+    python3 download_model.py --clair3
+    python3 download_model.py --dorado
+    ln -s $HOME/micromamba/envs/vigeas-ont/bin/models/* $HOME/rerio/clair3_models/
 fi
+echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.$(basename $SHELL)rc
