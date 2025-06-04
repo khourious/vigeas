@@ -2,6 +2,16 @@
 
 This repository contains scripts and files to run the bioinformatic analysis of whole genome sequencing of viruses using Illumina or Oxford Nanopore Technologies platforms.
 
+## INSTALLATION
+
+```sh
+git clone --recursive https://github.com/khourious/vigeas.git; cd vigeas
+chmod 700 -R INSTALL
+bash INSTALL
+```
+
+## USAGE
+
 ```
 Usage: vigeas <command> or <miscellaneous>
 
@@ -17,12 +27,6 @@ Miscellaneous:
   update   Update conda [micromamba] dependencies
 ```
 
-## Setting up the pipeline
+## CITATION
 
-Download and install the pipeline from the github repo:
-
-```sh
-git clone --recursive https://github.com/khourious/vigeas.git; cd vigeas
-chmod 700 -R INSTALL
-bash INSTALL
-```
+## CONTRIBUTIONS
