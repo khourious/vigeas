@@ -23,7 +23,7 @@ xz-utils
 chmod 700 -R $HOME/vigeas/scripts
 
 if ! grep -q 'vigeas' ~/.$(basename $SHELL)rc; then
-    echo 'export PATH=$HOME/vigeas/scripts:$PATH' >> ~/.$(basename $SHELL)rc
+    echo 'export PATH=$HOME/vigeas/scripts:$PATH' >> ~/.[bz]shrc
 fi
 
 if [[ -z $(command -v micromamba) ]]; then
@@ -37,7 +37,7 @@ if [[ -z $(command -v micromamba) ]]; then
 "$CONDA_FORGE_YES"
 "$PREFIX_LOCATION"
 EOF
-    echo 'alias mm="micromamba"' >> ~/.$(basename $SHELL)rc
+    echo 'alias mm="micromamba"' >> ~/.[bz]shrc
     export PATH=$HOME/micromamba/bin:$PATH
     micromamba create -y -n vigeas-ill -c conda-forge -c bioconda bbmap blast bwa-mem2 entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
     micromamba create -y -n vigeas-ont -c conda-forge -c bioconda bbmap bcftools clair3 minimap2 muscle samtools seqkit seqtk
@@ -66,4 +66,4 @@ else
     python3 download_model.py --dorado
     ln -s $HOME/micromamba/envs/vigeas-ont/bin/models/* $HOME/rerio/clair3_models/
 fi
-echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.$(basename $SHELL)rc
+echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.[bz]shrc
