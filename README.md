@@ -5,8 +5,8 @@ This repository contains scripts and files to run the bioinformatic analysis of 
 ## INSTALLATION
 
 ```sh
-git clone --recursive https://github.com/khourious/vigeas.git; cd vigeas
-chmod 700 -R INSTALL
+git clone --recursive https://github.com/khourious/vigeas.git && cd vigeas
+chmod 700 -R INSTALL scripts
 bash INSTALL
 ```
 
@@ -24,7 +24,8 @@ Miscellaneous:
   makedb   Create a BLAST database in this workflow -- for <vigeas ill -x hyb>
   panels   List available enrichment panels in this workflow -- for <vigeas ill -x hyb>
   primers  List available primer schemes in this workflow -- for <vigeas ill -x amp> and <vigeas ont -x bda>
-  update   Update conda [micromamba] dependencies
+  update   Update conda/mamba dependencies
+  version  Show last update information
 ```
 
 ## CITATION
