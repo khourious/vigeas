@@ -36,7 +36,7 @@ ref_seq <- list(
   "DENGUESEQ3/V1" = "Genome reference: NC_001475.2 (DENV-3)",
   "DENGUESEQ4/V1" = "Genome reference: NC_002640.1 (DENV-4)",
   "ChikAsianECSA/V1" = "Genome reference: KP164568.1 (CHIKV)",
-  "HTLV1/V1" = "Genome reference: J02029.1 (HTLV-1)",
+  "CCEMHTLV1/V1" = "Genome reference: J02029.1 (HTLV-1)",
   "WNV400/V1" = "Genome reference: NC_009942.1 (WNV)",
   "HIV1Sanabani2006/V1" = "Genome reference: K03455.1 (HIV-1)",
   "RSVA/V1" = "Genome reference: MN163126.1 (RSV-A)",
@@ -2237,7 +2237,7 @@ if (primer_scheme == "ChikAsianECSA/V1") {
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
 
-if (primer_scheme == "HTLV1/V1") {
+if (primer_scheme == "CCEMHTLV1/V1") {
   depcov <- ggplot() +
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
     labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
