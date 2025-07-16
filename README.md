@@ -31,3 +31,6 @@ Miscellaneous:
 ## CITATION
 
 ## CONTRIBUTIONS
+Thanks to:
+- Ricardo Khouri ([Rkhour0](https://github.com/orgs/khourious/people/Rkhour0)) for mentorship and discussions on improving in the `-x amp` and `-x ill` workflows.
+- Verity Hill ([ViralVerity](https://github.com/ViralVerity)) for her collaborative troubleshooting regarding low-coverage sequencing issues, primer trimming, and bioinformatic pipeline optimizations for DENV, ZIKV, and CHIKV data.
