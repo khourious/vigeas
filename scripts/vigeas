@@ -2,7 +2,7 @@
 
 if [[ -n "$MAMBA_EXE" ]]; then
     if [[ "$MAMBA_EXE" == *"micromamba"* ]]; then
-        eval "$("$MAMBA_EXE" shell hook -s posix)"
+        eval "$($MAMBA_EXE shell hook -s posix)"
         ENV_MANAGER=micromamba
     else
         ENV_MANAGER=mamba
@@ -147,15 +147,15 @@ Options: -f STR  Path containing the *.fasta with the reference genomes
         esac
     done
 
-    if [[ -z "$FASTA" ]] || [[ -z "$METADATA" ]]; then
+    if [[ -z "$FASTA" ]]; then
         usage_makedb
     else
         "$ENV_MANAGER" activate vigeas-ill
-        DATABASE_NAME="$(basename "$FASTA" | awk -F/ '{print $NF}' | awk -F. '{print $1}')"
+        DATABASE_NAME="$(basename $FASTA | awk -F/ '{print $NF}' | awk -F. '{print $1}')"
         cp "$FASTA" "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta"
-        cp "$METADATA" "$HOME/vigeas/blastdb/$DATABASE_NAME.tsv"
+        [[ -n "$DATABASE_NAME" && -n "$METADATA" && -f "$METADATA" ]] && cp "$METADATA" "$HOME/vigeas/blastdb/$DATABASE_NAME.tsv"
         makeblastdb -in "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta" -dbtype nucl -out "$HOME/vigeas/blastdb/$DATABASE_NAME"
-        awk '/^>/{if(s) close(s); s="$HOME/vigeas/refseq/" substr($0,2) ".fasta"; print > s; next}{if(s) print >> s}' "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta"
+        awk -v home="$HOME" '/^>/{if(s) close(s); s=home "/vigeas/refseq/" substr($0,2) ".fasta"; print > s; next}{if(s) print >> s}' "$HOME/vigeas/blastdb/RVOP.fasta"
         find "$HOME/vigeas/refseq/" -type f -name "*.fasta" -exec sh -c '[ ! -f "$1.fai" ] && samtools faidx "$1"' _ {} \;
     fi
     exit 0
@@ -205,8 +205,8 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
     if [[ -z "$PRESET" ]] || [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
         usage_ill
     else
-        LIBRARY_NAME="$(basename "$SAMPLE_SHEET" | awk -F. '{print $1}')"
-        ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
+        LIBRARY_NAME="$(basename $SAMPLE_SHEET | awk -F. '{print $1}')"
+        ANALYSIS_DIR="$HOME/vigeas/${LIBRARY_NAME}_ANALYSIS"
         [[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
         echo "" && echo "Output path: $ANALYSIS_DIR"
         echo "" && echo "Log Analysis: $ANALYSIS_DIR/$LIBRARY_NAME.log.$(uname -n).$(date +'%Y-%m-%d').txt"
@@ -251,10 +251,12 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                     "$ENV_MANAGER" activate vigeas-ill
                     SAMPLE_ID=$(echo "$DESCRIPTION" | awk -F, '{print $1}')
                     mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
+                    echo "" && echo "$SAMPLE_ID"
                     fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ANALYSIS_DIR/$SAMPLE_ID.R1.fastq.gz" -I "$ANALYSIS_DIR/$SAMPLE_ID.R2.fastq.gz" -o "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -O "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" -h "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.html" -j "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.json"
+                    "$ENV_MANAGER" deactivate
                     if echo "$DESCRIPTION" | grep -Eq "RSV_V[1-9]"; then
                         PRIMER_SCHEME_VER=$(grep -o "RSV_V[1-9]" < "$SAMPLE_SHEET" | sort -u | awk -F'_V' '{print $2}')
-                        for version in $PRIMER_SCHEME_VER; do
+                        for version in "$PRIMER_SCHEME_VER"; do
                             PRIMER_SCHEME_VER="$version"
                             for type in RSVA RSVB; do
                                 "$ENV_MANAGER" activate vigeas-ill
@@ -288,7 +290,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                                     for depth in 10 100 1000; do
                                         samtools depth "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk -v cutoff="$depth" -v reflen="$REF_LEN" '$3 > cutoff {covered++} END {printf "%.2f\t", (reflen>0) ? covered/reflen*100 : 0}'
                                     done
-                                    if [[ ! -s "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" ]]; then
+                                    if [[ ! -s "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" ]] || ! grep -v "^>" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" | grep -q "[ACGTacgtNn]"; then
                                         printf "0.00\t0\t100.00\n"
                                     else
                                         N_COUNT=$(seqtk comp "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" | awk '{print $9}')
@@ -307,10 +309,10 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                     else
                         "$ENV_MANAGER" activate vigeas-ill
                         if echo "$DESCRIPTION" | grep -Eq "DENGUESEQPAN_V[1-9]"; then
-                            seqkit range "$ANALYSIS_DIR/$SAMPLE_ID.R1.fastq.gz" -r 1:200 | seqkit fq2fa | blastn -num_threads "$THREADS" -word_size 21 -db "$HOME/vigeas/blastdb/DENGUESEQPAN" -out "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
+                            seqkit range "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -r 1:1000 | seqkit fq2fa | blastn -num_threads "$THREADS" -db "$HOME/vigeas/blastdb/DENGUESEQPAN" -out "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
                             PRIMER_SCHEME=$(cut -f 2 "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" | sort | uniq -c | sort -nr | head -n 1 | awk '{print $2}')
-                            PRIMER_SCHEME_VER=$(grep -o "DENGUESEQPAN_V[1-9]" < "$SAMPLE_SHEET" | sort -u | awk -F'_V' '{print $2}')
-                            PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}V${PRIMER_SCHEME_VER}" | sed -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g')
+                            PRIMER_SCHEME_VER=$(grep -o "DENGUESEQPAN_V[1-9]" < "$SAMPLE_SHEET" | sort -u | awk -F'_' '{print $2}')
+                            PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g')
                             [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.ann" ]] && bwa-mem2 index -p "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                         else
                             PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $2}' | cut -d'_' -f1)
@@ -345,7 +347,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                             for depth in 10 100 1000; do
                                 samtools depth "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" | awk -v cutoff="$depth" -v reflen="$REF_LEN" '$3 > cutoff {covered++} END {printf "%.2f\t", (reflen>0) ? covered/reflen*100 : 0}'
                             done
-                            if [[ ! -s "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa" ]]; then
+                            if [[ ! -s "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa" ]] || ! grep -v "^>" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa" | grep -q "[ACGTacgtNn]"; then
                                 printf "0.00\t0\t100.00\n"
                             else
                                 N_COUNT=$(seqtk comp "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa" | awk '{print $9}')
@@ -356,7 +358,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                         } >> "$ANALYSIS_DIR/.summary"
                         Rscript "$HOME/vigeas/scripts/depthCoverage.R" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth.tsv" "$SAMPLE_ID" "$PRIMER_SCHEME_DIR" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID"
                         "$ENV_MANAGER" deactivate
-                    fi  
+                    fi
                 done < "$SAMPLE_SHEET"
                 "$ENV_MANAGER" activate vigeas-stats
                 for target in $(find "$ANALYSIS_DIR" -type f -name '*coverage.pdf' | awk -F. '{print $(NF-1)}' | awk -F- '{print $1}' | sort -u); do
@@ -435,7 +437,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                             for depth in 10 100 1000; do
                                 samtools depth "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | awk -v cutoff="$depth" -v reflen="$REF_LEN" '$3 > cutoff {covered++} END {printf "%.2f\t", (reflen>0) ? covered/reflen*100 : 0}'
                             done
-                            if [[ ! -s "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" ]]; then
+                            if [[ ! -s "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" ]] || ! grep -v "^>" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" | grep -q "[ACGTacgtNn]"; then
                                 printf "0.00\t0\t100.00\n"
                             else
                                 N_COUNT=$(seqtk comp "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" | awk '{print $9}')
@@ -616,7 +618,7 @@ Options: -c STR   Clair3 model
             else
                 "$ENV_MANAGER" activate vigeas-ont
                 if echo "$DESCRIPTION" | grep -Eq "DENGUESEQPAN_V[1-9]"; then
-                    seqkit range "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq" -r 1:200 | seqkit fq2fa | blastn -num_threads "$THREADS" -db "$HOME/vigeas/blastdb/DENGUESEQPAN" -out "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
+                    seqkit range "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq" -r 1:1000 | seqkit fq2fa | blastn -num_threads "$THREADS" -db "$HOME/vigeas/blastdb/DENGUESEQPAN" -out "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
                     PRIMER_SCHEME=$(cut -f 2 "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" | sort | uniq -c | sort -nr | head -n 1 | awk '{print $2}')
                     PRIMER_SCHEME_VER=$(grep -o "DENGUESEQPAN_V[1-9]" < "$SAMPLE_SHEET" | sort -u | awk -F'_V' '{print $2}')
                     PRIMER_SCHEME_DIR=$(echo "{$PRIMER_SCHEME}_V${PRIMER_SCHEME_VER}" | sed -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g')
