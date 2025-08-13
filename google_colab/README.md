@@ -8,7 +8,7 @@ A key feature is that Colab requires no setup while providing free access to com
 2. Under `Open notebook`, select the `Github`
 3. Enter the following link in `Enter a GitHub URL or search by organisation or user`:
 ```
-https://github.com/lpmor22/docs/new/main/ipynb
+https://github.com/khourious/vigeas/tree/main/google_colab
 ```
 4. Click `search`, and after a brief scan, you will see a list of available notebooks on GitHub
 
