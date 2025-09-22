@@ -12,6 +12,7 @@ curl \
 dos2unix \
 git \
 libclang-dev \
+libgsl-dev \
 libhdf5-dev \
 libhts-dev \
 libssl-dev \
@@ -52,7 +53,7 @@ if ! "$ENV_MANAGER" env list | grep -q vigeas-ill; then
     "$ENV_MANAGER" create -y -n vigeas-ill -c conda-forge -c bioconda bbmap blast bwa-mem2 entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
 fi
 if ! "$ENV_MANAGER" env list | grep -q vigeas-ont; then
-    "$ENV_MANAGER" create -y -n vigeas-ont -c conda-forge -c bioconda bbmap bcftools clair3 minimap2 muscle samtools seqkit seqtk
+    "$ENV_MANAGER" create -y -n vigeas-ont -c conda-forge -c bioconda bbmap bcftools clair3 ivar minimap2 muscle samtools seqkit seqtk tensorflow
 fi
 if ! "$ENV_MANAGER" env list | grep -q vigeas-stats; then
     "$ENV_MANAGER" create -y -n vigeas-stats -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools seqkit seqtk
@@ -68,7 +69,7 @@ if [ ! -d "rerio" ]; then
     python3 download_model.py --dorado
     ln -s "$HOME/micromamba/envs/vigeas-ont/bin/models/"* "$HOME/rerio/clair3_models/"
 else
-    cd rerio || exit
+    cd
     rm -rf ~/rerio
     git clone https://github.com/nanoporetech/rerio.git
     cd rerio || exit

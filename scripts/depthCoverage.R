@@ -1,14 +1,14 @@
 # Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
-# Updated: November 21, 2024
+# Updated: September 21, 2025
 # Author: Laise de Moraes <laise.moraes@fiocruz.br>
 
 if(!interactive()) pdf(NULL)
 
-library("cowplot")
-library("dplyr")
 library("ggplot2")
+library("cowplot")
 library("patchwork")
 library("plyr")
+library("dplyr")
 library("readr")
 library("svglite")
 
@@ -44,7 +44,8 @@ ref_seq <- list(
   "RSVA/V3" = "Genome reference: MN163126.1 (RSV-A)",
   "RSVB/V1" = "Genome reference: MZ515716.1 (RSV-B)",
   "RSVB/V2" = "Genome reference: MZ515716.1 (RSV-B)",
-  "RSVB/V3" = "Genome reference: MZ515716.1 (RSV-B)")
+  "RSVB/V3" = "Genome reference: MZ515716.1 (RSV-B)",
+  "HTLV1DemincoF/V1" = "Genome reference: J02029.1 (HTLV-1)")
 primer_scheme_2 <- ref_seq[[primer_scheme]]
 
 if (primer_scheme == "ARTIC/V1") {
@@ -54,14 +55,15 @@ if (primer_scheme == "ARTIC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "nCoV-2019_1_LEFT-nCoV-2019_1_RIGHT", 30, 410,
                     "1", "nCoV-2019_3_LEFT-nCoV-2019_3_RIGHT", 642, 1028,
@@ -187,7 +189,7 @@ if (primer_scheme == "ARTIC/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -215,7 +217,7 @@ if (primer_scheme == "ARTIC/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -226,7 +228,7 @@ if (primer_scheme == "ARTIC/V1") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -241,14 +243,15 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "hCoV_F1_2kb-hCoV_R1_2kb", 31, 2079,
                     "1", "hCoV_F3_2kb-hCoV_R3_2kb", 3581, 5548,
@@ -293,7 +296,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -321,7 +324,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -332,7 +335,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -347,14 +350,15 @@ if (primer_scheme == "ARTIC/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "nCoV-2019_1_LEFT-nCoV-2019_1_RIGHT", 30, 410,
                     "1", "nCoV-2019_3_LEFT-nCoV-2019_3_RIGHT", 642, 1028,
@@ -480,7 +484,7 @@ if (primer_scheme == "ARTIC/V2") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -508,7 +512,7 @@ if (primer_scheme == "ARTIC/V2") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -519,7 +523,7 @@ if (primer_scheme == "ARTIC/V2") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -534,14 +538,15 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "hCoV_F1_2kb-hCoV_R1_2kb", 31, 2079,
                     "1", "hCoV_F3_2kb-hCoV_R3_2kb", 3581, 5548,
@@ -586,7 +591,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -614,7 +619,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -625,7 +630,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -640,14 +645,15 @@ if (primer_scheme == "ARTIC/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "nCoV-2019_1_LEFT-nCoV-2019_1_RIGHT", 30, 410,
                     "1", "nCoV-2019_3_LEFT-nCoV-2019_3_RIGHT", 642, 1028,
@@ -798,7 +804,7 @@ if (primer_scheme == "ARTIC/V3") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -826,7 +832,7 @@ if (primer_scheme == "ARTIC/V3") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -837,7 +843,7 @@ if (primer_scheme == "ARTIC/V3") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -852,14 +858,15 @@ if (primer_scheme == "ARTIC/V4") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "SARS-CoV-2_1_LEFT-SARS-CoV-2_1_RIGHT", 25, 431,
                     "1", "SARS-CoV-2_3_LEFT-SARS-CoV-2_3_RIGHT", 644, 1044,
@@ -986,7 +993,7 @@ if (primer_scheme == "ARTIC/V4") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1014,7 +1021,7 @@ if (primer_scheme == "ARTIC/V4") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1025,7 +1032,7 @@ if (primer_scheme == "ARTIC/V4") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -1040,14 +1047,15 @@ if (primer_scheme == "ARTIC/V4.1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "SARS-CoV-2_1_LEFT-SARS-CoV-2_1_RIGHT", 25, 431,
                     "1", "SARS-CoV-2_3_LEFT-SARS-CoV-2_3_RIGHT", 644, 1044,
@@ -1196,7 +1204,7 @@ if (primer_scheme == "ARTIC/V4.1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1224,7 +1232,7 @@ if (primer_scheme == "ARTIC/V4.1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1235,7 +1243,7 @@ if (primer_scheme == "ARTIC/V4.1") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -1250,14 +1258,15 @@ if (primer_scheme == "ARTIC/V5.3.2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "SARS-CoV-2_400_1_LEFT_1-SARS-CoV-2_400_1_RIGHT_1", 47, 447,
                     "1", "SARS-CoV-2_400_3_LEFT_1-SARS-CoV-2_400_3_RIGHT_0", 638, 1047,
@@ -1381,7 +1390,7 @@ if (primer_scheme == "ARTIC/V5.3.2") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1409,7 +1418,7 @@ if (primer_scheme == "ARTIC/V5.3.2") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1420,7 +1429,7 @@ if (primer_scheme == "ARTIC/V5.3.2") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -1435,14 +1444,15 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "hCoV_F1_2kb-hCoV_R1_2kb", 31, 2079,
                     "1", "hCoV_F3_2kb-hCoV_R3_2kb", 3581, 5548,
@@ -1487,7 +1497,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1515,7 +1525,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1526,7 +1536,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -1541,14 +1551,15 @@ if (primer_scheme == "FIOCRUZ-IOC/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "hCoV_F1_2kb-hCoV_R1_2kb", 31, 2079,
                     "1", "hCoV_F3_2kb-hCoV_R3_2kb", 3581, 5548,
@@ -1602,7 +1613,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V2") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1630,7 +1641,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V2") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/1798174254
@@ -1641,7 +1652,7 @@ if (primer_scheme == "FIOCRUZ-IOC/V2") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 30500)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".sars2-coverage.pdf")
@@ -1656,14 +1667,15 @@ if (primer_scheme == "ZikaAsian/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10807),
                        expand = expansion(0, 0), limits = c(0, 10810)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "ZIKA_400_1_L-ZIKA_400_1_R", 28, 504,
                     "1", "ZIKA_400_3_L-ZIKA_400_3_R", 658, 1076,
@@ -1729,7 +1741,7 @@ if (primer_scheme == "ZikaAsian/V2") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", #  https://www.ncbi.nlm.nih.gov/nuccore/KJ776791.2
@@ -1740,7 +1752,7 @@ if (primer_scheme == "ZikaAsian/V2") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10810)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".zikv-coverage.pdf")
@@ -1755,14 +1767,15 @@ if (primer_scheme == "DENGUESEQ1/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "DENV1_1_LEFT-DENV1_1_RIGHT", 12, 477,
                     "1", "DENV1_3_LEFT-DENV1_3_RIGHT", 691, 1093,
@@ -1826,7 +1839,7 @@ if (primer_scheme == "DENGUESEQ1/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001477.1
@@ -1836,7 +1849,7 @@ if (primer_scheme == "DENGUESEQ1/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".denv1-coverage.pdf")
@@ -1851,14 +1864,15 @@ if (primer_scheme == "DENGUESEQ2/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "DENV2_1_LEFT2-DENV2_1_RIGHT", 13, 481,
                     "1", "DENV2_3_LEFT-DENV2_3_RIGHT", 648, 1046,
@@ -1924,7 +1938,7 @@ if (primer_scheme == "DENGUESEQ2/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001474.2
@@ -1934,7 +1948,7 @@ if (primer_scheme == "DENGUESEQ2/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".denv2-coverage.pdf")
@@ -1949,14 +1963,15 @@ if (primer_scheme == "DENGUESEQ3/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "DENV3_1_LEFT-DENV3_1_RIGHT", 13, 416,
                     "1", "DENV3_3_LEFT-DENV3_3_RIGHT", 616, 1015,
@@ -2020,7 +2035,7 @@ if (primer_scheme == "DENGUESEQ3/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001475.2
@@ -2030,7 +2045,7 @@ if (primer_scheme == "DENGUESEQ3/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".denv3-coverage.pdf")
@@ -2045,14 +2060,15 @@ if (primer_scheme == "DENGUESEQ4/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10649),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "DENV4_1_LEFT-DENV4_1_RIGHT", 17, 508,
                     "1", "DENV4_3_LEFT-DENV4_3_RIGHT", 731, 1147,
@@ -2116,7 +2132,7 @@ if (primer_scheme == "DENGUESEQ4/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_002640.1
@@ -2126,7 +2142,7 @@ if (primer_scheme == "DENGUESEQ4/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".denv4-coverage.pdf")
@@ -2141,14 +2157,15 @@ if (primer_scheme == "ChikAsianECSA/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 11812),
                        expand = expansion(0, 0), limits = c(0, 12000)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "CHIK_400_1_LEFT_3-CHIK_400_1_RIGHT_3", 115, 451,
                     "1", "CHIK_400_3_LEFT_0-CHIK_400_3_RIGHT_0", 595, 924,
@@ -2217,7 +2234,7 @@ if (primer_scheme == "ChikAsianECSA/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 12000)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/KP164568.1
@@ -2229,7 +2246,7 @@ if (primer_scheme == "ChikAsianECSA/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 12000)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".chikv-coverage.pdf")
@@ -2242,16 +2259,17 @@ if (primer_scheme == "CCEMHTLV1/V1") {
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
     labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
          y = "Per base coverage (x)", x = NULL) +
-    scale_x_continuous(breaks = c(1, 2000, 4000, 6000, 8000, 9068),
+    scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 9068),
                        expand = expansion(0, 0), limits = c(0, 9100)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "HTLV-1_1_LEFT-HTLV-1_1_RIGHT", 102, 505,
                     "1", "HTLV-1_3_LEFT-HTLV-1_3_RIGHT", 664, 1056,
@@ -2296,24 +2314,22 @@ if (primer_scheme == "CCEMHTLV1/V1") {
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
   map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/J02029.1
-                         "gag", 824, 2113,
-                         "pol", 2114, 5210,
+                         "gag-pro-pol", 824, 5210,
                          "pX", 6857, 8382)
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/J02029.1
                          "5'LTR", 23, 777,
-                         "pro", 1960, 2778,
                          "env", 5203, 6669,
                          "3'LTR", 8301, 9055)
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".htlv1-coverage.pdf")
@@ -2328,14 +2344,15 @@ if (primer_scheme == "WNV400/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11029),
                        expand = expansion(0, 0), limits = c(0, 11060)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "WNV_400_1_LEFT-WNV_400_1_RIGHT", 8, 381,
                     "1", "WNV_400_3_LEFT-WNV_400_3_RIGHT", 569, 992,
@@ -2403,7 +2420,7 @@ if (primer_scheme == "WNV400/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 11060)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_009942.1
@@ -2413,7 +2430,7 @@ if (primer_scheme == "WNV400/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 11060)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".wnv-coverage.pdf")
@@ -2428,21 +2445,22 @@ if (primer_scheme == "HIV1Sanabani2006/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 2000, 4000, 6000, 8000, 9719),
                        expand = expansion(0, 0), limits = c(0, 9800)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "SC-ANS_F-SC-ANA_R", 545, 2610,
                     "1", "IN-B01S_F-C-BNA_R", 3235, 5220,
                     "1", "SC-DNS_F-SC-DNA_R", 7718, 9537)
   map1plot1 <- map1p1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "red"))
@@ -2451,7 +2469,7 @@ if (primer_scheme == "HIV1Sanabani2006/V1") {
                     "2", "SC-CNS_F-SC-CNA_R", 4889, 7808)
   map1plot2 <- map1p2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
@@ -2464,7 +2482,7 @@ if (primer_scheme == "HIV1Sanabani2006/V1") {
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.hiv.lanl.gov/content/sequence/HIV/MAP/landmark.html
@@ -2475,7 +2493,7 @@ if (primer_scheme == "HIV1Sanabani2006/V1") {
   map2plot2 <- map2genome2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome3 <- tribble(~"gene", ~"start", ~"end", # https://www.hiv.lanl.gov/content/sequence/HIV/MAP/landmark.html
@@ -2486,7 +2504,7 @@ if (primer_scheme == "HIV1Sanabani2006/V1") {
   map2plot3 <- map2genome3 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")  
   output <-  paste0(output, ".hiv1-coverage.pdf")
@@ -2501,14 +2519,15 @@ if (primer_scheme == "RSVA/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "A1f-A1r", 1, 1834,
                     "1", "AB3f-A3r", 2926, 4885,
@@ -2517,7 +2536,7 @@ if (primer_scheme == "RSVA/V1") {
                     "1", "A9f-A9r", 12343, 14144)
   map1plot1 <- map1p1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "red"))
@@ -2529,7 +2548,7 @@ if (primer_scheme == "RSVA/V1") {
                     "2", "A10f-A10r", 13819, 15277)
   map1plot2 <- map1p2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
@@ -2547,7 +2566,7 @@ if (primer_scheme == "RSVA/V1") {
   map2plot <- map2genome %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".rsva-coverage.pdf")
@@ -2562,14 +2581,15 @@ if (primer_scheme == "RSVA/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "A1f-A1r", 1, 1834,
                     "1", "AB3f-A3r", 2926, 4885,
@@ -2578,7 +2598,7 @@ if (primer_scheme == "RSVA/V2") {
                     "1", "A9f-A9r", 12343, 14144)
   map1plot1 <- map1p1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "red"))
@@ -2590,7 +2610,7 @@ if (primer_scheme == "RSVA/V2") {
                     "2", "A10f-A10r", 13819, 15277)
   map1plot2 <- map1p2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
@@ -2608,7 +2628,7 @@ if (primer_scheme == "RSVA/V2") {
   map2plot <- map2genome %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".rsva-coverage.pdf")
@@ -2623,14 +2643,15 @@ if (primer_scheme == "RSVA/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "A1f-A1r", 1, 1834,
                     "1", "AB3f-A3r", 2926, 4885,
@@ -2639,7 +2660,7 @@ if (primer_scheme == "RSVA/V3") {
                     "1", "A9f-A9r", 12343, 14144)
   map1plot1 <- map1p1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "red"))
@@ -2651,7 +2672,7 @@ if (primer_scheme == "RSVA/V3") {
                     "2", "A10f2-A10r", 13680, 15277)
   map1plot2 <- map1p2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
@@ -2669,7 +2690,7 @@ if (primer_scheme == "RSVA/V3") {
   map2plot <- map2genome %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".rsva-coverage.pdf")
@@ -2684,14 +2705,15 @@ if (primer_scheme == "RSVB/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "B1f-B1r", 1, 1704,
                     "1", "AB3f-B3r", 2926, 4352,
@@ -2700,7 +2722,7 @@ if (primer_scheme == "RSVB/V1") {
                     "1", "B9f-B9r", 11903, 13694)
   map1plot1 <- map1p1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "red"))
@@ -2712,7 +2734,7 @@ if (primer_scheme == "RSVB/V1") {
                     "2", "B10f-B10r", 13332, 15278)
   map1plot2 <- map1p2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
@@ -2730,7 +2752,7 @@ if (primer_scheme == "RSVB/V1") {
   map2plot <- map2genome %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".rsvb-coverage.pdf")
@@ -2745,14 +2767,15 @@ if (primer_scheme == "RSVB/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "B1f-B1r", 1, 1704,
                     "1", "AB3f-B3r", 2926, 4352,
@@ -2761,7 +2784,7 @@ if (primer_scheme == "RSVB/V2") {
                     "1", "B9f-B9r", 11903, 13694)
   map1plot1 <- map1p1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "red"))
@@ -2773,7 +2796,7 @@ if (primer_scheme == "RSVB/V2") {
                     "2", "B10f-B10r", 13332, 15278)
   map1plot2 <- map1p2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
@@ -2791,7 +2814,7 @@ if (primer_scheme == "RSVB/V2") {
   map2plot <- map2genome %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".rsvb-coverage.pdf")
@@ -2806,14 +2829,15 @@ if (primer_scheme == "RSVB/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(expand = expansion(0, 0)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
     theme_light(base_size = 10) +
-    scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x)) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
-          axis.text.x = element_text(size = 9),
+          axis.text.x = element_text(angle = 90, size = 9),
           axis.text.y = element_text(hjust = 1, size = 9)) +
-    geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
                     "1", "B1f-B1r", 1, 1704,
                     "1", "AB3f-B3r", 2926, 4352,
@@ -2822,7 +2846,7 @@ if (primer_scheme == "RSVB/V3") {
                     "1", "B9f-B9r", 11903, 13694)
   map1plot1 <- map1p1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "red"))
@@ -2834,7 +2858,7 @@ if (primer_scheme == "RSVB/V3") {
                     "2", "B10f-B10r", 13332, 15278)
   map1plot2 <- map1p2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
@@ -2852,10 +2876,66 @@ if (primer_scheme == "RSVB/V3") {
   map2plot <- map2genome %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
-    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 15400)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".rsvb-coverage.pdf")
   plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot + plot_layout(nrow = 5, heights = c(3, .1, .1, .1, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "HTLV1DemincoF/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 9068),
+                       expand = expansion(0, 0), limits = c(0, 9100)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+    map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "AV1 Fn1a+/b+ - AV1 R", 23, 4748)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "BV1 F2 - BV1 Ra+/bn+", 4124, 9056)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 3) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/J02029.1
+                         "gag-pro-pol", 824, 5210,
+                         "pX", 6857, 8382)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/J02029.1
+                         "5'LTR", 23, 777,
+                         "env", 5203, 6669,
+                         "3'LTR", 8301, 9055)
+  map2plot2 <- map2genome2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".htlv1-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
