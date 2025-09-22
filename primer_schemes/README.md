@@ -14,7 +14,6 @@
 | EBOV          | ~500pb        | ZaireEbola_V2       | https://github.com/artic-network/artic-ncov2019          |
 | EBOV          | ~400pb        | ZaireEbola_V3       | https://github.com/artic-network/artic-ncov2019          |
 | HIV-1         | ~2000pb       | HIV1Sanabani2006_V1 | https://doi.org/10.1089/aid.2006.22.171                  |
-| HTLV-1        | ~400pb        | HTLV1_V1            | Fernanda Khouri [UFBA-IMS, Brazil]                       |
 | LASV (L)      | ~400pb        | LassaL_V1           | https://github.com/zibraproject/zika-pipeline            |
 | LASV (S)      | ~400pb        | LassaS_V1           | https://github.com/zibraproject/zika-pipeline            |
 | MPOXV         | ~2,000pb      | MPXV_V1             | https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2 |
@@ -35,7 +34,6 @@
 | RSV (A/B)     | ~1,500bp      | RSV_V1              | https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v1 |
 | RSV (A/B)     | ~1,500bp      | RSV_V2              | https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v2 |
 | RSV (A/B)     | ~1,500bp      | RSV_V3              | https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v3 |
-| WNV           | ~400bp        | WNV400_V1           | Caio França [Southern Nazarene University, USA]          |
 | YFV           | ~500pb        | YFV500_V1           | https://github.com/zibraproject/zika-pipeline            |
 | YFV           | ~1,000pb      | YFV1000_V1          | https://github.com/zibraproject/zika-pipeline            |
 | ZIKV          | ~400pb        | ZikaAsian_V2        | https://github.com/zibraproject/zika-pipeline            |

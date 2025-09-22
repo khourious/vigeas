@@ -16,10 +16,10 @@ version() {
 vigeas [VIral GEnome ASsembly pipelines for WGS]
 Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
-  Main script: July 16, 2025
+  Main script: September 21, 2025
 
   ILLUMINA workflows: May 23, 2025
-  ONT workflows: May 23, 2025
+  ONT workflows: September 21, 2025
 "
     exit 1
 }
@@ -78,7 +78,6 @@ primer_schemes() {
      EBOV          ~500bp           ZaireEbola_V2          https://github.com/artic-network/artic-ncov2019
      EBOV          ~400bp           ZaireEbola_V3          https://github.com/artic-network/artic-ncov2019
      HIV-1         ~2,000bp         HIV1Sanabani2006_V1    https://doi.org/10.1089/aid.2006.22.171
- [*] HTLV-1        ~400bp           CCEMHTLV1_V1           Fernanda Khouri [UFBA-IMS, Brazil]
      LASV (L)      ~400bp           LassaL_V1              https://github.com/zibraproject/zika-pipeline
      LASV (S)      ~400bp           LassaS_V1              https://github.com/zibraproject/zika-pipeline
      MPOXV         ~2,000bp         MPXV_V1                https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
@@ -99,7 +98,6 @@ primer_schemes() {
  [*] RSV (A/B)     ~1,500bp         RSV_V1                 https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v1
  [*] RSV (A/B)     ~1,500bp         RSV_V2                 https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v2
  [*] RSV (A/B)     ~1,500bp         RSV_V3                 https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v3
- [*] WNV           ~400bp           WNV400_V1              Caio França [Southern Nazarene University, USA]
      YFV           ~500bp           YFV500_V1              https://github.com/zibraproject/zika-pipeline
      YFV           ~1,000bp         YFV1000_V1             https://github.com/zibraproject/zika-pipeline
  [*] ZIKV          ~400bp           ZikaAsian_V2           https://github.com/zibraproject/zika-pipeline
@@ -301,7 +299,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                                 } >> "$ANALYSIS_DIR/.summary"
                                 Rscript "$HOME/vigeas/scripts/depthCoverage.R" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth.tsv" "$SAMPLE_ID" "$PRIMER_SCHEME_DIR" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID"
                                 for target in $(find "$ANALYSIS_DIR/$SAMPLE_ID" -type f -name '*-coverage.pdf' | awk -F. '{print substr($2, 1, 3)}' | sort -u); do
-                                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.rsv-coverage.pdf" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$target*coverage.pdf"
+                                    gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.rsv-coverage.pdf" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".$target*coverage.pdf
                                 done
                                 "$ENV_MANAGER" deactivate
                             done
@@ -317,7 +315,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                         else
                             PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $2}' | cut -d'_' -f1)
                             PRIMER_SCHEME_VER=$(echo "$DESCRIPTION" | awk -F, '{print $2}' | cut -d'_' -f2-)
-                            PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g')
+                            PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g')
                             [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.ann" ]] && bwa-mem2 index -p "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                         fi
                         bbsplit.sh build=1 in="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" in2="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" ref="$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" out="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.fastq.gz"
@@ -372,8 +370,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                 while IFS= read -r DESCRIPTION || [ -n "$DESCRIPTION" ]; do
                     SAMPLE_ID=$(echo "$DESCRIPTION" | awk -F, '{print $1}')
                     PANEL=$(echo "$DESCRIPTION" | awk -F, '{print $2}')
-                    echo "$SAMPLE_ID"
-                    echo "$PANEL"
+                    echo "" && echo "$SAMPLE_ID" && echo "$PANEL"
                     mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
                     "$ENV_MANAGER" activate vigeas-ill
                     if [[ "$SE" == 1 ]]; then
@@ -477,6 +474,8 @@ Preset:  -x STR   Always applied before other options []
 
 Options: -c STR   Clair3 model
          -i STR   Path containing the demultiplexed *.bam data
+         -m INT   Min. read length (bp) for chimera filtering [default: expected amplicon size]
+         -M INT   Max. read length (bp) for chimera filtering [default: expected amplicon size + 200]
          -s STR   Path containing the samplesheet [basic format: sample_id,barcode,primer_scheme]
          -t INT   Max number of threads [default: $((NPROC - 2))]
 "
@@ -487,10 +486,12 @@ Options: -c STR   Clair3 model
         usage_ont
     fi
 
-    while getopts "c:i:s:t:x:" OPT; do
+    while getopts "c:i:m:M:s:t:x:" OPT; do
         case "$OPT" in
             c) CLAIR3_MODEL="$OPTARG";;
             i) INPUT="$OPTARG";;
+            m) MIN="$OPTARG";;
+            M) MAX="$OPTARG";;
             s) SAMPLE_SHEET="$OPTARG";;
             t) THREADS="$OPTARG";;
             x) PRESET="$OPTARG";;
@@ -533,7 +534,7 @@ Options: -c STR   Clair3 model
                  echo "" && "$ENV_MANAGER" list -n vigeas-stats 'exonerate|ghostscript|r-base|r-cowplot|r-dplyr|r-ggplot2|r-patchwork|r-plyr|r-readr|r-svglite|samtools|seqkit|seqtk'
                 "$ENV_MANAGER" activate vigeas-ont && echo ""
                 while IFS= read -r -d '' BAM; do
-                    samtools fastq "$BAM" -s "$(echo "$BAM" | awk -F/ '{print $NF}').fastq"
+                    samtools fastq "$BAM" > "$ANALYSIS_DIR/$(echo "$BAM" | awk -F/ '{print $NF}' | awk -F. '{print $1}').fastq"
                 done < <(find "$INPUT" -type f -name '*.bam' -print0)
                 "$ENV_MANAGER" deactivate
             fi
@@ -542,16 +543,16 @@ Options: -c STR   Clair3 model
         while IFS= read -r DESCRIPTION || [ -n "$DESCRIPTION" ]; do
             "$ENV_MANAGER" activate vigeas-ont
             SAMPLE_ID=$(echo "$DESCRIPTION" | awk -F, '{print $1}')
-            BARCODE_ID=$(echo "$$DESCRIPTION"| awk -F, '{print $2}')
+            BARCODE_ID=$(echo "$DESCRIPTION"| awk -F, '{print $2}')
             cd "$ANALYSIS_DIR" || exit
             mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
             if [[ "$BARCODE_ID" == *-* ]]; then
                 for barcode in $(echo "$BARCODE_ID" | sed 's/BC/barcode/g' | tr '-' '\n'); do
-                    cat "$ANALYSIS_DIR/*_$barcode.fastq" >> "$ANALYSIS_DIR/$SAMPLE_ID/$BARCODE_ID.fastq"
+                    cat "$ANALYSIS_DIR"/*_$barcode.fastq >> "$ANALYSIS_DIR/$SAMPLE_ID/$BARCODE_ID.fastq"
                 done
             else
                 for barcode in $(echo "$BARCODE_ID" | sed 's/BC/barcode/g' | tr '-' '\n'); do
-                    cat "$ANALYSIS_DIR/*_$barcode.fastq" >> "$ANALYSIS_DIR/$SAMPLE_ID/$BARCODE_ID.fastq"
+                    cat "$ANALYSIS_DIR"/*_$barcode.fastq >> "$ANALYSIS_DIR/$SAMPLE_ID/$BARCODE_ID.fastq"
                 done
             fi
             if echo "$DESCRIPTION" | grep -Eq "RSV_V[1-9]"; then
@@ -560,11 +561,15 @@ Options: -c STR   Clair3 model
                     PRIMER_SCHEME_VER="$version"
                     for type in RSVA RSVB; do
                         "$ENV_MANAGER" activate vigeas-ont
-                        echo "$PRIMER_SCHEME_DIR"
+                        echo "" && echo "$PRIMER_SCHEME_DIR"
                         PRIMER_SCHEME="$type"
                         PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_V${PRIMER_SCHEME_VER}" | sed -e 's/RSVA_V1/RSVA\/V1/g' -e 's/RSVA_V2/RSVA\/V2/g' -e 's/RSVA_V3/RSVA\/V3/g' -e 's/RSVB_V1/RSVB\/V1/g' -e 's/RSVB_V2/RSVB\/V2/g' -e 's/RSVB_V3/RSVB\/V3/g')
-                        MIN=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
-                        MAX=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
+                        if [[ -z "$MIN" ]]; then
+                            MIN=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
+                        fi
+                        if [[ -z "$MAX" ]]; then
+                            MAX=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
+                        fi
                         [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.fai" ]] && samtools faidx "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                         bbduk.sh minlen="$MIN" maxlen="$MAX" minavgquality=10 in="$ANALYSIS_DIR/$SAMPLE_ID/$BARCODE_ID.fastq" out="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq"
                         dedupe.sh in="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" out="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq"
@@ -579,7 +584,7 @@ Options: -c STR   Clair3 model
                         bgzip -f "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.pass.vcf"
                         tabix -p vcf "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.pass.vcf.gz"
                         bcftools query -f '%CHROM\t%POS\n' "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.fail.vcf" > "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt"
-                        samtools depth -a "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk '$3 < 10 {print $1 "\t" $2}' >> "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" && sort -k2,2n "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" -o "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt"
+                        samtools depth -a "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk -v depth="$DEPTH" '$3 < depth {print $1 "\t" $2}' >> "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" && sort -k2,2n "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" -o "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt"
                         bcftools consensus -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.pass.vcf.gz" -m "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" > "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                         sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                         muscle -align <(awk 'NR==FNR{print; next} {print $1}' "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta") -output "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.aligned.fa"
@@ -599,7 +604,7 @@ Options: -c STR   Clair3 model
                             AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
                             printf "%.2f\t" "$AVG_DEPTH"
                             REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
-                            for depth in 10 100 1000; do
+                            for depth in 20 100 1000; do
                                 samtools depth "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk -v cutoff="$depth" -v reflen="$REF_LEN" '$3 > cutoff {covered++} END {printf "%.2f\t", (reflen>0) ? covered/reflen*100 : 0}'
                             done
                             if [[ ! -s "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" ]]; then
@@ -624,16 +629,20 @@ Options: -c STR   Clair3 model
                     PRIMER_SCHEME_DIR=$(echo "{$PRIMER_SCHEME}_V${PRIMER_SCHEME_VER}" | sed -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g')
                     [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.fai" ]] && samtools faidx "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                 else
-                    PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $2}' | cut -d'_' -f1)
-                    PRIMER_SCHEME_VER=$(echo "$DESCRIPTION" | awk -F, '{print $2}' | cut -d'_' -f2-)
-                    PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g')
+                    PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | cut -d'_' -f1)
+                    PRIMER_SCHEME_VER=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | cut -d'_' -f2-)
+                    PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g')
                     [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.fai" ]] && samtools faidx "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                 fi
-                PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | awk -F/ '{print $1}')
-                PRIMER_SCHEME_DIR=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g')
-                echo "$PRIMER_SCHEME_DIR"
-                MIN=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
-                MAX=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
+                PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | awk -F_ '{print $1}')
+                PRIMER_SCHEME_DIR=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g')
+                echo "" && echo "$PRIMER_SCHEME_DIR"
+                if [[ -z "$MIN" ]]; then
+                    MIN=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
+                fi
+                if [[ -z "$MAX" ]]; then
+                    MAX=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
+                fi
                 [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.fai" ]] && samtools faidx "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                 bbduk.sh minlen="$MIN" maxlen="$MAX" minavgquality=10 in="$ANALYSIS_DIR/$SAMPLE_ID/$BARCODE_ID.fastq" out="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq"
                 dedupe.sh in="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" out="$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq"
@@ -647,7 +656,7 @@ Options: -c STR   Clair3 model
                 bgzip -f "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.pass.vcf"
                 tabix -p vcf "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.pass.vcf.gz"
                 bcftools query -f '%CHROM\t%POS\n' "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.fail.vcf" > "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt"
-                samtools depth -a "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" | awk '$3 < 10 {print $1 "\t" $2}' >> "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt" && sort -k2,2n "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt" -o "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt"
+                samtools depth -a "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" | awk -v depth="$DEPTH" '$3 < depth {print $1 "\t" $2}' >> "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt" && sort -k2,2n "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt" -o "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt"
                 bcftools consensus -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.pass.vcf.gz" -m "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt" > "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa"
                 sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa"
                 muscle -align <(awk 'NR==FNR{print; next} {print $1}' "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta") -output "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.aligned.fa"
@@ -656,7 +665,7 @@ Options: -c STR   Clair3 model
                 "$ENV_MANAGER" activate vigeas-stats
                 samtools depth -a "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" > "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth.tsv"
                 [[ ! -f "$ANALYSIS_DIR/.summary" ]] && {
-                    echo -e "primer_scheme\tsample_id\tnum_mapp_reads\tavg_depth\tdepth_20x\tdepth_100x\tdepth_1000x\tref_cov\tncount\tncount_perc" > "$ANALYSIS_DIR/.summary"
+                    echo -e "primer_scheme\tsample_id\tnum_total_reads\tnum_mapp_reads\tavg_depth\tdepth_20x\tdepth_100x\tdepth_1000x\tref_cov\tncount\tncount_perc" > "$ANALYSIS_DIR/.summary"
                 }
                 {
                     printf "\n"
@@ -667,7 +676,7 @@ Options: -c STR   Clair3 model
                     AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
                     printf "%.2f\t" "$AVG_DEPTH"
                     REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
-                    for depth in 10 100 1000; do
+                    for depth in 20 100 1000; do
                         samtools depth "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" | awk -v cutoff="$depth" -v reflen="$REF_LEN" '$3 > cutoff {covered++} END {printf "%.2f\t", (reflen>0) ? covered/reflen*100 : 0}'
                     done
                     if [[ ! -s "$ANALYSIS_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa" ]]; then
@@ -685,11 +694,11 @@ Options: -c STR   Clair3 model
         done < "$SAMPLE_SHEET"
         "$ENV_MANAGER" activate vigeas-stats
         for target in $(find "$ANALYSIS_DIR" -type f -name '*coverage.pdf' | awk -F. '{print $2}' | awk -F- '{print $1}' | sort -u); do
-            gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR/$LIBRARY_NAME.$target-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf" "$ANALYSIS_DIR/*/*.$target-coverage.pdf"
+            gs -dSAFER -r3000 -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -sOUTPUTFILE="$ANALYSIS_DIR/$LIBRARY_NAME.$target-coverage.$(uname -n).$(date +'%Y-%m-%d').pdf" "$ANALYSIS_DIR"/*/*.$target-coverage.pdf
         done
         "$ENV_MANAGER" deactivate
         sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR/.summary" > "$ANALYSIS_DIR/$LIBRARY_NAME.summary.$(uname -n).$(date +'%Y-%m-%d').txt"
-        rm -rf "$ANALYSIS_DIR/.summary"
+        rm -rf "$ANALYSIS_DIR/.summary" "$ANALYSIS_DIR/*.fastq"
         end=$(date +%s.%N)
         runtime=$(python3 -c "print(${end} - ${start})")
         echo "" && echo "Done. The runtime was $runtime seconds." && echo ""
