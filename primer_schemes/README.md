@@ -1,4 +1,4 @@
-# VIral GEnome ASsembly pipelines for WGS
+dc# VIral GEnome ASsembly pipelines for WGS
 
 ## Primer Scheme List
 
@@ -6,10 +6,13 @@
 | ------------- | ------------- | ------------------- | ---------------------------------------------------------|
 | CHIKV         | ~400pb        | ChikAsianECSA_V1    | https://github.com/zibraproject/zika-pipeline            |
 | DENV-1        | ~400pb        | DENGUESEQ1_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
+| DENV-1        | ~900pb        | DENV1CADDE_V1       | https://doi.org/10.1038/s41467-021-22607-0               |
 | DENV-2        | ~400pb        | DENGUESEQ2_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
+| DENV-2        | ~900pb        | DENV2CADDE_V1       | https://dx.doi.org/10.3201/eid2504.180958                |
 | DENV-3        | ~400pb        | DENGUESEQ3_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
+| DENV-3        | ~900pb        | DENV3CADDE_V1       | https://doi.org/10.1093/ve/veaf034                       |
 | DENV-4        | ~400pb        | DENGUESEQ4_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
-| DENV (PAN)    | ~400pb        | DENGUESEQPAN_V1     | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
+| DENV-4        | ~900pb        | DENV4CADDE_V1       | https://doi.org/10.3390/v16101603                        |
 | EBOV          | ~1,000pb      | ZaireEbola_V1       | https://github.com/artic-network/artic-ncov2019          |
 | EBOV          | ~500pb        | ZaireEbola_V2       | https://github.com/artic-network/artic-ncov2019          |
 | EBOV          | ~400pb        | ZaireEbola_V3       | https://github.com/artic-network/artic-ncov2019          |

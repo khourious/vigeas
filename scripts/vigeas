@@ -530,7 +530,7 @@ Options: -c STR   Clair3 model
             if [[ -z "$PRESET" ]] || [[ -z "$CLAIR3_MODEL" ]] || [[ -z "$INPUT" ]] || [[ -z "$SAMPLE_SHEET" ]]; then
                 usage_ont
             else
-                "$ENV_MANAGER" list -n vigeas-ont 'bbmap|bcftools|clair3|minimap2|muscle|samtools|seqkit|seqtk' && echo ""
+                "$ENV_MANAGER" list -n vigeas-ont 'bbmap|bcftools|clair3|ivar|minimap2|muscle|samtools|seqkit|seqtk' && echo ""
                  echo "" && "$ENV_MANAGER" list -n vigeas-stats 'exonerate|ghostscript|r-base|r-cowplot|r-dplyr|r-ggplot2|r-patchwork|r-plyr|r-readr|r-svglite|samtools|seqkit|seqtk'
                 "$ENV_MANAGER" activate vigeas-ont && echo ""
                 while IFS= read -r -d '' BAM; do
