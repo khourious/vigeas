@@ -2920,8 +2920,8 @@ if (primer_scheme == "HTLV1DemincoF/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 9068),
                        expand = expansion(0, 0), limits = c(0, 9100)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000, 2000),
+                       expand = expansion(0, 0), limits = c(1, 2001),
                        trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),

@@ -19,7 +19,7 @@ Written by Laise de Moraes <laise.moraes@fiocruz.br>
   Main script: September 24, 2025
 
   ILLUMINA workflows: May 23, 2025
-  ONT workflows: September 21, 2025
+  ONT workflows: September 25, 2025
 "
     exit 1
 }
