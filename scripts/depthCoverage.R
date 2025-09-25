@@ -1,5 +1,5 @@
 # Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
-# Updated: September 21, 2025
+# Updated: September 24, 2025
 # Author: Laise de Moraes <laise.moraes@fiocruz.br>
 
 if(!interactive()) pdf(NULL)
@@ -45,7 +45,11 @@ ref_seq <- list(
   "RSVB/V1" = "Genome reference: MZ515716.1 (RSV-B)",
   "RSVB/V2" = "Genome reference: MZ515716.1 (RSV-B)",
   "RSVB/V3" = "Genome reference: MZ515716.1 (RSV-B)",
-  "HTLV1DemincoF/V1" = "Genome reference: J02029.1 (HTLV-1)")
+  "HTLV1DemincoF/V1" = "Genome reference: J02029.1 (HTLV-1)",
+  "DENV1CADDE/V1" = "Genome reference: NC_001477.1 (DENV-1)",
+  "DENV2CADDE/V1" = "Genome reference: NC_001474.2 (DENV-2)",
+  "DENV3CADDE/V1" = "Genome reference: NC_001475.2 (DENV-3)",
+  "DENV4CADDE/V1" = "Genome reference: NC_002640.1 (DENV-4)")
 primer_scheme_2 <- ref_seq[[primer_scheme]]
 
 if (primer_scheme == "ARTIC/V1") {
@@ -2936,6 +2940,313 @@ if (primer_scheme == "HTLV1DemincoF/V1") {
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".htlv1-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "DENGUESEQ1/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
+                       expand = expansion(0, 0), limits = c(0, 10750)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "DENV1_1_LEFT-DENV1_1_RIGHT", 134, 1080,
+                    "1", "DENV1_3_LEFT-DENV1_3_RIGHT", 1447, 2380,
+                    "1", "DENV1_5_LEFT-DENV1_5_RIGHT", 2867, 3778,
+                    "1", "DENV1_7_LEFT-DENV1_7_RIGHT", 4130, 5011,
+                    "1", "DENV1_9_LEFT-DENV1_9_RIGHT", 5402, 6252,
+                    "1", "DENV1_11_LEFT-DENV1_11_RIGHT", 6784, 7701,
+                    "1", "DENV1_13_LEFT-DENV1_13_RIGHT", 8151, 8990,
+                    "1", "DENV1_15_LEFT-DENV1_15_RIGHT", 9353, 10182)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "DENV1_2_LEFT-DENV1_2_RIGHT", 825, 1648,
+                    "2", "DENV1_4_LEFT-DENV1_4_RIGHT", 2110, 2986,
+                    "2", "DENV1_6_LEFT-DENV1_6_RIGHT", 3279, 4242,
+                    "2", "DENV1_8_LEFT-DENV1_8_RIGHT", 4749, 5565,
+                    "2", "DENV1_10_LEFT-DENV1_10_RIGHT", 6064, 6953,
+                    "2", "DENV1_12_LEFT-DENV1_12_RIGHT", 7590, 8519,
+                    "2", "DENV1_14_LEFT-DENV1_14_RIGHT", 8829, 9755)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001477.1
+                         "5'UTR", 1, 94,
+                         "prM", 437, 934,
+                         "E", 935, 2419,
+                         "NS1", 2420, 3475,
+                         "NS2A", 3476, 4129,
+                         "NS3", 4520, 6376,
+                         "NS4A", 6377, 6757,
+                         "NS4B", 6827, 7573,
+                         "NS5", 7574, 10270,
+                         "3'UTR", 10274, 10735)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001477.1
+                         "C", 95, 436,
+                         "NS2B", 4130, 4519,
+                         "2K", 6758, 6826)
+  map2plot2 <- map2genome2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".denv1-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "DENGUESEQ2/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
+                       expand = expansion(0, 0), limits = c(0, 10750)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "DENV2_1_LEFT2-DENV2_1_RIGHT", 85, 1046,
+                    "1", "DENV2_3_LEFT-DENV2_3_RIGHT", 1642, 2542,
+                    "1", "DENV2_5_LEFT-DENV2_5_RIGHT", 2708, 3760,
+                    "1", "DENV2_7_LEFT-DENV2_7_RIGHT", 4345, 5264,
+                    "1", "DENV2_9_LEFT-DENV2_9_RIGHT", 5860, 6812,
+                    "1", "DENV2_11_LEFT-DENV2_11_RIGHT", 7519, 8572,
+                    "1", "DENV2_13_LEFT-DENV2_13_RIGHT", 9181, 10113)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "DENV2_2_LEFT-DENV2_2_RIGHT", 920, 1805,
+                    "2", "DENV2_4_LEFT-DENV2_4_RIGHT", 2423, 3363,
+                    "2", "DENV2_6_LEFT-DENV2_6_RIGHT", 3419, 4421,
+                    "2", "DENV2_8_LEFT-DENV2_8_RIGHT", 5051, 5949,
+                    "2", "DENV2_10_LEFT-DENV2_10_RIGHT", 6741, 7679,
+                    "2", "DENV2_12_LEFT-DENV2_12_RIGHT", 8427, 9333)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001474.2
+                         "5'UTR", 1, 96,
+                         "prM", 439, 936,
+                         "E", 937, 2421,
+                         "NS1", 2422, 3477,
+                         "NS2A", 3478, 4131,
+                         "NS3", 4522, 6375,
+                         "NS4A", 6376, 6756,
+                         "NS4B", 6826, 7569,
+                         "NS5", 7570, 10269,
+                         "3'UTR", 10273, 10723)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001474.2
+                         "C", 97, 438,
+                         "NS2B", 4132, 4521,
+                         "2K", 6757, 6825)
+  map2plot2 <- map2genome2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".denv2-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "DENGUESEQ3/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
+                       expand = expansion(0, 0), limits = c(0, 10750)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "DENV3_1_LEFT-DENV3_1_RIGHT", 132, 1084,
+                    "1", "DENV3_3_LEFT-DENV3_3_RIGHT", 1303, 2142,
+                    "1", "DENV3_5_LEFT-DENV3_5_RIGHT", 2773, 3623,
+                    "1", "DENV3_7_LEFT-DENV3_7_RIGHT", 4011, 4825,
+                    "1", "DENV3_9_LEFT-DENV3_9_RIGHT", 5252, 6135,
+                    "1", "DENV3_11_LEFT-DENV3_11_RIGHT", 6605, 7449,
+                    "1", "DENV3_13_LEFT-DENV3_13_RIGHT", 8029, 8887,
+                    "1", "DENV3_15_LEFT-DENV3_15_RIGHT", 9330, 10140)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "DENV3_2_LEFT-DENV3_2_RIGHT", 946, 1892,
+                    "2", "DENV3_4_LEFT-DENV3_4_RIGHT", 2033, 2882,
+                    "2", "DENV3_6_LEFT-DENV3_6_RIGHT", 3480, 4322,
+                    "2", "DENV3_8_LEFT-DENV3_8_RIGHT", 4701, 5559,
+                    "2", "DENV3_10_LEFT-DENV3_10_RIGHT", 5965, 6778,
+                    "2", "DENV3_12_LEFT-DENV3_12_RIGHT", 7259, 8142,
+                    "2", "DENV3_14_LEFT-DENV3_14_RIGHT", 8706, 9654)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001475.2
+                         "5'UTR", 1, 94,
+                         "prM", 437, 934,
+                         "E", 935, 2413,
+                         "NS1", 2414, 3469,
+                         "NS2A", 3470, 4123,
+                         "NS3", 4514, 6370,
+                         "NS4A", 6371, 6751,
+                         "NS4B", 6821, 7564,
+                         "NS5", 7565, 10264,
+                         "3'UTR", 10268, 10707)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_001475.2
+                         "C", 95, 436,
+                         "NS2B", 4124, 4513,
+                         "2K", 6752, 6820)
+  map2plot2 <- map2genome2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".denv3-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "DENGUESEQ4/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10649),
+                       expand = expansion(0, 0), limits = c(0, 10750)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
+                       expand = expansion(0, 0), limits = c(1, 101)) +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "DENV4_1_LEFT-DENV4_1_RIGHT", 40, 787,
+                    "1", "DENV4_3_LEFT-DENV4_3_RIGHT", 1272, 2082,
+                    "1", "DENV4_5_LEFT-DENV4_5_RIGHT", 2496, 3332,
+                    "1", "DENV4_7_LEFT-DENV4_7_RIGHT", 3536, 4398,
+                    "1", "DENV4_9_LEFT-DENV4_9_RIGHT", 4753, 5618,
+                    "1", "DENV4_11_LEFT-DENV4_11_RIGHT", 6042, 6766,
+                    "1", "DENV4_13_LEFT-DENV4_13_RIGHT", 7277, 8091,
+                    "1", "DENV4_15_LEFT-DENV4_15_RIGHT", 8487, 9312)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "DENV4_2_LEFT-DENV4_2_RIGHT", 622, 1386,
+                    "2", "DENV4_4_LEFT-DENV4_4_RIGHT", 1870, 2620,
+                    "2", "DENV4_6_LEFT-DENV4_6_RIGHT", 3081, 3812,
+                    "2", "DENV4_8_LEFT-DENV4_8_RIGHT", 4226, 5066,
+                    "2", "DENV4_10_LEFT-DENV4_10_RIGHT", 5509, 6260,
+                    "2", "DENV4_12_LEFT-DENV4_12_RIGHT", 6605, 7422,
+                    "2", "DENV4_14_LEFT-DENV4_14_RIGHT", 7929, 8758,
+                    "2", "DENV4_16_LEFT-DENV4_16_RIGHT", 9071, 9912)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_002640.1
+                         "5'UTR", 1, 101,
+                         "prM", 441, 938,
+                         "E", 939, 2423,
+                         "NS1", 2424, 3479,
+                         "NS2A", 3480, 4133,
+                         "NS3", 4524, 6377,
+                         "NS4A", 6378, 6758,
+                         "NS4B", 6828, 7562,
+                         "NS5", 7563, 10262,
+                         "3'UTR", 10266, 10649)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/NC_002640.1
+                         "C", 102, 440,
+                         "NS2B", 4134, 4523,
+                         "2K", 6759, 6827)
+  map2plot2 <- map2genome2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".denv4-coverage.pdf")
   plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
