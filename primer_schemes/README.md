@@ -1,4 +1,4 @@
-dc# VIral GEnome ASsembly pipelines for WGS
+# VIral GEnome ASsembly pipelines for WGS
 
 ## Primer Scheme List
 
