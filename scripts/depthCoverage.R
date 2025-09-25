@@ -59,8 +59,9 @@ if (primer_scheme == "ARTIC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -247,8 +248,9 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -354,8 +356,9 @@ if (primer_scheme == "ARTIC/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -542,8 +545,9 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -649,8 +653,9 @@ if (primer_scheme == "ARTIC/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -862,8 +867,9 @@ if (primer_scheme == "ARTIC/V4") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1051,8 +1057,9 @@ if (primer_scheme == "ARTIC/V4.1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1262,8 +1269,9 @@ if (primer_scheme == "ARTIC/V5.3.2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1448,8 +1456,9 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1555,8 +1564,9 @@ if (primer_scheme == "FIOCRUZ-IOC/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1671,8 +1681,9 @@ if (primer_scheme == "ZikaAsian/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10807),
                        expand = expansion(0, 0), limits = c(0, 10810)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1771,8 +1782,9 @@ if (primer_scheme == "DENGUESEQ1/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1868,8 +1880,9 @@ if (primer_scheme == "DENGUESEQ2/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1967,8 +1980,9 @@ if (primer_scheme == "DENGUESEQ3/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2064,8 +2078,9 @@ if (primer_scheme == "DENGUESEQ4/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10649),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2161,8 +2176,9 @@ if (primer_scheme == "ChikAsianECSA/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 11812),
                        expand = expansion(0, 0), limits = c(0, 12000)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2265,8 +2281,9 @@ if (primer_scheme == "CCEMHTLV1/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 9068),
                        expand = expansion(0, 0), limits = c(0, 9100)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2348,8 +2365,9 @@ if (primer_scheme == "WNV400/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11029),
                        expand = expansion(0, 0), limits = c(0, 11060)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2449,8 +2467,9 @@ if (primer_scheme == "HIV1Sanabani2006/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 2000, 4000, 6000, 8000, 9719),
                        expand = expansion(0, 0), limits = c(0, 9800)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2523,8 +2542,9 @@ if (primer_scheme == "RSVA/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2585,8 +2605,9 @@ if (primer_scheme == "RSVA/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2647,8 +2668,9 @@ if (primer_scheme == "RSVA/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2709,8 +2731,9 @@ if (primer_scheme == "RSVB/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2771,8 +2794,9 @@ if (primer_scheme == "RSVB/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2833,8 +2857,9 @@ if (primer_scheme == "RSVB/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2895,8 +2920,9 @@ if (primer_scheme == "HTLV1DemincoF/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 9068),
                        expand = expansion(0, 0), limits = c(0, 9100)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2944,15 +2970,16 @@ if (primer_scheme == "HTLV1DemincoF/V1") {
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
 
-if (primer_scheme == "DENGUESEQ1/V1") {
+if (primer_scheme == "DENV1CADDE/V1") {
   depcov <- ggplot() +
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
     labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -3021,15 +3048,16 @@ if (primer_scheme == "DENGUESEQ1/V1") {
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
 
-if (primer_scheme == "DENGUESEQ2/V1") {
+if (primer_scheme == "DENV2CADDE/V1") {
   depcov <- ggplot() +
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
     labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -3096,15 +3124,16 @@ if (primer_scheme == "DENGUESEQ2/V1") {
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
 
-if (primer_scheme == "DENGUESEQ3/V1") {
+if (primer_scheme == "DENV3CADDE/V1") {
   depcov <- ggplot() +
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
     labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -3173,15 +3202,16 @@ if (primer_scheme == "DENGUESEQ3/V1") {
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
 
-if (primer_scheme == "DENGUESEQ4/V1") {
+if (primer_scheme == "DENV4CADDE/V1") {
   depcov <- ggplot() +
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
     labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10649),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100),
-                       expand = expansion(0, 0), limits = c(1, 101)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
+                       expand = expansion(0, 0), limits = c(1, 1001),
+                       trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
