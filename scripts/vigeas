@@ -16,9 +16,9 @@ version() {
 vigeas [VIral GEnome ASsembly pipelines for WGS]
 Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
-  Main script: October 01, 2025
+  Main script: October 02, 2025
 
-  ILLUMINA workflows: May 23, 2025
+  ILLUMINA workflows: October 02, 2025
   ONT workflows: September 25, 2025
 "
     exit 1
@@ -414,7 +414,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                         bwa-mem2 mem -t "$THREADS" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.fastq.gz" | ivar trim -e -m 32 -q 15 -b "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam"
                         samtools sort -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam"
                         samtools index "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam"
-                        samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | ivar variants -q 20 -t 0.03 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME." -r "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
+                        samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | ivar variants -q 20 -t 0.03 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME" -r "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                         samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | ivar consensus -t 0 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}"
                         sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                         mafft --thread "$THREADS" --quiet --auto --inputorder --6merpair --leavegappyregion --addfragments "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ASSEMBLY_DIR/$LIBRARY_NAME.consensus.$PRIMER_SCHEME.$(uname -n).$(date +'%Y-%m-%d').fasta"

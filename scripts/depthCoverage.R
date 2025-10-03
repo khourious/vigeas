@@ -1,5 +1,5 @@
 # Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
-# Updated: September 24, 2025
+# Updated: October 02, 2025
 # Author: Laise de Moraes <laise.moraes@fiocruz.br>
 
 if(!interactive()) pdf(NULL)
@@ -49,7 +49,10 @@ ref_seq <- list(
   "DENV1CADDE/V1" = "Genome reference: NC_001477.1 (DENV-1)",
   "DENV2CADDE/V1" = "Genome reference: NC_001474.2 (DENV-2)",
   "DENV3CADDE/V1" = "Genome reference: NC_001475.2 (DENV-3)",
-  "DENV4CADDE/V1" = "Genome reference: NC_002640.1 (DENV-4)")
+  "DENV4CADDE/V1" = "Genome reference: NC_002640.1 (DENV-4)",
+  "OROVFN400L/V1" = "Genome reference: KP691612.1 (OROV L segment)",
+  "OROVFN400M/V1" = "Genome reference: KP691622.1 (OROV M segment)",
+  "OROVFN400S/V1" = "Genome reference: KP691623.1 (OROV S segment)")
 primer_scheme_2 <- ref_seq[[primer_scheme]]
 
 if (primer_scheme == "ARTIC/V1") {
@@ -59,9 +62,9 @@ if (primer_scheme == "ARTIC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -248,9 +251,9 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -356,9 +359,9 @@ if (primer_scheme == "ARTIC/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -545,9 +548,9 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -653,9 +656,9 @@ if (primer_scheme == "ARTIC/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -867,9 +870,9 @@ if (primer_scheme == "ARTIC/V4") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1057,9 +1060,9 @@ if (primer_scheme == "ARTIC/V4.1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1269,9 +1272,9 @@ if (primer_scheme == "ARTIC/V5.3.2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1456,9 +1459,9 @@ if (primer_scheme == "FIOCRUZ-IOC/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1564,9 +1567,9 @@ if (primer_scheme == "FIOCRUZ-IOC/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 5000, 10000, 15000, 20000, 25000, 29903),
                        expand = expansion(0, 0), limits = c(0, 30500)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1681,9 +1684,9 @@ if (primer_scheme == "ZikaAsian/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10807),
                        expand = expansion(0, 0), limits = c(0, 10810)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1782,9 +1785,9 @@ if (primer_scheme == "DENGUESEQ1/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1880,9 +1883,9 @@ if (primer_scheme == "DENGUESEQ2/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -1980,9 +1983,9 @@ if (primer_scheme == "DENGUESEQ3/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2078,9 +2081,9 @@ if (primer_scheme == "DENGUESEQ4/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10649),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2176,9 +2179,9 @@ if (primer_scheme == "ChikAsianECSA/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 11812),
                        expand = expansion(0, 0), limits = c(0, 12000)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2281,9 +2284,9 @@ if (primer_scheme == "CCEMHTLV1/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 9068),
                        expand = expansion(0, 0), limits = c(0, 9100)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2365,9 +2368,9 @@ if (primer_scheme == "WNV400/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11029),
                        expand = expansion(0, 0), limits = c(0, 11060)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2467,9 +2470,9 @@ if (primer_scheme == "HIV1Sanabani2006/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 2000, 4000, 6000, 8000, 9719),
                        expand = expansion(0, 0), limits = c(0, 9800)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2542,9 +2545,9 @@ if (primer_scheme == "RSVA/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2605,9 +2608,9 @@ if (primer_scheme == "RSVA/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2668,9 +2671,9 @@ if (primer_scheme == "RSVA/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2731,9 +2734,9 @@ if (primer_scheme == "RSVB/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2794,9 +2797,9 @@ if (primer_scheme == "RSVB/V2") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2857,9 +2860,9 @@ if (primer_scheme == "RSVB/V3") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000),
                        expand = expansion(0, 0), limits = c(0, 15400)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2922,7 +2925,7 @@ if (primer_scheme == "HTLV1DemincoF/V1") {
                        expand = expansion(0, 0), limits = c(0, 9100)) +
     scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000, 2000),
                        expand = expansion(0, 0), limits = c(1, 2001),
-                       trans = "log10") +
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -2977,9 +2980,9 @@ if (primer_scheme == "DENV1CADDE/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10735),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -3055,9 +3058,9 @@ if (primer_scheme == "DENV2CADDE/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -3131,9 +3134,9 @@ if (primer_scheme == "DENV3CADDE/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10723),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -3209,9 +3212,9 @@ if (primer_scheme == "DENV4CADDE/V1") {
          y = "Per base coverage (x)", x = NULL) +
     scale_x_continuous(breaks = c(1, 1000, 3000, 5000, 7000, 9000, 10649),
                        expand = expansion(0, 0), limits = c(0, 10750)) +
-    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 200, 300, 400, 500, 1000),
-                       expand = expansion(0, 0), limits = c(1, 1001),
-                       trans = "log10") +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
     theme_light(base_size = 10) +
     theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 14),
@@ -3278,5 +3281,181 @@ if (primer_scheme == "DENV4CADDE/V1") {
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".denv4-coverage.pdf")
   plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "OROVFN400L/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000, 6846),
+                       expand = expansion(0, 0), limits = c(0, 6870)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "OROV_L_v2_0_LEFT-OROV_L_v2_0_RIGHT", 9, 400,
+                    "2", "OROV_L_v2_2_LEFT-OROV_L_v2_2_RIGHT", 335, 738,
+                    "2", "OROV_L_v2_4_LEFT-OROV_L_v2_4_RIGHT", 943, 1352,
+                    "2", "OROV_L_v2_6_LEFT-OROV_L_v2_6_RIGHT", 1536, 1933,
+                    "2", "OROV_L_v2_8_LEFT-OROV_L_v2_8_RIGHT", 2129, 2542,
+                    "2", "OROV_L_v2_10_LEFT/alt/alt1-OROV_L_v2_10_RIGHT/alt1", 2751, 3161,
+                    "2", "OROV_L_v2_12_LEFT/alt-OROV_L_v2_12_RIGHT", 3380, 3781,
+                    "2", "OROV_L_v2_14_LEFT-OROV_L_v2_14_RIGHT", 3987, 4383,
+                    "2", "OROV_L_v2_16_LEFT-OROV_L_v2_16_RIGHT", 4571, 4982,
+                    "2", "OROV_L_v2_18_LEFT-OROV_L_v2_18_RIGHT/alt", 5172, 5585,
+                    "2", "OROV_L_v2_20_LEFT-OROV_L_v2_20_RIGHT", 5814, 6221,
+                    "2", "OROV_L_v2_22_LEFT-OROV_L_v2_22_RIGHT", 6389, 6789)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 6870)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "OROV_L_v2_1_LEFT-OROV_L_v2_1_RIGHT", 33, 440,
+                    "1", "OROV_L_v2_3_LEFT/alt-OROV_L_v2_3_RIGHT", 629, 1042,
+                    "1", "OROV_L_v2_5_LEFT-OROV_L_v2_5_RIGHT", 1238, 1642,
+                    "1", "OROV_L_v2_7_LEFT-OROV_L_v2_7_RIGHT", 1825, 2228,
+                    "1", "OROV_L_v2_9_LEFT-OROV_L_v2_9_RIGHT", 2441, 2851,
+                    "1", "OROV_L_v2_11_LEFT-OROV_L_v2_11_RIGHT", 3066, 3482,
+                    "1", "OROV_L_v2_13_LEFT-OROV_L_v2_13_RIGHT", 3665, 4069,
+                    "1", "OROV_L_v2_15_LEFT-OROV_L_v2_15_RIGHT", 4283, 4693,
+                    "1", "OROV_L_v2_17_LEFT-OROV_L_v2_17_RIGHT", 4894, 5284,
+                    "1", "OROV_L_v2_19_LEFT-OROV_L_v2_19_RIGHT", 5501, 5909,
+                    "1", "OROV_L_v2_21_LEFT-OROV_L_v2_21_RIGHT", 6103, 6505,
+                    "1", "OROV_L_v2_23_LEFT-OROV_L_v2_23_RIGHT", 6526, 6849)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 6870)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/KP691612.1
+                         "OROVsLgp1", 44, 6802)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 6870)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".orovL-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 + plot_layout(nrow = 5, heights = c(3, .1, .1, .1, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "OROVFN400M/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4385),
+                       expand = expansion(0, 0), limits = c(0, 4410)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "OROV_M_400_1_LEFT/alt1-OROV_M_400_1_RIGHT", 12, 385,
+                    "1", "OROV_M_400_3_LEFT-OROV_M_400_3_RIGHT", 542, 900,
+                    "1", "OROV_M_400_5_LEFT-OROV_M_400_5_RIGHT", 1111, 1490,
+                    "1", "OROV_M_400_7_LEFT-OROV_M_400_7_RIGHT", 1671, 2047,
+                    "1", "OROV_M_400_9_LEFT-OROV_M_400_9_RIGHT", 2178, 2578,
+                    "1", "OROV_M_400_11_LEFT-OROV_M_400_11_RIGHT", 2712, 3123,
+                    "1", "OROV_M_400_13_LEFT-OROV_M_400_13_RIGHT", 3302, 3699,
+                    "1", "OROV_M_400_15_LEFT-OROV_M_400_15_RIGHT", 3847, 4232)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 4410)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "OROV_M_400_2_LEFT/alt1/alt2-OROV_M_400_2_RIGHT", 284, 648,
+                    "2", "OROV_M_400_4_LEFT-OROV_M_400_4_RIGHT/alt1", 801, 1212,
+                    "2", "OROV_M_400_6_LEFT-OROV_M_400_6_RIGHT", 1382, 1784,
+                    "2", "OROV_M_400_8_LEFT/alt1-OROV_M_400_8_RIGHT/alt1/alt2", 1940, 2310,
+                    "2", "OROV_M_400_10_LEFT-OROV_M_400_10_RIGHT", 2475, 2844,
+                    "2", "OROV_M_400_12_LEFT-OROV_M_400_12_RIGHT", 3025, 3412,
+                    "2", "OROV_M_400_14_LEFT-OROV_M_400_14_RIGHT", 3592, 3982,
+                    "2", "OROV_M_400_16_LEFT-OROV_M_400_16_RIGHT", 4008, 4381)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 4410)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/KP691622.1
+                         "OROVsMgp1", 32, 4294)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 4410)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".orovM-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 + plot_layout(nrow = 5, heights = c(3, .1, .1, .1, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "OROVFN400S/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 100, 200, 300, 400, 500, 600, 700, 800, 900, 946),
+                       expand = expansion(0, 0), limits = c(0, 950)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "OROV_S_400_0_LEFT-OROV_S_400_0_RIGHT", 5, 264,
+                    "2", "OROV_S_400_2_LEFT-OROV_S_400_2_RIGHT", 279, 710)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 950)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "OROV_S_400_1_LEFT-OROV_S_400_1_RIGHT", 38, 398,
+                    "1", "OROV_S_400_3_LEFT-OROV_S_400_3_RIGHT", 548, 909)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 950)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/KP691622.1
+                         "OROVsMgp1", 32, 4294)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 950)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".orovS-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 + plot_layout(nrow = 5, heights = c(3, .1, .1, .1, .3))
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
