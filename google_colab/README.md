@@ -1,9 +1,9 @@
-## IPython Notebooks (.ipynb)
+## IPython notebook on Google Colab
 
 **Google Colab (or Google Colaboratory)** is a cloud-based platform hosted by Google Research that allows anyone to write and execute Python code in a notebook environment directly through a web browser.
 A key feature is that Colab requires no setup while providing free access to computational resources, including GPUs, to encourage research in machine learning, data analysis, and education.
 
-## How to Open IPython Notebook from GitHub
+## How to open IPython notebook from GitHub
 1. Go to the [Google Colab Platform](https://colab.research.google.com)
 2. Under `Open notebook`, select the `Github`
 3. Enter the following link in `Enter a GitHub URL or search by organisation or user`:

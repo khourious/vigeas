@@ -3447,15 +3447,23 @@ if (primer_scheme == "OROVFN400S/V1") {
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 950)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "blue"))
-  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/KP691622.1
-                         "OROVsMgp1", 32, 4294)
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/KP691623.1
+                         "OROVsNgp1", 45, 740)
   map2plot1 <- map2genome1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 950)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
-  output <-  paste0(output, ".orovS-coverage.pdf")
-  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 + plot_layout(nrow = 5, heights = c(3, .1, .1, .1, .3))
+  map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/KP691623.1
+                         "OROVsNgp2", 64,342)
+  map2plot2 <- map2genome2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 950)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+    output <-  paste0(output, ".orovS-coverage.pdf")
+    plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
