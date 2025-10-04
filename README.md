@@ -36,7 +36,7 @@ Example:
 985322,BC02,ZikaAsian_V2
 ```
 
-Available primer schemes in this workflow can be found at: [https://github.com/khourious/vigeas/tree/main/primer_schemes/](https://github.com/khourious/vigeas/tree/main/primer_schemes)
+Available primer schemes in this workflow can be found at: [primer_schemes/README.md](https://github.com/khourious/vigeas/blob/main/primer_schemes/README.md)
 
 ## USAGE
 

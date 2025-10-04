@@ -13,7 +13,7 @@
 | DENV-3        | ~900pb        | DENV3CADDE_V1       | https://doi.org/10.1093/ve/veaf034                       |
 | DENV-4        | ~400pb        | DENGUESEQ4_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
 | DENV-4        | ~900pb        | DENV4CADDE_V1       | https://doi.org/10.3390/v16101603                        |
-| DENV (PAN)    | ~400bp        | DENGUESEQPAN_V1       https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
+| DENV (PAN)    | ~400bp        | DENGUESEQPAN_V1     | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
 | EBOV          | ~1,000pb      | ZaireEbola_V1       | https://github.com/artic-network/artic-ncov2019          |
 | EBOV          | ~500pb        | ZaireEbola_V2       | https://github.com/artic-network/artic-ncov2019          |
 | EBOV          | ~400pb        | ZaireEbola_V3       | https://github.com/artic-network/artic-ncov2019          |
