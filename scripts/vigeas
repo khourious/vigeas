@@ -16,7 +16,7 @@ version() {
 vigeas [VIral GEnome ASsembly pipelines for WGS]
 Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
-  Main script: October 02, 2025
+  Main script: October 06, 2025
 
   ILLUMINA workflows: October 02, 2025
   ONT workflows: September 25, 2025
@@ -117,7 +117,7 @@ enrichment_panels() {
  [*] Illumina Viral Surveillance Panel v2          VSP2
  [*] Influenza                                     FLU
 ------------------------------------------------------------
-* Included Refs of Human Influenza Vaccine Composition of 2025-2026 Northern Hemisphere Influenza Season
+* Included Refs of Human Influenza Vaccine Composition
   (https://gisaid.org/resources/human-influenza-vaccine-composition)
 "
     exit 1

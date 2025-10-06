@@ -1,0 +1,65 @@
+#!/bin/bash
+
+brew update
+brew upgrade
+brew install \
+    autoconf \
+    automake \
+    ca-certificates \
+    cargo-c \
+    clang-format \
+    cmake \
+    curl \
+    dos2unix \
+    git \
+    gsl \
+    hdf5 \
+    htslib \
+    llvm \
+    openssl \
+    pipx \
+    xz \
+    zlib \
+    zstd
+
+if ! grep -q 'vigeas' ~/.[bz]shrc; then
+    echo "export PATH=$HOME/vigeas/scripts:$PATH" >> ~/.[bz]shrc
+fi
+
+if [[ -n "$MAMBA_EXE" ]]; then
+    if [[ "$MAMBA_EXE" == *"micromamba"* ]]; then
+        eval "$("$MAMBA_EXE" shell hook -s posix)"
+        ENV_MANAGER=micromamba
+    else
+        ENV_MANAGER=mamba
+    fi
+elif [[ -n "$CONDA_EXE" ]]; then
+    ENV_MANAGER=conda
+else
+    export BIN_FOLDER="$HOME/micromamba/bin"
+    export INIT_YES="Y"
+    export CONDA_FORGE_YES="Y"
+    export PREFIX_LOCATION="$HOME/micromamba"
+    ${SHELL} <(curl -L micro.mamba.pm/install.sh) <<EOF
+$BIN_FOLDER
+$INIT_YES
+$CONDA_FORGE_YES
+$PREFIX_LOCATION
+EOF
+    export PATH=$HOME/micromamba/bin:$PATH
+    ENV_MANAGER=micromamba
+fi
+
+source
+
+if ! "$ENV_MANAGER" env list | grep -q vigeas-ill; then
+    "$ENV_MANAGER" create -y -n vigeas-ill -c conda-forge -c bioconda bbmap blast bwa-mem2 entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
+fi
+if ! "$ENV_MANAGER" env list | grep -q vigeas-ont; then
+    "$ENV_MANAGER" create -y -n vigeas-ont -c conda-forge -c bioconda bbmap bcftools clair3 ivar minimap2 muscle samtools seqkit seqtk tensorflow
+fi
+if ! "$ENV_MANAGER" env list | grep -q vigeas-stats; then
+    "$ENV_MANAGER" create -y -n vigeas-stats -c conda-forge -c bioconda exonerate ghostscript r-base r-cowplot r-dplyr r-ggplot2 r-patchwork r-plyr r-readr r-svglite samtools 
+seqkit seqtk
+fi
+echo "environments:" && "$ENV_MANAGER" env list | grep vigeas

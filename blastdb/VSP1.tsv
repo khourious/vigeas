@@ -44,6 +44,9 @@ AY210103.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/K
 AY209932.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Korea/426/1968(H2N2)"	segment 6 (NA)	
 M63531.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Korea/426/1968(H2N2)"	segment 7 (MP)	
 AY210191.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Korea/426/1968(H2N2)"	segment 8 (NS)	
+WSS5146800	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Missouri/11/2025(H1N1)"	segment 4 (HA)	2026 Southern Hemisphere Influenza Season
+WSS5146818	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Missouri/11/2025(H1N1)"	segment 4 (HA)	2026 Southern Hemisphere Influenza Season
+WSS5146799	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Missouri/11/2025(H1N1)"	segment 6 (NA)	2026 Southern Hemisphere Influenza Season
 CY002071.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/New York/392/2004(H3N2)"	segment 1 (PB2)	
 CY002070.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/New York/392/2004(H3N2)"	segment 2 (PB1)	
 CY002069.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/New York/392/2004(H3N2)"	segment 3 (PA)	
@@ -68,6 +71,21 @@ KF021598.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/S
 KF021599.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Shanghai/02/2013(H7N9)"	segment 6 (NA)	
 KF021600.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Shanghai/02/2013(H7N9)"	segment 7 (MP)	
 KF021601.1	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Shanghai/02/2013(H7N9)"	segment 8 (NS)	
+WSS5146808	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Singapore/GP20238/2024(H3N2)"	segment 1 (PB2)	2026 Southern Hemisphere Influenza Season
+WSS5146807	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Singapore/GP20238/2024(H3N2)"	segment 2 (PB1)	2026 Southern Hemisphere Influenza Season
+WSS5146805	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Singapore/GP20238/2024(H3N2)"	segment 3 (PA)	2026 Southern Hemisphere Influenza Season
+WSS5146802	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Singapore/GP20238/2024(H3N2)"	segment 4 (HA)	2026 Southern Hemisphere Influenza Season
+WSS5146804	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Singapore/GP20238/2024(H3N2)"	segment 5 (NP)	2026 Southern Hemisphere Influenza Season
+WSS5146801	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Singapore/GP20238/2024(H3N2)"	segment 6 (NA)	2026 Southern Hemisphere Influenza Season
+WSS5146803	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Singapore/GP20238/2024(H3N2)"	segment 7 (MP)	2026 Southern Hemisphere Influenza Season
+WSS5146806	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Singapore/GP20238/2024(H3N2)"	segment 8 (NS)	2026 Southern Hemisphere Influenza Season
+WSS5146826	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Sydney/1359/2024(H3N2)"	segment 1 (PB2)	2026 Southern Hemisphere Influenza Season
+WSS5146825	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Sydney/1359/2024(H3N2)"	segment 2 (PB1)	2026 Southern Hemisphere Influenza Season
+WSS5146820	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Sydney/1359/2024(H3N2)"	segment 3 (PA)	2026 Southern Hemisphere Influenza Season
+WSS5146821	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Sydney/1359/2024(H3N2)"	segment 4 (HA)	2026 Southern Hemisphere Influenza Season
+WSS5146823	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Sydney/1359/2024(H3N2)"	segment 5 (NP)	2026 Southern Hemisphere Influenza Season
+WSS5146819	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Sydney/1359/2024(H3N2)"	segment 6 (NA)	2026 Southern Hemisphere Influenza Season
+WSS5146822	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Sydney/1359/2024(H3N2)"	segment 7 (MP)	2026 Southern Hemisphere Influenza Season
 WSS3510840	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Victoria/2570/2019(H1N1)"	segment 1 (PB2)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510841	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Victoria/2570/2019(H1N1)"	segment 2 (PB1)	2022-2023 Northern Hemisphere Influenza Season
 WSS3510842	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Victoria/2570/2019(H1N1)"	segment 3 (PA)	2022-2023 Northern Hemisphere Influenza Season
@@ -194,14 +212,16 @@ AY597011.2	Betacoronavirus hongkongense - Human coronavirus HKU1 (HCoV-HKU1)
 AY274119.3	Betacoronavirus pandemicum - Severe acute respiratory syndrome coronavirus (SARS-CoV)		
 MN908947.3	Betacoronavirus pandemicum - Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)		
 KY352407.1	Betacoronavirus pandemicum - Severe acute respiratory syndrome-related coronavirus (SARSr-CoV)		
-WSS4768784	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 1 (PB2)	2025-2026 Northern Hemisphere Influenza Season
-WSS4768783	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 2 (PB1)	2025-2026 Northern Hemisphere Influenza Season
-WSS4768779	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 3 (PA)	2025-2026 Northern Hemisphere Influenza Season
-WSS4768777	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 4 (HA)	2025-2026 Northern Hemisphere Influenza Season
-WSS4768782	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 5 (NP)	2025-2026 Northern Hemisphere Influenza Season
-WSS4768778	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 6 (NA)	2025-2026 Northern Hemisphere Influenza Season
-WSS4768781	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 7 (MP)	2025-2026 Northern Hemisphere Influenza Season
-WSS4768780	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 8 (NS)	2025-2026 Northern Hemisphere Influenza Season
+WSS5146815	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 1 (PB2)	2026 Southern Hemisphere Influenza Season
+WSS5146814	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 2 (PB1)	2026 Southern Hemisphere Influenza Season
+WSS5146816	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 3 (PA)	2026 Southern Hemisphere Influenza Season
+WSS5146809	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 4 (HA)	2026 Southern Hemisphere Influenza Season
+WSS5146813	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 5 (NP)	2026 Southern Hemisphere Influenza Season
+WSS5146832	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 5 (NP)	2026 Southern Hemisphere Influenza Season
+WSS5146810	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 6 (NA)	2026 Southern Hemisphere Influenza Season
+WSS5146812	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 7 (MP)	2026 Southern Hemisphere Influenza Season
+WSS5146831	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 7 (MP)	2026 Southern Hemisphere Influenza Season
+WSS5146811	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Austria/1359417/2021"	segment 8 (NS)	2026 Southern Hemisphere Influenza Season
 AF101982.1	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Lee/1940"	segment 1 (PB2)	
 M14880.1	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Lee/1940"	segment 2 (PB1)	
 AF102017.1	"Betainfluenzavirus influenzae - Influenza B virus (IBV), strain B/Lee/1940"	segment 3 (PA)	
