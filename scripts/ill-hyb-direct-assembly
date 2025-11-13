@@ -2,152 +2,148 @@
 
 # ill-hyb-direct-assembly <fastq_folder> <sample_sheet> <ref_seq_list> <se>
 
-eval "$($HOME/micromamba/bin/micromamba shell hook -s posix)"
-
 INPUT=$1
 SAMPLE_SHEET=$2
 REF_SEQ_LIST=$3
-THREADS=$(nproc)
-DEPTH=5
+DEPTH=10
+PIDENT=90
 SE=0 # 0 = paired-end; 1 = single-end
 
-LIBRARY_NAME="$(basename "$SAMPLE_SHEET" | awk -F. '{print $1}')"
-ANALYSIS_DIR=$HOME/vigeas/"$LIBRARY_NAME"_ANALYSIS
-[[ ! -d "$ANALYSIS_DIR" ]] && mkdir "$ANALYSIS_DIR" && chmod 700 -R "$ANALYSIS_DIR"
-echo "" && echo "Output path: "$ANALYSIS_DIR""
-echo "" && echo "Log Analysis: "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt"
-echo "" && echo "To display the log output in fulscreen: watch tail -n 20 "$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt" && echo ""
+if [[ -n "$MAMBA_EXE" ]]; then
+    if [[ "$MAMBA_EXE" == *"micromamba"* ]]; then
+        eval "$($MAMBA_EXE shell hook -s posix)"
+        ENV_MANAGER=micromamba
+    else
+        ENV_MANAGER=mamba
+    fi
+elif [[ -n "$CONDA_EXE" ]]; then
+    ENV_MANAGER=conda
+fi
 
-if [[ $(grep "Experiment Name" "$SAMPLE_SHEET") ]]; then
-    cat "$SAMPLE_SHEET" | tr -dc '[:print:]\n' | sed -e '1,18d' | awk -F, '{print $1","$NF}' | sort > "$ANALYSIS_DIR"/.samplesheet
-    SAMPLE_SHEET="$ANALYSIS_DIR"/.samplesheet
+LIBRARY_NAME="$(basename $SAMPLE_SHEET | awk -F. '{print $1}')"
+ASSEMBLY_DIR="$HOME/vigeas/${LIBRARY_NAME}_ASSEMBLY"
+
+[[ ! -d "$ASSEMBLY_DIR" ]] && mkdir "$ASSEMBLY_DIR" && chmod 700 -R "$ASSEMBLY_DIR"
+echo "" && echo "Output path: $ASSEMBLY_DIR"
+echo "" && echo "Log Analysis: $ASSEMBLY_DIR/$LIBRARY_NAME.log.$(uname -n).$(date +'%Y-%m-%d').txt"
+echo "" && echo "To display the log output in fulscreen: watch tail -n 20 $ASSEMBLY_DIR/$LIBRARY_NAME.log.$(uname -n).$(date +'%Y-%m-%d').txt" && echo ""
+
+if grep -q "Experiment Name" "$SAMPLE_SHEET"; then
+    cat "$SAMPLE_SHEET" | tr -dc '[:print:]\n' | sed -n '/^Sample_ID/,$p' | sed '1d' | awk -F, > "$ASSEMBLY_DIR/.samplesheet"
+    SAMPLE_SHEET="$ASSEMBLY_DIR/.samplesheet"
 fi
 
 bg() {
-    for i in $(awk -F, '{print $1}' "$SAMPLE_SHEET"); do
-        if [[ $(find "$INPUT" -type f -name '*001.*') ]]; then
-            if [[ -z $(find "$INPUT" -mindepth 1 -type d) ]]; then
-                cp -v "$INPUT"/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
-                if [[ $(find "$INPUT" -type f -name '*R2*') ]]; then
-                    cp -v "$INPUT"/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
-                fi
-            else
-                cp -v "$INPUT"/"$i"_*/"$i"_*_R1_001.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
-                if [[ $(find "$INPUT" -type f -name '*R2*') ]]; then
-                    cp -v "$INPUT"/"$i"_*/"$i"_*_R2_001.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
-                fi
-            fi
-        elif [[ $(find "$INPUT" -type f -name '*_[1-2].fastq.gz') ]]; then
-            cp -v "$INPUT"/"$i"_1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
-            if [[ $(find "$INPUT" -type f -name '*_2.fastq.gz') ]]; then
-                cp -v "$INPUT"/"$i"_2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
-            fi
-        elif [[ $(find "$INPUT" -type f -name '*.R[1-2].fastq.gz') ]]; then
-            cp -v "$INPUT"/"$i".R1.fastq.gz "$ANALYSIS_DIR"/"$i".R1.fastq.gz
-            if [[ $(find "$INPUT" -type f -name '*.R2.fastq.gz') ]]; then
-                cp -v "$INPUT"/"$i".R2.fastq.gz "$ANALYSIS_DIR"/"$i".R2.fastq.gz
-            fi
-        fi
-    done
-    echo "sample_id#ref_seq#target#segment#flu_vaccine#num_total_reads#num_mapp_reads#avg_depth#depth_10x#depth_100x#depth_1000x#ref_cov#ncount#ncount_perc" | tr '#' '\t' >> "$ANALYSIS_DIR"/.summary
-    for i in $(cat "$SAMPLE_SHEET"); do
-        SAMPLE_ID=$(echo "$i" | awk -F, '{print $1}')
-        PANEL=$(echo "$i" | awk -F, '{print $2}')
-        echo "$SAMPLE_ID"
-        echo "$PANEL"
-        mkdir "$ANALYSIS_DIR"/"$SAMPLE_ID"
-        micromamba activate vigeas-ill
-        if [[ "$SE" == 1 ]]; then
-            fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.json
-            spades.py -t "$THREADS" --metaviral -s "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo
+    start=$(date +%s.%N)
+    if [[ -z "$THREADS" ]]; then
+        if ((NPROC > 2)); then
+            THREADS=$((NPROC - 2))
         else
-            fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ANALYSIS_DIR"/"$SAMPLE_ID".R1.fastq.gz -I "$ANALYSIS_DIR"/"$SAMPLE_ID".R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -O "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz -h "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.html -j "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.json
-            spades.py -t "$THREADS" --metaviral -1 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz -2 "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo
+            THREADS=2
         fi
-        if [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta ]; then
-            blastn -num_threads "$THREADS" -word_size 21 -query "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta -db $HOME/vigeas/blastdb/"$PANEL" -out "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt -outfmt "6 qseqid sseqid pident length"
-            seqtk seq -F '!' "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fasta > "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fastq
-            gzip "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fastq
-            cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/transcripts.fastq > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz
-        elif [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta ]; then
-            blastn -num_threads "$THREADS" -word_size 21 -query "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta -db $HOME/vigeas/blastdb/"$PANEL" -out "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".blastn.txt -outfmt "6 qseqid sseqid pident length"
-            seqtk seq -F '!' "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fasta > "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fastq
-            gzip "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fastq
-            cat "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/before_rr.fastq.gz > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz
+    fi
+    "$ENV_MANAGER" list -n vigeas-ill 'bbmap|blast|bwa-mem2|entrez-direct|exonerate|fastp|ivar|mafft|samtools|seqkit|seqtk|spades' && echo ""
+    echo "" && "$ENV_MANAGER" list -n vigeas-stats 'exonerate|ghostscript|r-base|r-cowplot|r-dplyr|r-ggplot2|r-patchwork|r-plyr|r-readr|r-svglite|samtools|seqkit|seqtk' && echo ""
+    while IFS= read -r ID; do
+        R1=$(find "$INPUT" -type f -regex ".*/${ID}.*\(_R1\|_1\|\.R1\).*\.fastq\.gz" -print -quit)
+        R2=$(find "$INPUT" -type f -regex ".*/${ID}.*\(_R2\|_2\|\.R2\).*\.fastq\.gz" -print -quit)
+        if [[ -n "$R1" ]]; then
+            cp -v "$R1" "$ASSEMBLY_DIR/${ID}.R1.fastq.gz"
+            [[ -n "$R2" ]] && cp -v "$R2" "$ASSEMBLY_DIR/${ID}.R2.fastq.gz"
+            continue
         fi
-        micromamba deactivate
-        for i in $(cat "$REF_SEQ_LIST"); do
+    done < <(awk -F, '{print $1}' "$SAMPLE_SHEET")
+
+    [[ ! -f "$ASSEMBLY_DIR/.summary" ]] && {
+        echo -e "sample_id\tref_seq\ttarget\tsegment\tflu_vaccine\tnum_total_reads\tnum_mapp_reads\tavg_depth\tdepth_10x\tdepth_100x\tdepth_1000x\tref_cov\tncount\tncount_perc" > "$ASSEMBLY_DIR/.summary"
+    }
+
+    while IFS= read -r DESCRIPTION || [ -n "$DESCRIPTION" ]; do
+        SAMPLE_ID=$(echo "$DESCRIPTION" | awk -F, '{print $1}')
+        PANEL=$(echo "$DESCRIPTION" | awk -F, '{print $2}')
+        echo "" && echo "$SAMPLE_ID" && echo "$PANEL"
+        mkdir "$ASSEMBLY_DIR"/"$SAMPLE_ID"
+        "$ENV_MANAGER" activate vigeas-ill
+        if [[ "$SE" == 1 ]]; then
+            fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -h "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.html" -j "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.json"
+            spades.py -t "$THREADS" --metaviral -s "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/denovo"
+        else
+            fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" -I "$ASSEMBLY_DIR/$SAMPLE_ID.R2.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -O "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" -h "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.html" -j "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.json"
+            spades.py -t "$THREADS" --metaviral -1 "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -2 "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/denovo"
+        fi
+        if [ -f "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fasta" ]; then
+            blastn -num_threads "$THREADS" -word_size 21 -query "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fasta" -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
+            seqtk seq -F '!' "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fasta" > "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq"
+            gzip "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq"
+            cat "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz"
+        elif [ -f "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fasta" ]; then
+            blastn -num_threads "$THREADS" -word_size 21 -query "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fasta" -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
+            seqtk seq -F '!' "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fasta" > "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq"
+            gzip "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq"
+            cat "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq.gz" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz"
+        else
+            seqkit fq2fa "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" | blastn -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
+        fi
+        "$ENV_MANAGER" deactivate
+        while IFS= read -r REFSEQ; do
             echo ""
-            echo "$SAMPLE_ID" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-            grep "^$i" $HOME/vigeas/blastdb/"$PANEL".tsv | awk -F"\t" '{if ($3 == "" || $3 == " " || gsub(/\t/, "", $3) == 0) printf $1"#"$2"#"$3"#"$4; else printf $0}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-            micromamba activate vigeas-ill
-            bwa-mem2 index -p $HOME/vigeas/refseq/"$i" $HOME/vigeas/refseq/"$i".fasta
-            if [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/*.fasta ]; then
-                if [[ "$SE" == 1 ]]; then
-                    bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
-                else
-                    bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
-                fi
+            {
+                printf "%s\t" "${SAMPLE_ID}"
+                grep "^$REFSEQ" "$HOME/vigeas/blastdb/$PANEL.tsv" | awk -F"\t" '{if ($3 == "" || $3 == " " || gsub(/\t/, "", $3) == 0) {printf "%s\t%s\t%s\t%s\t", $1, $2, $3, $4} else {printf "%s\t", $0}}'
+            } >> "$ASSEMBLY_DIR/.summary"
+            "$ENV_MANAGER" activate vigeas-ill
+            bwa-mem2 index -p "$HOME/vigeas/refseq/$REFSEQ" "$HOME/vigeas/refseq/$REFSEQ.fasta"
+            if [[ "$SE" == 1 ]]; then
+                bwa-mem2 mem -t "$THREADS" "$HOME/vigeas/refseq/$REFSEQ" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz" | samtools sort - > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.concat.sorted.bam"
             else
-                if [[ "$SE" == 1 ]]; then
-                    bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
-                else
-                    bwa-mem2 mem -t "$THREADS" $HOME/vigeas/refseq/"$i" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
-                fi
+                bwa-mem2 mem -t "$THREADS" "$HOME/vigeas/refseq/$REFSEQ" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" | samtools sort - > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.concat.sorted.bam"
             fi
-            samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam
-            samtools consensus -m simple -a -aa -A -d 1 -@ "$THREADS" --show-del no --show-ins yes -f fasta "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.pre.sorted.bam -o "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre.fasta
-            bwa-mem2 index -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre.fasta
-            if [ -f "$ANALYSIS_DIR"/"$SAMPLE_ID"/denovo/*.fasta ]; then
-                if [[ "$SE" == 1 ]]; then
-                    bwa-mem2 mem -t "$THREADS" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.concat.R1.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
-                else
-                    bwa-mem2 mem -t "$THREADS" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.pre.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
-                fi
+            samtools index "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.concat.sorted.bam"
+            samtools consensus -m simple -a -aa -A -d 1 -@ "$THREADS" --show-del no --show-ins yes -f fasta "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.concat.sorted.bam" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.concat.fasta"
+            bwa-mem2 index -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.concat" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.concat.fasta"
+            if [[ "$SE" == 1 ]]; then
+                bwa-mem2 mem -t "$THREADS" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.concat" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz" | samtools sort - > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam"
             else
-                if [[ "$SE" == 1 ]]; then
-                    bwa-mem2 mem -t "$THREADS" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+                bwa-mem2 mem -t "$THREADS" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.concat" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" | samtools sort - > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam"
+            fi
+            samtools index "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam"
+            {
+                seqkit stats "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" | awk 'NR==2{gsub(/,/, "", $4); printf "%s\t", $4}'
+                samtools view -F 4 -c "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | awk '{printf "%s\t", $1}'
+            } >> "$ASSEMBLY_DIR/.summary"
+            samtools depth -a "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth.tsv"
+            samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/refseq/$REFSEQ.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | ivar variants -q 20 -t 0.03 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ" -r "$HOME/vigeas/refseq/$REFSEQ.fasta"
+            samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/refseq/$REFSEQ.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | ivar consensus -t 0 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}"
+            sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa"
+            "$ENV_MANAGER" deactivate
+            "$ENV_MANAGER" activate vigeas-stats
+            {
+                AVG_DEPTH=$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
+                printf "%.2f\t" "$AVG_DEPTH"
+                REF_LEN=$(fastalength "$HOME/vigeas/refseq/$REFSEQ.fasta" | awk '{print $1}')
+                for depth in 10 100 1000; do
+                    samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | awk -v cutoff="$depth" -v reflen="$REF_LEN" '$3 > cutoff {covered++} END {printf "%.2f\t", (reflen>0) ? covered/reflen*100 : 0}'
+                done
+                if [[ ! -s "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" ]] || ! grep -v "^>" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" | grep -q "[ACGTacgtNn]"; then
+                    printf "0.00\t0\t100.00\n"
                 else
-                    bwa-mem2 mem -t "$THREADS" "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".pre "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R1.fastq.gz "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID".trimmed.R2.fastq.gz | tee >(samtools view -c - | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary) | samtools sort - > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
+                    N_COUNT=$(seqtk comp "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" | awk '{print $9}')
+                    REF_COV=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", ($2 - $1) * 100 / $2}')
+                    N_PERC=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", $1 * 100 / $2}')
+                    printf "%s\t" "$REF_COV"
+                    printf "%d\t" "$N_COUNT"
+                    printf "%s\n" "$N_PERC"
                 fi
-            fi
-            samtools index "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam
-            samtools view -F 4 -c "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-            samtools depth -a "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam > "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth.tsv
-            samtools mpileup -a -A -d 0 --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar variants -q 20 -t 0.03 -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i" -r $HOME/vigeas/refseq/"$i".fasta
-            samtools mpileup -a -A -d 0 --reference $HOME/vigeas/refseq/"$i".fasta -B "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | ivar consensus -t 0 -m "$DEPTH" -p "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH"
-            sed -i -e 's/>.*/>'${SAMPLE_ID}'/g' "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth"$DEPTH".fa
-            rm -rf "$ANALYSIS_DIR"/"$SAMPLE_ID".*.fastq.gz
-            micromamba deactivate
-            micromamba activate vigeas-stats
-            AVG_DEPTH=$(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{sum+=$3} END {print sum/NR}')
-            if [[ "$AVG_DEPTH" == "" || "$AVG_DEPTH" == 0 ]]; then
-                echo "0.00""#" | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-            else
-                echo "$AVG_DEPTH" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-            fi
-            paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"10"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-            paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"100"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-            paste <(samtools depth "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".trimmed.sorted.bam | awk '{if ($3 > '"1000"') {print $0}}' | wc -l) <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') | awk -F"\t" '{printf("%0.2f\n", $1/$2*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-            COVERAGE=$(fastalength "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa 2> /dev/null | awk '{print $1}')
-            if [[ "$COVERAGE" == 0 ]]; then
-                echo "0.00" | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-                fastalength $HOME/vigeas/refseq/"$i".fasta | awk -F" " '{print $1}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-                echo "100.00" | awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
-            else
-                paste <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}') <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') | awk -F"\t" '{printf("%0.2f\n", ($1-$2)/$1*100)}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-                seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}' | awk '{printf $0"#"}' | tr '#' '\t' | tr -d '\n' >> "$ANALYSIS_DIR"/.summary
-                paste <(seqtk comp "$ANALYSIS_DIR"/"$SAMPLE_ID"/"$SAMPLE_ID"."$i".depth10.fa | awk -F"\t" '{print $9}') <(fastalength $HOME/vigeas/refseq/"$i".fasta | awk '{print $1}')| awk -F"\t" '{printf("%0.2f\n", ($1/$2)*100)}'| awk '{printf $0"\n"}' >> "$ANALYSIS_DIR"/.summary
-            fi
-        done
-    done
-    micromamba deactivate
-    sed '/^[[:space:]]*$/d' "$ANALYSIS_DIR"/.summary > "$ANALYSIS_DIR"/"$LIBRARY_NAME".summary.$(uname -n).$(date +'%Y-%m-%d').txt
-    rm -rf "$ANALYSIS_DIR"/.samplesheet "$ANALYSIS_DIR"/.summary*
+            } >> "$ASSEMBLY_DIR/.summary"
+        done < "$REF_SEQ_LIST"
+    done < "$SAMPLE_SHEET"
+    "$ENV_MANAGER" deactivate
+    sed '/^[[:space:]]*$/d' "$ASSEMBLY_DIR/.summary" > "$ASSEMBLY_DIR/$LIBRARY_NAME.summary.$(uname -n).$(date +'%Y-%m-%d').txt"
+    rm -rf "$ASSEMBLY_DIR/.samplesheet" "$ASSEMBLY_DIR/.summary" "$ASSEMBLY_DIR"/*.fastq.gz
     end=$(date +%s.%N)
     runtime=$(python3 -c "print(${end} - ${start})")
-    echo "" && echo "Done. The runtime was "$runtime" seconds." && echo ""
+    echo "" && echo "Done. The runtime was $runtime seconds." && echo ""
 }
 
-bg &>>"$ANALYSIS_DIR"/"$LIBRARY_NAME".log.$(uname -n).$(date +'%Y-%m-%d').txt &
+bg &>>"$ASSEMBLY_DIR/$LIBRARY_NAME.log.$(uname -n).$(date +'%Y-%m-%d').txt" &
 exit 0
