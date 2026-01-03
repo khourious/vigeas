@@ -55,7 +55,7 @@ bg() {
     done < <(awk -F, '{print $1}' "$SAMPLE_SHEET")
 
     [[ ! -f "$ASSEMBLY_DIR/.summary" ]] && {
-        echo -e "sample_id\tref_seq\ttarget\tsegment\tflu_vaccine\tnum_total_reads\tnum_mapp_reads\tavg_depth\tdepth_10x\tdepth_100x\tdepth_1000x\tref_cov\tncount\tncount_perc" > "$ASSEMBLY_DIR/.summary"
+        echo -e "sample_id\tref_seq\ttarget\tsegment\tflu_vaccine\tnum_total_reads\tnum_mapp_reads\tavg_depth\tref_cov" > "$ASSEMBLY_DIR/.summary"
     }
 
     while IFS= read -r DESCRIPTION || [ -n "$DESCRIPTION" ]; do
@@ -65,24 +65,24 @@ bg() {
         mkdir "$ASSEMBLY_DIR"/"$SAMPLE_ID"
         "$ENV_MANAGER" activate vigeas-ill
         if [[ "$SE" == 1 ]]; then
-            fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -h "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.html" -j "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.json"
-            spades.py -t "$THREADS" --metaviral -s "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/denovo"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" ]] && fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -h "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.html" -j "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.json"
+            [[ ! -d "$ASSEMBLY_DIR/$SAMPLE_ID/denovo" ]] && spades.py -t "$THREADS" --metaviral -s "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/denovo"
         else
-            fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" -I "$ASSEMBLY_DIR/$SAMPLE_ID.R2.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -O "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" -h "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.html" -j "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.json"
-            spades.py -t "$THREADS" --metaviral -1 "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -2 "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/denovo"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" ]] && fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" -I "$ASSEMBLY_DIR/$SAMPLE_ID.R2.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -O "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" -h "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.html" -j "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.json"
+            [[ ! -d "$ASSEMBLY_DIR/$SAMPLE_ID/denovo" ]] && spades.py -t "$THREADS" --metaviral -1 "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -2 "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/denovo"
         fi
         if [ -f "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fasta" ]; then
-            blastn -num_threads "$THREADS" -word_size 21 -query "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fasta" -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
-            seqtk seq -F '!' "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fasta" > "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq"
-            gzip "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq"
-            cat "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" ]] && blastn -num_threads "$THREADS" -word_size 21 -query "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fasta" -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq" ]] && seqtk seq -F '!' "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fasta" > "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq" ]] && gzip "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz" ]] && cat "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/transcripts.fastq" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz"
         elif [ -f "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fasta" ]; then
-            blastn -num_threads "$THREADS" -word_size 21 -query "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fasta" -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
-            seqtk seq -F '!' "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fasta" > "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq"
-            gzip "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq"
-            cat "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq.gz" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" ]] && blastn -num_threads "$THREADS" -word_size 21 -query "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fasta" -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq" ]] && seqtk seq -F '!' "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fasta" > "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq" ]] && gzip "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz" ]] && cat "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" "$ASSEMBLY_DIR/$SAMPLE_ID/denovo/before_rr.fastq.gz" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.concat.R1.fastq.gz"
         else
-            seqkit fq2fa "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" | blastn -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
+            [[ ! -f "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" ]] && seqkit fq2fa "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" | blastn -db "$HOME/vigeas/blastdb/$PANEL" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
         fi
         "$ENV_MANAGER" deactivate
         while IFS= read -r REFSEQ; do
@@ -121,24 +121,18 @@ bg() {
                 AVG_DEPTH=$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
                 printf "%.2f\t" "$AVG_DEPTH"
                 REF_LEN=$(fastalength "$HOME/vigeas/refseq/$REFSEQ.fasta" | awk '{print $1}')
-                for depth in 10 100 1000; do
-                    samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | awk -v cutoff="$depth" -v reflen="$REF_LEN" '$3 > cutoff {covered++} END {printf "%.2f\t", (reflen>0) ? covered/reflen*100 : 0}'
-                done
-                if [[ ! -s "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" ]] || ! grep -v "^>" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" | grep -q "[ACGTacgtNn]"; then
-                    printf "0.00\t0\t100.00\n"
+                N_COUNT=$(seqtk comp "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" | awk '{print $9}')
+                if [[ "$REF_LEN" -gt 0 ]]; then
+                    REF_COV=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", (($2 - $1) / $2) * 100}')
                 else
-                    N_COUNT=$(seqtk comp "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa" | awk '{print $9}')
-                    REF_COV=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", ($2 - $1) * 100 / $2}')
-                    N_PERC=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", $1 * 100 / $2}')
-                    printf "%s\t" "$REF_COV"
-                    printf "%d\t" "$N_COUNT"
-                    printf "%s\n" "$N_PERC"
+                    REF_COV="0.00"
                 fi
+                printf "%s\n" "$REF_COV"
             } >> "$ASSEMBLY_DIR/.summary"
         done < "$REF_SEQ_LIST"
     done < "$SAMPLE_SHEET"
     "$ENV_MANAGER" deactivate
-    sed '/^[[:space:]]*$/d' "$ASSEMBLY_DIR/.summary" > "$ASSEMBLY_DIR/$LIBRARY_NAME.summary.$(uname -n).$(date +'%Y-%m-%d').txt"
+    sed '/^[[:space:]]*$/d' "$ASSEMBLY_DIR/.summary" > "$ASSEMBLY_DIR/$LIBRARY_NAME.summary.$(uname -n).$(date +'%Y-%m-%d').tsv"
     rm -rf "$ASSEMBLY_DIR/.samplesheet" "$ASSEMBLY_DIR/.summary" "$ASSEMBLY_DIR"/*.fastq.gz
     end=$(date +%s.%N)
     runtime=$(python3 -c "print(${end} - ${start})")
