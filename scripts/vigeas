@@ -333,7 +333,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                     "$ENV_MANAGER" activate vigeas-ill
                     SAMPLE_ID=$(echo "$DESCRIPTION" | awk -F, '{print $1}')
                     [[ ! -d "$ASSEMBLY_DIR"/"$SAMPLE_ID" ]] && mkdir "$ASSEMBLY_DIR"/"$SAMPLE_ID"
-                    echo "" && echo "$SAMPLE_ID"
+                    echo "" && echo "$SAMPLE_ID" && echo "$PRIMER_SCHEME_DIR"
                     if [[ "$SE" == 1 ]]; then
                         fastp --thread "$THREADS" -f 0 -t 0 -F 0 -T 0 --cut_front --cut_tail --qualified_quality_phred 20 -l 75 -i "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -h "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.html" -j "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.json"
                     else
@@ -645,11 +645,11 @@ Options: -c STR   Clair3 model
             mkdir "$ASSEMBLY_DIR"/"$SAMPLE_ID"
             if [[ "$BARCODE_ID" == *-* ]]; then
                 for barcode in $(echo "$BARCODE_ID" | sed 's/BC/barcode/g' | tr '-' '\n'); do
-                    cat "$ASSEMBLY_DIR"/*_$barcode.fastq >> "$ASSEMBLY_DIR/$SAMPLE_ID/$BARCODE_ID.fastq"
+                    cat "$ASSEMBLY_DIR"/*_$barcode*.fastq >> "$ASSEMBLY_DIR/$SAMPLE_ID/$BARCODE_ID.fastq"
                 done
             else
                 for barcode in $(echo "$BARCODE_ID" | sed 's/BC/barcode/g' | tr '-' '\n'); do
-                    cat "$ASSEMBLY_DIR"/*_$barcode.fastq >> "$ASSEMBLY_DIR/$SAMPLE_ID/$BARCODE_ID.fastq"
+                    cat "$ASSEMBLY_DIR"/*_$barcode*.fastq >> "$ASSEMBLY_DIR/$SAMPLE_ID/$BARCODE_ID.fastq"
                 done
             fi
             if echo "$DESCRIPTION" | grep -Eq "RSV_V[1-9]"; then
@@ -658,7 +658,7 @@ Options: -c STR   Clair3 model
                     PRIMER_SCHEME_VER="$version"
                     for type in RSVA RSVB; do
                         "$ENV_MANAGER" activate vigeas-ont
-                        echo "" && echo "$PRIMER_SCHEME_DIR"
+                        echo "" && echo "$SAMPLE_ID" && echo "$PRIMER_SCHEME_DIR"
                         PRIMER_SCHEME="$type"
                         PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_V${PRIMER_SCHEME_VER}" | sed -e 's/RSVA_V1/RSVA\/V1/g' -e 's/RSVA_V2/RSVA\/V2/g' -e 's/RSVA_V3/RSVA\/V3/g' -e 's/RSVB_V1/RSVB\/V1/g' -e 's/RSVB_V2/RSVB\/V2/g' -e 's/RSVB_V3/RSVB\/V3/g')
                         if [[ -z "$MIN" ]]; then
@@ -708,6 +708,7 @@ Options: -c STR   Clair3 model
                                 REF_COV="0.00"
                             fi
                             printf "%s\n" "$REF_COV"
+                        } >> "$ASSEMBLY_DIR/.summary"
                         Rscript "$HOME/vigeas/scripts/depthCoverage.R" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth.tsv" "$SAMPLE_ID" "$PRIMER_SCHEME_DIR" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME"
                         "$ENV_MANAGER" deactivate
                     done
@@ -728,7 +729,7 @@ Options: -c STR   Clair3 model
                 fi
                 PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | awk -F_ '{print $1}')
                 PRIMER_SCHEME_DIR=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g' -e 's/DENV1CADDE_V1/DENV1CADDE\/V1/g' -e 's/DENV2CADDE_V1/DENV2CADDE\/V1/g' -e 's/DENV2GII2022CADDE_V1/DENV2GII2022CADDE\/V1/g' -e 's/DENV3CADDE_V1/DENV3CADDE\/V1/g' -e 's/DENV4CADDE_V1/DENV4CADDE\/V1/g' -e 's/OROVFN400L_V1/OROVFN400L\/V1/g' -e 's/OROVFN400M_V1/OROVFN400M\/V1/g' -e 's/OROVFN400S_V1/OROVFN400S\/V1/g')
-                echo "" && echo "$PRIMER_SCHEME_DIR"
+                echo "" && echo "$SAMPLE_ID" && echo "$PRIMER_SCHEME_DIR"
                 if [[ -z "$MIN" ]]; then
                     MIN=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
                 fi
