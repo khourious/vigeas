@@ -48,7 +48,7 @@ ref_seq <- list(
   "HTLV1DemincoF/V1" = "Genome reference: J02029.1 (HTLV-1)",
   "DENV1CADDE/V1" = "Genome reference: NC_001477.1 (DENV-1)",
   "DENV2CADDE/V1" = "Genome reference: NC_001474.2 (DENV-2)",
-  "DENV2GII2022CADDE/V1" = "Genome reference: PV789655.1 (DENV-2 GII)",
+  "DENV2GII2022FN/V1" = "Genome reference: PV789655.1 (DENV-2 GII)",
   "DENV3CADDE/V1" = "Genome reference: NC_001475.2 (DENV-3)",
   "DENV4CADDE/V1" = "Genome reference: NC_002640.1 (DENV-4)",
   "OROVFN400L/V1" = "Genome reference: KP691612.1 (OROV L segment)",
@@ -3469,7 +3469,7 @@ if (primer_scheme == "OROVFN400S/V1") {
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
 
-if (primer_scheme == "DENV2CADDE/V1") {
+if (primer_scheme == "DENV2GII2022FN/V1") {
   depcov <- ggplot() +
     geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
     labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
@@ -3561,7 +3561,7 @@ if (primer_scheme == "DENV2CADDE/V1") {
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
-  output <-  paste0(output, ".denv2-coverage.pdf")
+  output <-  paste0(output, ".denv2gii-coverage.pdf")
   plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
