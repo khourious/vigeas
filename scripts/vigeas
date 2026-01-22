@@ -18,7 +18,7 @@ Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
   Main script: January 13, 2026
 
-  ILLUMINA workflows: January 13, 2026
+  ILLUMINA workflows: January 22, 2026
   ONT workflows: January 13, 2026
 "
     exit 1
@@ -357,7 +357,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                                 samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | ivar consensus -t 0 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}"
                                 sed -i -e "s/>.*/>${SAMPLE_ID}_${PRIMER_SCHEME}/g" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                                 mafft --thread "$THREADS" --quiet --auto --inputorder --6merpair --leavegappyregion --addfragments "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | seqkit grep -ip "${SAMPLE_ID}_${PRIMER_SCHEME}" | sed '/>/!y/atcgn/ATCGN/' >> "$ASSEMBLY_DIR/$LIBRARY_NAME.consensus.RSV.$(uname -n).$(date +'%Y-%m-%d').fasta"
-                                rm -rf "$ASSEMBLY_DIR/$SAMPLE_ID.*.fastq.gz"
+                                rm -rf "$ASSEMBLY_DIR/$SAMPLE_ID".*.fastq.gz
                                 "$ENV_MANAGER" deactivate
                                 "$ENV_MANAGER" activate vigeas-stats
                                 samtools depth -a "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth.tsv"
@@ -368,16 +368,21 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                                     printf "%s\t" "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}"
                                     printf "%s\t" "${SAMPLE_ID}"
                                     seqkit stats "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" | awk 'NR==2{gsub(/,/, "", $4); printf "%s\t", $4}'
-                                    samtools view -F 4 -c "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam" | awk '{printf "%s\t", $1}'
-                                    AVG_DEPTH=$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
-                                    printf "%.2f\t" "$AVG_DEPTH"
-                                    REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
-                                    N_COUNT=$(seqtk comp "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" | awk '{print $9}')
-                                    if [[ "$REF_LEN" -gt 0 ]]; then
-                                        REF_COV=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", (($2 - $1) / $2) * 100}')
-                                    else
+                                    MAPPED_READS=$(samtools view -F 4 -c "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam")
+                                    printf "%s\t" "$MAPPED_READS"
+                                    if [[ "$MAPPED_READS" -eq 0 ]]; then
+                                        AVG_DEPTH="0.00"
                                         REF_COV="0.00"
+									else
+                                        AVG_DEPTH=$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
+                                        REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
+                                        N_COUNT=$(seqtk comp "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" | awk '{print $9}')
+                                        if [[ "$REF_LEN" -gt 0 ]]; then
+                                            REF_COV=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", (($2 - $1) / $2) * 100}')
+                                        else
+                                            REF_COV="0.00"
                                     fi
+                                    printf "%.2f\t" "$AVG_DEPTH"
                                     printf "%s\n" "$REF_COV"
                                 } >> "$ASSEMBLY_DIR/.summary"
                                 Rscript "$HOME/vigeas/scripts/depthCoverage.R" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth.tsv" "$SAMPLE_ID" "$PRIMER_SCHEME_DIR" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID"
@@ -413,7 +418,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                         samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | ivar consensus -t 0 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}"
                         sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                         mafft --thread "$THREADS" --quiet --auto --inputorder --6merpair --leavegappyregion --addfragments "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | seqkit grep -ip "$SAMPLE_ID" | sed '/>/!y/atcgn/ATCGN/' >> "$ASSEMBLY_DIR/$LIBRARY_NAME.consensus.$PRIMER_SCHEME.$(uname -n).$(date +'%Y-%m-%d').fasta"
-                        rm -rf "$ASSEMBLY_DIR/$SAMPLE_ID.*.fastq.gz"
+                        rm -rf "$ASSEMBLY_DIR/$SAMPLE_ID".*.fastq.gz
                         "$ENV_MANAGER" deactivate
                         "$ENV_MANAGER" activate vigeas-stats
                         samtools depth -a "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth.tsv"
@@ -421,7 +426,6 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                             echo -e "primer_scheme\tsample_id\tnum_total_reads\tnum_mapp_reads\tavg_depth\tref_cov" > "$ASSEMBLY_DIR/.summary"
                         }
                         {
-                            printf "\n"
                             printf "%s\t" "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}"
                             printf "%s\t" "${SAMPLE_ID}"
                             seqkit stats "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.fastq.gz" | awk 'NR==2{gsub(/,/, "", $4); printf "%s\t", $4}'
@@ -528,7 +532,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
             fi
         fi
         sed '/^[[:space:]]*$/d' "$ASSEMBLY_DIR/.summary" > "$ASSEMBLY_DIR/$LIBRARY_NAME.summary.$(uname -n).$(date +'%Y-%m-%d').tsv"
-        rm -rf "$ASSEMBLY_DIR/.samplesheet" "$ASSEMBLY_DIR/.summary" "$ASSEMBLY_DIR"/*.fastq.gz
+        rm -rf "$ASSEMBLY_DIR"/.samplesheet "$ASSEMBLY_DIR"/.summary "$ASSEMBLY_DIR"/*.fastq.gz
         end=$(date +%s.%N)
         runtime=$(python3 -c "print(${end} - ${start})")
         echo "" && echo "Done. The runtime was $runtime seconds." && echo ""
@@ -687,9 +691,8 @@ Options: -c STR   Clair3 model
                         samtools depth -a "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk -v depth="$DEPTH" '$3 < depth {print $1 "\t" $2}' >> "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" && sort -k2,2n "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt"
                         bcftools consensus -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.pass.vcf.gz" -m "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                         if [ "$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" | awk '{sum+=$3} END{if(NR>0) print sum/NR; else print 0}')" = "0" ]; then
-                            REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
-                            sed -i "2s/.*/$(printf 'N%.0s' $(seq 1 $REF_LEN))/" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa"
-                        fi 
+                            sed -i '2,$s/[^>[:space:]]/N/g' "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa"
+                        fi
                         sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                         cat "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" >> "$ASSEMBLY_DIR/$LIBRARY_NAME.consensus.$PRIMER_SCHEME.$(uname -n).$(date +'%Y-%m-%d').fasta"
                         "$ENV_MANAGER" deactivate
@@ -759,8 +762,7 @@ Options: -c STR   Clair3 model
                 samtools depth -a "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" | awk -v depth="$DEPTH" '$3 < depth {print $1 "\t" $2}' >> "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt" && sort -k2,2n "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt"
                 bcftools consensus -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.pass.vcf.gz" -m "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.nmask.txt" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa"
                 if [ "$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" | awk '{sum+=$3} END{if(NR>0) print sum/NR; else print 0}')" = "0" ]; then
-                    REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
-                    sed -i "2s/.*/$(printf 'N%.0s' $(seq 1 $REF_LEN))/" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa"
+                    sed -i '2,$s/[^>[:space:]]/N/g' "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa"
                 fi
                 sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa"
                 cat "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.depth${DEPTH}.fa" >> "$ASSEMBLY_DIR/$LIBRARY_NAME.consensus.$PRIMER_SCHEME.$(uname -n).$(date +'%Y-%m-%d').fasta"
@@ -796,7 +798,7 @@ Options: -c STR   Clair3 model
         done
         "$ENV_MANAGER" deactivate
         sed '/^[[:space:]]*$/d' "$ASSEMBLY_DIR/.summary" > "$ASSEMBLY_DIR/$LIBRARY_NAME.summary.$(uname -n).$(date +'%Y-%m-%d').tsv"
-        rm -rf "$ASSEMBLY_DIR/*.fastq" "$ASSEMBLY_DIR/.summary"
+        rm -rf "$ASSEMBLY_DIR"/*.fastq "$ASSEMBLY_DIR"/.samplesheet "$ASSEMBLY_DIR"/.summary
         end=$(date +%s.%N)
         runtime=$(python3 -c "print(${end} - ${start})")
         echo "" && echo "Done. The runtime was $runtime seconds." && echo ""
