@@ -115,27 +115,28 @@ bg() {
             samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/refseq/$REFSEQ.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | ivar variants -q 20 -t 0.03 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ" -r "$HOME/vigeas/refseq/$REFSEQ.fasta"
             samtools mpileup -a -A -d 0 --reference "$HOME/vigeas/refseq/$REFSEQ.fasta" -B "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.sorted.bam" | ivar consensus -t 0 -m "$DEPTH" -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}"
             sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.depth${DEPTH}.fa"
-			{
-				printf "%s\t" "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}"
-				printf "%s\t" "${SAMPLE_ID}"
-				seqkit stats "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" | awk 'NR==2{gsub(/,/, "", $4); printf "%s\t", $4}'
-				MAPPED_READS=$(samtools view -F 4 -c "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam")
-				printf "%s\t" "$MAPPED_READS"
-				if [[ "$MAPPED_READS" -eq 0 ]]; then
-					AVG_DEPTH="0.00"
-					REF_COV="0.00"
-				else
-					AVG_DEPTH=$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
-					REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
-					N_COUNT=$(seqtk comp "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" | awk '{print $9}')
-					if [[ "$REF_LEN" -gt 0 ]]; then
-						REF_COV=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", (($2 - $1) / $2) * 100}')
-					else
-						REF_COV="0.00"
-				fi
-				printf "%.2f\t" "$AVG_DEPTH"
-				printf "%s\n" "$REF_COV"
-			} >> "$ASSEMBLY_DIR/.summary"
+            {
+                printf "%s\t" "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}"
+                printf "%s\t" "${SAMPLE_ID}"
+                seqkit stats "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" | awk 'NR==2{gsub(/,/, "", $4); printf "%s\t", $4}'
+                MAPPED_READS=$(samtools view -F 4 -c "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam")
+                printf "%s\t" "$MAPPED_READS"
+                if [[ "$MAPPED_READS" -eq 0 ]]; then
+                    AVG_DEPTH="0.00"
+                    REF_COV="0.00"
+                else
+                    AVG_DEPTH=$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
+                    REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
+                    N_COUNT=$(seqtk comp "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" | awk '{print $9}')
+                    if [[ "$REF_LEN" -gt 0 ]]; then
+                        REF_COV=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", (($2 - $1) / $2) * 100}')
+                    else
+                        REF_COV="0.00"
+                    fi
+                fi
+                printf "%.2f\t" "$AVG_DEPTH"
+                printf "%s\n" "$REF_COV"
+            } >> "$ASSEMBLY_DIR/.summary"
         done < "$REF_SEQ_LIST"
     done < "$SAMPLE_SHEET"
     sed '/^[[:space:]]*$/d' "$ASSEMBLY_DIR/.summary" > "$ASSEMBLY_DIR/$LIBRARY_NAME.summary.$(uname -n).$(date +'%Y-%m-%d').tsv"

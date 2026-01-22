@@ -373,7 +373,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                                     if [[ "$MAPPED_READS" -eq 0 ]]; then
                                         AVG_DEPTH="0.00"
                                         REF_COV="0.00"
-									else
+                                    else
                                         AVG_DEPTH=$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
                                         REF_LEN=$(fastalength "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" | awk '{print $1}')
                                         N_COUNT=$(seqtk comp "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" | awk '{print $9}')
@@ -381,6 +381,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                                             REF_COV=$(echo "$N_COUNT $REF_LEN" | awk '{printf "%.2f", (($2 - $1) / $2) * 100}')
                                         else
                                             REF_COV="0.00"
+                                        fi
                                     fi
                                     printf "%.2f\t" "$AVG_DEPTH"
                                     printf "%s\n" "$REF_COV"
