@@ -18,6 +18,8 @@
 | EBOV          | ~500pb        | ZaireEbola_V2       | https://github.com/artic-network/artic-ncov2019          |
 | EBOV          | ~400pb        | ZaireEbola_V3       | https://github.com/artic-network/artic-ncov2019          |
 | HIV-1         | ~2000pb       | HIV1Sanabani2006_V1 | https://doi.org/10.1089/aid.2006.22.171                  |
+| HTLV-1        | ~400bp        | CCEMHTLV1/V1        | https://doi.org/10.1016/j.nexres.2025.101110             |
+| HTLV-1        | ~400bp        | CCEMHTLV1/V2        | https://doi.org/10.1016/j.nexres.2025.101110             |
 | LASV (L)      | ~400pb        | LassaL_V1           | https://github.com/zibraproject/zika-pipeline            |
 | LASV (S)      | ~400pb        | LassaS_V1           | https://github.com/zibraproject/zika-pipeline            |
 | LASV (L+S)    | ~400bp        | Lassa_V1            | https://github.com/zibraproject/zika-pipeline            |

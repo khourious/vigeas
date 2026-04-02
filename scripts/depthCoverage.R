@@ -37,6 +37,7 @@ ref_seq <- list(
   "DENGUESEQ4/V1" = "Genome reference: NC_002640.1 (DENV-4)",
   "ChikAsianECSA/V1" = "Genome reference: KP164568.1 (CHIKV)",
   "CCEMHTLV1/V1" = "Genome reference: J02029.1 (HTLV-1)",
+  "CCEMHTLV1/V2" = "Genome reference: J02029.1 (HTLV-1)",
   "WNV400/V1" = "Genome reference: NC_009942.1 (WNV)",
   "HIV1Sanabani2006/V1" = "Genome reference: K03455.1 (HIV-1)",
   "RSVA/V1" = "Genome reference: MN163126.1 (RSV-A)",
@@ -3562,6 +3563,91 @@ if (primer_scheme == "DENV2CADDE/V1") {
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 10750)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".denv2-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "CCEMHTLV1/V2") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 9068),
+                       expand = expansion(0, 0), limits = c(0, 9100)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "HTLV-1_1_LEFT-HTLV-1_1_RIGHT", 102, 505,
+                    "1", "HTLV-1_3_LEFT-HTLV-1_3_RIGHT", 664, 1056,
+                    "1", "HTLV-1_5_LEFT-HTLV-1_5_RIGHT", 1174, 1563,
+                    "1", "HTLV-1_7_LEFT-HTLV-1_7_RIGHT", 1794, 2189,
+                    "1", "HTLV-1_9_LEFT-HTLV-1_9_RIGHT", 2407, 2806,
+                    "1", "HTLV-1_11_LEFT-HTLV-1_11_RIGHT", 3047, 3454,
+                    "1", "HTLV-1_13_LEFT-HTLV-1_13_RIGHT", 3676, 4073,
+                    "1", "HTLV-1_15_LEFT-HTLV-1_15_RIGHT", 4296, 4692,
+                    "1", "HTLV-1_17_LEFT-HTLV-1_17_RIGHT", 4904, 5298,
+                    "1", "HTLV-1_19_LEFT-HTLV-1_19_RIGHT", 5539, 5926,
+                    "1", "HTLV-1_21_LEFT-HTLV-1_21_RIGHT", 6102, 6509,
+                    "1", "HTLV-1_23_LEFT-HTLV-1_23_RIGHT", 6678, 7060,
+                    "1", "HTLV-1_25_LEFT-HTLV-1_25_RIGHT", 7286, 7687,
+                    "1", "HTLV-1_27_LEFT-HTLV-1_27_RIGHT", 7898, 8312,
+                    "1", "HTLV-1_29_LEFT-HTLV-1_29_LEFT", 8559, 8948)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "HTLV-1_2_LEFT-HTLV-1_2_RIGHT", 349, 750,
+                    "2", "HTLV-1_4_LEFT_alt-HTLV-1_4_RIGHT", 937, 960,
+                    "2", "HTLV-1_4_LEFT-HTLV-1_4_RIGHT", 944, 1343,
+                    "2", "HTLV-1_6_LEFT-HTLV-1_6_RIGHT", 1479, 1870,
+                    "2", "HTLV-1_8_LEFT-HTLV-1_8_RIGHT", 2091, 2481,
+                    "2", "HTLV-1_10_LEFT-HTLV-1_10_RIGHT", 2729, 3132,
+                    "2", "HTLV-1_12_LEFT-HTLV-1_12_RIGHT", 3359, 3766,
+                    "2", "HTLV-1_14_LEFT-HTLV-1_14_RIGHT", 3991, 4380,
+                    "2", "HTLV-1_16_LEFT-HTLV-1_16_RIGHT", 4611, 5000,
+                    "2", "HTLV-1_18_LEFT-HTLV-1_18_RIGHT", 5204, 5615,
+                    "2", "HTLV-1_20_LEFT-HTLV-1_20_RIGHT", 5833, 6245,
+                    "2", "HTLV-1_22_LEFT-HTLV-1_22_RIGHT", 6361, 6764,
+                    "2", "HTLV-1_24_LEFT-HTLV-1_24_RIGHT", 6970, 7379,
+                    "2", "HTLV-1_26_LEFT-HTLV-1_26_RIGHT", 7589, 7986,
+                    "2", "HTLV-1_28_LEFT-HTLV-1_28_RIGHT", 8234, 8637)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/J02029.1
+                         "gag-pro-pol", 824, 5210,
+                         "pX", 6857, 8382)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://www.ncbi.nlm.nih.gov/nuccore/J02029.1
+                         "5'LTR", 23, 777,
+                         "env", 5203, 6669,
+                         "3'LTR", 8301, 9055)
+  map2plot2 <- map2genome2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".htlv1-coverage.pdf")
   plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
   save_plot(output, plot, base_height = 7, base_width = 20)
 }
