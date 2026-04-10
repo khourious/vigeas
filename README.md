@@ -57,6 +57,7 @@ Miscellaneous:
 ```
 
 ## CITATION
+Aguilar Ticona, J. P., Amorim Santos, L., Meng, X., Nery, N., Fofana, M. O., De Moraes, L., Morais Strobel, I., Vitoriano, R., Silveira Cucco, M., Andrade Belitardo, E. M. M., Thakku, G., Cruz, J. S., Detweiler, A. M., Neff, N., Tato, C. M., Reis, M. G., Costa, F., Cummings, D. A. T., Ko, A. I., & Khouri, R. (2026). Metagenomic surveillance reveals off-season circulation of respiratory viruses during the COVID-19 pandemic in Salvador, Brazil. _New Microbes and New Infections_, 70, 101717. [https://doi.org/10.1016/j.nmni.2026.101717](https://doi.org/10.1016/j.nmni.2026.101717)
 
 ## CONTRIBUTIONS
 Thanks to:
