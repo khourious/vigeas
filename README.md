@@ -1,4 +1,4 @@
-# VIral GEnome ASsembly pipelines for WGS
+# VIGEAS: VIral GEnome ASsembly pipelines for WGS
 
 This repository contains scripts and files to run the bioinformatic analysis of whole genome sequencing of viruses using Illumina or Oxford Nanopore Technologies platforms.
 
