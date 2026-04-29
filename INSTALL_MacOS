@@ -50,8 +50,6 @@ EOF
     ENV_MANAGER=micromamba
 fi
 
-source
-
 if ! "$ENV_MANAGER" env list | grep -q vigeas-ill; then
     "$ENV_MANAGER" create -y -n vigeas-ill -c conda-forge -c bioconda bbmap blast bwa-mem2 entrez-direct exonerate fastp ivar mafft samtools seqkit seqtk spades
 fi

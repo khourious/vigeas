@@ -2,7 +2,7 @@
 
 ## Primer Scheme List
 
-|     Target    | Amplicon Size | Primer Scheme Name  | Reference                                                |
+| Target        | Amplicon Size | Primer Scheme Name  | Reference                                                |
 | ------------- | ------------- | ------------------- | ---------------------------------------------------------|
 | CHIKV         | ~400pb        | ChikAsianECSA_V1    | https://github.com/zibraproject/zika-pipeline            |
 | DENV-1        | ~400pb        | DENGUESEQ1_V1       | https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2 |
