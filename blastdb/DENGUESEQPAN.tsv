@@ -1,7 +1,3 @@
-AF214040.1	" Alphavirus western - Western equine encephalitis virus, North American (WEEV-NA)"		
-GQ287646.1	" Alphavirus western - Western equine encephalitis virus, South American (WEEV-SA)"		
-AY421767.1	 Enterovirus alphacoxsackie - Human coxsackievirus A10 (CVA-10)		
-AY193805.1	 Orthoflavivirus omskense - Omsk hemorrhagic fever virus (OHFV)		
 AY567487.2	Alphacoronavirus amsterdamense - Human coronavirus NL63 (HCoV-NL63)		
 AF304460.1	Alphacoronavirus chicagoense - Human coronavirus 229E (HCoV-229E)		
 WSS4768775	"Alphainfluenzavirus influenzae - Influenza A virus (IAV), strain A/Croatia/10136RV/2023(H3N2)"	segment 1 (PB2)	2025-2026 Northern Hemisphere Influenza Season
@@ -167,6 +163,11 @@ X74477.1	Alphapapillomavirus 9 - Human papillomavirus 35 (HPV-35)
 X74481.1	Alphapapillomavirus 9 - Human papillomavirus 52 (HPV-52)		
 D90400.1	Alphapapillomavirus 9 - Human papillomavirus 58 (HPV-58)		
 D21208.1	Alphapapillomavirus 9 - Human papillomavirus 67 (HPV-67)		
+HQ696595.1	Alphapolyomavirus nonihominis - Human polyomavirus 9 (HPyV9)		
+GU989205.1	Alphapolyomavirus octihominis - Trichodysplasia spinulosa-associated polyomavirus (TSPyV)		
+KY404016.1	Alphapolyomavirus quardecihominis - LI polyomavirus (LIPyV)		
+HM011556.1	Alphapolyomavirus quintihominis - Merkel cell polyomavirus (MCPyV)		
+KF954417.1	Alphapolyomavirus terdecihominis - New Jersey polyomavirus (NJPyV)		
 AB041007.1	Alphatorquevirus homin1 - Torque teno virus 1 (TTV1)		
 AB064607.1	Alphatorquevirus homin10 - Torque teno virus 10 (TTV10)		
 AF345526.1	Alphatorquevirus homin13 - Torque teno virus 13 (TTV13)		
@@ -191,6 +192,11 @@ AF369024.2	Alphavirus chikungunya - Chikungunya virus (CHIKV)
 KP164568.1	Alphavirus chikungunya - Chikungunya virus (CHIKV)		
 X63135.1	"Alphavirus eastern - Eastern equine encephalitis virus, North American (EEEV-NA)"		
 EF151503.1	"Alphavirus eastern - Eastern equine encephalitis virus, South American (EEEV-SA)"		
+AF237947.1	Alphavirus mayaro - Mayaro virus (MAYV)		
+AF079457.1	Alphavirus onyong - ONyong-nyong virus (ONNV)		
+GQ433354.1	Alphavirus rossriver - Ross River virus (RRV)		
+X04129.1	Alphavirus semliki - Semliki Forest virus (SFV)		
+AF429428.1	Alphavirus sindbis - Sindbis virus (SINV)		
 L01442.2	Alphavirus venezuelan - Venezuelan equine encephalitis virus IAB (VEEV-IAB)		
 AF375051.1	Alphavirus venezuelan - Venezuelan equine encephalitis virus IC (VEEV-IC)		
 L00930.1	Alphavirus venezuelan - Venezuelan equine encephalitis virus ID (VEEV-ID)		
@@ -203,6 +209,8 @@ AF075255.1	Alphavirus venezuelan - Venezuelan equine encephalitis virus IIIC (VE
 AF075256.1	Alphavirus venezuelan - Venezuelan equine encephalitis virus IV (VEEV-IV)		
 AF075259.1	Alphavirus venezuelan - Venezuelan equine encephalitis virus V (VEEV-V)		
 AF075258.1	Alphavirus venezuelan - Venezuelan equine encephalitis virus VI (VEEV-VI)		
+AF214040.1	"Alphavirus western - Western equine encephalitis virus, North American (WEEV-NA)"		
+GQ287646.1	"Alphavirus western - Western equine encephalitis virus, South American (WEEV-SA)"		
 HM029238.1	Avastrovirus galli - Avastrovirus 2 (AAstV2)		
 FJ434664.1	Avastrovirus intestini - Avastrovirus 3 (AAstV3)		
 Y15936.2	Avastrovirus meleagridis - Avastrovirus 1 (AAstV1)		
@@ -291,6 +299,8 @@ AF531420.1	Betapapillomavirus 4 - Human papillomavirus 92 (HPV-92)
 FN677755.1	Betapapillomavirus 5 - Human papillomavirus 150 (HPV-150)		
 KR816172.1	Betapapillomavirus 5 - Human papillomavirus 185 (HPV-185)		
 AY382779.2	Betapapillomavirus 5 - Human papillomavirus 96 (HPV-96)		
+LT934539.1	Betapolyomavirus hominis - BK polyomavirus (BKPyV)		
+J02400.1	Betapolyomavirus secuhominis - JC polyomavirus (JCPyV)		
 EF127906.1	Betapolyomavirus tertihominis - KI polyomavirus (KIPyV)		
 EF444549.1	Betapolyomavirus tertihominis - WU polyomavirus (WUPyV)		
 AB026931.1	Betatorquevirus homini1 - Torque teno mini virus 1 (TTMV1)		
@@ -337,6 +347,20 @@ FJ973558.1	Bocaparvovirus primate2 - Human bocavirus 2a (HBoV2a)
 FJ973560.1	Bocaparvovirus primate2 - Human bocavirus 2b (HBoV2b)		
 FJ170278.1	Bocaparvovirus primate2 - Human bocavirus 2c (HBoV2c)		
 FJ973561.2	Bocaparvovirus primate2 - Human bocavirus 4 (HBoV4)		
+AF133428.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 1 (VP1)	
+AF139765.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 10 (VP10)	
+U72694.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 11 (VP11)	
+U53227.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 12 (VP12)	
+AF139758.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 2 (VP2)	
+AF139759.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 3 (VP3)	
+AF139760.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 4 (VP4)	
+AF139761.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 5 (VP5)	
+AF139762.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 6 (VP6)	
+AF139763.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 7 (VP7)	
+AF139764.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 8 (VP8)	
+AF000720.1	Coltivirus dermacentoris - Colorado tick fever virus (CTFV)	segment 9 (VP9)	
+JF828358.1	Cuevavirus lloviuense - Lloviu virus (LLOV)		
+AY446894.2	Cytomegalovirus humanbeta5 - Human cytomegalovirus (HCMV)		
 JQ922305.1	"Deltainfluenzavirus influenzae - Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 1 (PB2)	
 JQ922306.1	"Deltainfluenzavirus influenzae - Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 2 (PB1)	
 JQ922307.1	"Deltainfluenzavirus influenzae - Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 3 (P3)	
@@ -344,7 +368,16 @@ JQ922308.1	"Deltainfluenzavirus influenzae - Influenza D virus (IDV), strain D/s
 JQ922309.1	"Deltainfluenzavirus influenzae - Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 5 (NP)	
 JQ922310.1	"Deltainfluenzavirus influenzae - Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 6 (P42)	
 JQ922311.1	"Deltainfluenzavirus influenzae - Influenza D virus (IDV), strain D/swine/Oklahoma/1334/2011"	segment 7 (NS)	
+JQ898291.1	Deltapolyomavirus decihominis - MW polyomavirus (MWPyV)		
+NC_014407	Deltapolyomavirus septihominis - Human polyomavirus 7 (HPyV7)		
+NC_014406	Deltapolyomavirus sextihominis - Human polyomavirus 6 (HPyV6)		
+JX463183.1	Deltapolyomavirus undecihominis - STL polyomavirus (STLPyV)		
 AF033817.1	Deltaretrovirus priTlym1 - Human T-cell lymphotropic virus 1 (HTLV-1)		
+AF085716.1	Dependoparvovirus mammalian1 - Adeno-associated virus 5 (AAV5)		
+AF043303.1	Dependoparvovirus primate1 - Adeno-associated virus 2 (AAV2)		
+AF513852.1	Dependoparvovirus primate1 - Adeno-associated virus 8 (AAV8)		
+LQ870207.1	Dependoparvovirus primate1 - Adeno-associated virus 9 (AAV9)		
+AY421767.1	Enterovirus alphacoxsackie - Human coxsackievirus A10 (CVA-10)		
 AY421768.1	Enterovirus alphacoxsackie - Human coxsackievirus A12 (CVA-12)		
 AY421769.1	Enterovirus alphacoxsackie - Human coxsackievirus A14 (CVA-14)		
 U05876.1	Enterovirus alphacoxsackie - Human coxsackievirus A16 (CVA-16)		
@@ -792,6 +825,11 @@ JQ308210.1	Gyrovirus homsa1
 KF294862.1	Gyrovirus homsa2		
 JX310702.1	Gyrovirus homsa3		
 KF294861.1	Gyrovirus homsa4		
+JX005846.1	Heartland banyangvirus - Heartland virus (HRTV)	L segment	
+JX005844.1	Heartland banyangvirus - Heartland virus (HRTV)	M segment	
+JX005842.1	Heartland banyangvirus - Heartland virus (HRTV)	S segment	
+JQ001776.1	Henipavirus cedarense - Cedar virus (CedV)		
+HQ660129.1	Henipavirus ghanaense - Ghana virus (GhV)		
 AF017149.3	Henipavirus hendraense - Hendra virus (HeV)		
 AF212302.2	Henipavirus nipahense - Nipah virus (NiV)		
 AF009606.1	"Hepacivirus hominis - Hepatitis C virus, genotype 1a (HCV-1a)"		
@@ -1126,6 +1164,13 @@ KJ641691.1	Kobuvirus femyomini - Aichivirus F2 (AiV-F2)
 MN774989.1	Lamedtorquevirus hominid11		
 K03455.1	Lentivirus humimdef1 - Human immunodeficiency virus 1 (HIV-1)		
 M30502.1	Lentivirus humimdef2 - Human immunodeficiency virus 2 (HIV-2)		
+AJ507799.2	Lymphocryptovirus humangamma4 - Epstein-Barr virus (EBV)		
+AF081020.2	Lyssavirus australis - Australian bat lyssavirus (ABLV)		
+EU293119.1	Lyssavirus duvenhage - Duvenhage virus (DUVV)		
+EF157976.1	Lyssavirus hamburg - European bat lyssavirus 1 (EBLV-1)		
+EF157977.2	Lyssavirus helsinki - European bat lyssavirus 2 (EBLV-2)		
+EU293108.1	Lyssavirus lagos - Lagos bat virus (LBV)		
+Y09762.1	Lyssavirus mokola - Mokola virus (MOKV)		
 KM017741.1	Mamastrovirus felis - Mamastrovirus 2 (MAstV2)		
 MN433703.1	Mamastrovirus hominis - Mamastrovirus 1 (MAstV1)		
 GQ415660.1	Mamastrovirus homustovis - Mamastrovirus 8 (MAstV8)		
@@ -1136,6 +1181,8 @@ FJ973620.1	Mamastrovirus virginiaense - Mamastrovirus 9 (MAstV9)
 AY358026.2	Mammarenavirus brazilense - Sabia virus (SABV)		
 EU260464.1	Mammarenavirus chapareense - Chapare virus (CHAPV)	L segment	
 EU260463.1	Mammarenavirus chapareense - Chapare virus (CHAPV)	S segment	
+J04331.1	Mammarenavirus choriomeningitidis - Lymphocytic choriomeningitis virus (LCMV)	L segment	
+M20869.1	Mammarenavirus choriomeningitidis - Lymphocytic choriomeningitis virus (LCMV)	S segment	
 AY358024.2 	Mammarenavirus guanaritoense - Guanarito virus (GTOV)	L segment	
 AY129247.1	Mammarenavirus guanaritoense - Guanarito virus (GTOV)	S segment	
 AY358022.2	Mammarenavirus juninense - Junin virus (JUNV)	L segment	
@@ -1210,12 +1257,42 @@ AF371337.2	Metapneumovirus hominis - Human metapneumovirus A1 (HMPV-A1)
 FJ168779.1	Metapneumovirus hominis - Human metapneumovirus A2 (HMPV-A2)		
 AY525843.1	Metapneumovirus hominis - Human metapneumovirus B1 (HMPV-B1)		
 FJ168778.1	Metapneumovirus hominis - Human metapneumovirus B2 (HMPV-B2)		
+AB016162.1	Morbillivirus hominis - Measles virus (MV)		
 V01116.1	Mupapillomavirus 1 - Human papillomavirus 1 (HPV-1)		
 X70828.1	Mupapillomavirus 2 - Human papillomavirus 63 (HPV-63)		
 KP769769.1	Mupapillomavirus 3 - Human papillomavirus 204 (HPV-204)		
 M87661.2	Norovirus norwalkense - Norwalk virus (NV)		
 X56147.1	Nupapillomavirus 1 - Human papillomavirus 41 (HPV-41)		
+KX100135.1	Orthobunyavirus cacheense - Cache Valley virus (CVV)	L segment	
+KX100134.1	Orthobunyavirus cacheense - Cache Valley virus (CVV)	M segment	
+KX100133.1	Orthobunyavirus cacheense - Cache Valley virus (CVV)	S segment	
+KX817314.1	Orthobunyavirus encephalitidis - California encephalitis virus (CEV)	L segment	
+KX817313.1	Orthobunyavirus encephalitidis - California encephalitis virus (CEV)	M segment	
+KX817312.1	Orthobunyavirus encephalitidis - California encephalitis virus (CEV)	S segment	
+EU665255.1	Orthobunyavirus encephalitidis - Tahyna virus (TAHV)	L segment	
+EU622819.2	Orthobunyavirus encephalitidis - Tahyna virus (TAHV)	M segment	
+EU622820.2	Orthobunyavirus encephalitidis - Tahyna virus (TAHV)	S segment	
+HM007352.1	Orthobunyavirus jamestownense - Jamestown Canyon virus (JCV)	L segment	
+HM007351.1	Orthobunyavirus jamestownense - Jamestown Canyon virus (JCV)	M segment	
+HM007350.1	Orthobunyavirus jamestownense - Jamestown Canyon virus (JCV)	S segment	
+EU203678.2	Orthobunyavirus khatangaense - Snowshoe hare virus (SSHV)	L segment	
+EU262553.1	Orthobunyavirus khatangaense - Snowshoe hare virus (SSHV)	M segment	
+EU294510.1	Orthobunyavirus khatangaense - Snowshoe hare virus (SSHV)	S segment	
+AF528165.1	Orthobunyavirus lacrosseense - La Crosse virus (LACV)	L segment	
+AF528166.1	Orthobunyavirus lacrosseense - La Crosse virus (LACV)	M segment	
+AF528167.1	Orthobunyavirus lacrosseense - La Crosse virus (LACV)	S segment	
+AF484424.1	Orthobunyavirus oropoucheense - Oropouche virus (OROV)	L segment	
+MF926354.1	Orthobunyavirus oropoucheense - Oropouche virus (OROV)	L segment	
+AF441119.1	Orthobunyavirus oropoucheense - Oropouche virus (OROV)	M segment	
+MF926353.1	Orthobunyavirus oropoucheense - Oropouche virus (OROV)	M segment	
+AY237111.1	Orthobunyavirus oropoucheense - Oropouche virus (OROV)	S segment	
+MF926352.1	Orthobunyavirus oropoucheense - Oropouche virus (OROV)	S segment	
+MF319185.1	Orthoebolavirus bombaliense - Bombali virus (BOMV)		
+FJ217161.1	Orthoebolavirus bundibugyoense - Bundibugyo virus (BDBV)		
+AF522874.1	Orthoebolavirus restonense - Reston virus (RESTV)		
+AY729654.1	Orthoebolavirus sudanense - Sudan virus (SUDV)		
 AF086833.2	Orthoebolavirus taiense - Ebola virus (EBOV)		
+FJ217162.1	Orthoebolavirus taiense - Tai Forest virus (TAFV)		
 U88536.1	Orthoflavivirus denguei - Dengue virus type 1 (DENV-1)		
 U87411.1	Orthoflavivirus denguei - Dengue virus type 2 (DENV-2)		
 M93130.1	Orthoflavivirus denguei - Dengue virus type 3 (DENV-3)		
@@ -1226,7 +1303,12 @@ L40361.3	"Orthoflavivirus encephalitidis - Tick-borne encephalitis virus, Siberi
 X03700.1	Orthoflavivirus flavi - Yellow fever virus (YFV)		
 M18370.1	Orthoflavivirus japonicum - Japanese encephalitis virus (JEV)		
 AY323490.1	Orthoflavivirus kyasanurense - Kyasanur Forest disease virus (KFDV)		
+DQ525916.1	Orthoflavivirus louisense - St. Louis encephalitis virus (SLEV)		
+AF161266.1	Orthoflavivirus murrayense - Murray Valley encephalitis virus (MVEV)		
 M12294.2	Orthoflavivirus nilense - West Nile virus (WNV)		
+AY193805.1	Orthoflavivirus omskense - Omsk hemorrhagic fever virus (OHFV)		
+AF311056.1	Orthoflavivirus powassanense - Powassan virus (POWV)		
+AY453411.1	Orthoflavivirus usutuense - Usutu virus (USUV)		
 KU527068.1	Orthoflavivirus zikaense - Zika virus (ZIKV)		
 AF291704.5	Orthohantavirus andesense - Andes virus (ANDV)	L segment	
 AF291703.2	Orthohantavirus andesense - Andes virus (ANDV)	M segment	
@@ -1303,9 +1385,9 @@ HM756286.1	Orthohantavirus luxiense - Luxi virus (LUXV)	S segment
 JQ611713.1	Orthohantavirus mamorense - Maripa virus (MARV)	L segment	
 JQ611714.1	Orthohantavirus mamorense - Maripa virus (MARV)	M segment	
 JQ611712.1	Orthohantavirus mamorense - Maripa virus (MARV)	S segment	
-FJ809772.1	Orthohantavirus mamorense - Rio Mamoré virus  (RIOMV)	L segment	
-FJ608550.1	Orthohantavirus mamorense - Rio Mamoré virus  (RIOMV)	M segment	
-FJ532244.1	Orthohantavirus mamorense - Rio Mamoré virus  (RIOMV)	S segment	
+FJ809772.1	Orthohantavirus mamorense - Rio MamorÃ© virus  (RIOMV)	L segment	
+FJ608550.1	Orthohantavirus mamorense - Rio MamorÃ© virus  (RIOMV)	M segment	
+FJ532244.1	Orthohantavirus mamorense - Rio MamorÃ© virus  (RIOMV)	S segment	
 EU788002.1	Orthohantavirus maporalense - Maporal virus (MAPV)	L segment	
 AY363179.1	Orthohantavirus maporalense - Maporal virus (MAPV)	M segment	
 AY267347.1	Orthohantavirus maporalense - Maporal virus (MAPV)	S segment	
@@ -1365,6 +1447,10 @@ AY090454.1	"Orthohepadnavirus hominoidei - Hepatitis B virus, genotype H (HBV-H)
 AF241411.1	"Orthohepadnavirus hominoidei - Hepatitis B virus, genotype I (HBV-I)"		
 AB486012.1	"Orthohepadnavirus hominoidei - Hepatitis B virus, genotype J (HBV-J)"		
 DQ217792.2	Orthomarburgvirus marburgense - Marburg virus (MARV)		
+EF446131.1	Orthomarburgvirus marburgense - Ravn virus (RAVV)		
+DQ211612.1	Orthonairovirus haemorrhagiae - Aigai virus (AIGV)	L segment	
+DQ211625.1	Orthonairovirus haemorrhagiae - Aigai virus (AIGV)	M segment	
+DQ211638.1	Orthonairovirus haemorrhagiae - Aigai virus (AIGV)	S segment	
 AY389361.2	Orthonairovirus haemorrhagiae - Crimean-Congo hemorrhagic fever virus (CCHFV)	L segment	
 AF467768.2	Orthonairovirus haemorrhagiae - Crimean-Congo hemorrhagic fever virus (CCHFV)	M segment	
 U88410.1	Orthonairovirus haemorrhagiae - Crimean-Congo hemorrhagic fever virus (CCHFV)	S segment	
@@ -1374,6 +1460,11 @@ MT903340.1	Orthopoxvirus monkeypox - Monkeypox virus (MPXV)
 X69198.1	Orthopoxvirus variola - Variola virus (VARV)		
 AB543336.1	Orthorubulavirus hominis - Human parainfluenza virus 4 (HPIV-4)		
 X57559.1	Orthorubulavirus laryngotracheitidis - Human parainfluenza virus 2 (HPIV-2)		
+AB040874.1	Orthorubulavirus parotitidis - Mumps virus (MuV)		
+OM101125.1	Parahenipavirus langyaense - Langya virus (LayV)		
+KF278639.1	Parahenipavirus mojiangense - Mojiang virus (MojV)		
+JX112711.1	Pararubulavirus menangleense - Menangle virus (MenV)		
+KF774436.1	Pararubulavirus sosugaense - Sosuga virus (SoRV)		
 S45208.1	Parechovirus ahumpari - Human parechovirus 1 (HPeV-1)		
 JX219568.1	Parechovirus ahumpari - Human parechovirus 10 (HPeV-10)		
 JX219574.1	Parechovirus ahumpari - Human parechovirus 11 (HPeV-11)		
@@ -1403,9 +1494,18 @@ D87713.1	Pegivirus hominis - Human pegivirus 3 (HPgV-3)
 AB021287.1	Pegivirus hominis - Human pegivirus 4 (HPgV-4)		
 AY949771.1	Pegivirus hominis - Human pegivirus 5 (HPgV-5)		
 AB003292.1	Pegivirus hominis - Human pegivirus 6 (HPgV-6)		
+JX867534.2	Phlebovirus napoliense - Toscana virus (TOSV)	L segment	
+JX867535.1	Phlebovirus napoliense - Toscana virus (TOSV)	M segment	
+JX867536.1	Phlebovirus napoliense - Toscana virus (TOSV)	S segment	
 DQ375403.1	Phlebovirus riftense - Rift Valley fever virus (RVFV)	L segment	
 DQ380206.1	Phlebovirus riftense - Rift Valley fever virus (RVFV)	M segment	
 DQ380151.1	Phlebovirus riftense - Rift Valley fever virus (RVFV)	S segment	
+GQ847513.2	Phlebovirus siciliaense - Sandfly fever Sicilian virus (SFCV)	L segment	
+GQ847512.2	Phlebovirus siciliaense - Sandfly fever Sicilian virus (SFCV)	M segment	
+GQ847511.2	Phlebovirus siciliaense - Sandfly fever Sicilian virus (SFCV)	S segment	
+KP272028.1	Phlebovirus toroense - Punta Toro virus (PTV)	L segment	
+KP272029.1	Phlebovirus toroense - Punta Toro virus (PTV)	M segment	
+KP272030.1	Phlebovirus toroense - Punta Toro virus (PTV)	S segment	
 AF457102.1	Respirovirus laryngotracheitidis - Human parainfluenza virus 1 (HPIV-1)		
 AB012132.1	Respirovirus pneumoniae - Human parainfluenza virus 3 (HPIV-3)		
 DQ838599.2	Rotavirus alphagastroenteritidis - Rotavirus A (RVA)	NSP1 segment	
@@ -1508,6 +1608,9 @@ X79442.1	Rotavirus tritogastroenteritidis - Rotavirus C (RVC)	VP4 segment
 X59843.2	Rotavirus tritogastroenteritidis - Rotavirus C (RVC)	VP6 segment	
 X77257.1	Rotavirus tritogastroenteritidis - Rotavirus C (RVC)	VP7 segment	
 M15240.2	Rubivirus rubellae - Rubella virus (RuV)		
+JN635296.1	"Rubivirus rubellae - Rubella virus (RuV), strain RVi/Bismarck.ND.USA/23.08/2B"		
+MN547623.1	Rubivirus ruteetense - Ruhugu virus (RuhV)		
+MN552442.2	Rubivirus strelense - Rustrela virus (RusV)		
 GQ179640.3	Salivirus aklasse - Salivirus A1 (SaV-A1)		
 KM023140.1	Salivirus aklasse - Salivirus A2 (SaV-A2)		
 MN774932.1	Samektorquevirus hominid15		
@@ -1520,3 +1623,14 @@ DQ058829.1	"Sapovirus sapporoense - Sapporo virus (SaV), Ehime strain"
 X86560.1	"Sapovirus sapporoense - Sapporo virus (SaV), Manchester strain"		
 AY646856.2	"Sapovirus sapporoense - Sapporo virus (SaV), Nongkhai strain"		
 HM002617.1	"Sapovirus sapporoense - Sapporo virus (SaV), Sapporo strain"		
+JN555585.1	Simplexvirus humanalpha1 - Human herpesvirus 1 (HSV-1)		
+JN561323.2	Simplexvirus humanalpha2 - Human herpesvirus 2 (HSV-2)		
+MH880287.1	Thogotovirus bourbonense - Bourbon virus (BRBV)	segment 1 (PB2)	
+MH880288.1	Thogotovirus bourbonense - Bourbon virus (BRBV)	segment 2 (PB1)	
+MH880289.1	Thogotovirus bourbonense - Bourbon virus (BRBV)	segment 3 (PA)	
+MH880290.1	Thogotovirus bourbonense - Bourbon virus (BRBV)	segment 4 (GP)	
+MH880291.1	Thogotovirus bourbonense - Bourbon virus (BRBV)	segment 5 (NP)	
+MH880292.1	Thogotovirus bourbonense - Bourbon virus (BRBV)	segment 6 (ML)	
+KM817684.1	Uukuvirus tachengense - Tacheng tick virus 2 (TcTV-2)	L segment	
+KM817744.1	Uukuvirus tachengense - Tacheng tick virus 2 (TcTV-2)	S segment	
+X04370.1	Varicellovirus humanalpha3 - Varicella-zoster virus (VZV)		
