@@ -5,6 +5,7 @@
 *.fai
 *.pac
 scripts/depthCovCreate.R
-primer_schemes/WNV400
+primer_schemes/DENV2GII2022FN
 primer_schemes/HTLV1DemincoF
+primer_schemes/WNV400
 .DS_Store
