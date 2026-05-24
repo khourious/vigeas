@@ -1,25 +1,25 @@
 #!/bin/bash
 
 sudo apt-get install -y \
-autoconf \
-automake \
-build-essential \
-ca-certificates \
-cargo \
-clang \
-cmake \
-curl \
-dos2unix \
-git \
-libclang-dev \
-libgsl-dev \
-libhdf5-dev \
-libhts-dev \
-libssl-dev \
-libzstd-dev \
-pipx \
-zlib1g-dev \
-xz-utils
+  autoconf \
+  automake \
+  build-essential \
+  ca-certificates \
+  cargo \
+  clang \
+  cmake \
+  curl \
+  dos2unix \
+  git \
+  libclang-dev \
+  libgsl-dev \
+  libhdf5-dev \
+  libhts-dev \
+  libssl-dev \
+  libzstd-dev \
+  pipx \
+  zlib1g-dev \
+  xz-utils
 
 if ! grep -q 'vigeas' ~/.[bz]shrc; then
     echo "export PATH=$HOME/vigeas/scripts:$PATH" >> ~/.[bz]shrc

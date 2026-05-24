@@ -4,12 +4,26 @@ This repository contains scripts and files to run the bioinformatic analysis of 
 
 ## INSTALLATION
 
-### Linux/Unix
+### Linux
 
 ```sh
-git clone --recursive https://github.com/khourious/vigeas.git && cd vigeas
-chmod 700 -R INSTALL_Unix scripts
+git clone --recursive https://github.com/khourious/vigeas.git
+cd vigeas
+chmod -R +x INSTALL_Unix scripts
 bash INSTALL_Unix
+```
+
+### macOS
+
+```sh
+git clone --recursive https://github.com/khourious/vigeas.git
+cd vigeas
+chmod -R +x INSTALL_macOS
+bash INSTALL_macOS
+```
+
+```sh
+exec zsh
 ```
 
 ## INPUT DATA FORMATS
@@ -36,7 +50,39 @@ Example:
 985322,BC02,ZikaAsian_V2
 ```
 
-Available primer schemes in this workflow can be found at: [primer_schemes/README.md](https://github.com/khourious/vigeas/blob/main/primer_schemes/README.md)
+Check available primer schemes and their correct naming format using `vigeas primers` or in [primer_schemes/README.md](https://github.com/khourious/vigeas/blob/main/primer_schemes/README.md).
+
+### Illumina (amplicon-based libraries)
+
+This workflow expects demultiplexed data in FASTQ format. Both paired-end and single-end reads are supported.
+
+Prepare a sample sheet in CSV format with the following columns:
+- **sample_id**: sample identifier
+- **primer_scheme**: primer scheme name including version (_e.g._, `ChikAsianECSA_V1`)
+
+Example:
+```sh
+976530,ARTIC_V4
+985322,ZikaAsian_V2
+```
+
+For multiplex amplicon schemes (_e.g._, `OROV`, `Lassa`), the pipeline automatically detects and processes individual segments. Simply provide the base primer scheme name in the sample sheet. Check available primer schemes and their correct naming format using `vigeas primers` or in [primer_schemes/README.md](https://github.com/khourious/vigeas/blob/main/primer_schemes/README.md).
+
+### Illumina (hybrid-capture-based libraries)
+
+This workflow expects demultiplexed data in FASTQ format. Both paired-end and single-end reads are supported.
+
+Prepare a sample sheet in CSV format with the following columns:
+- **sample_id**: sample identifier
+- **panel_id**: panel name (_e.g._, `RVOP`)
+
+Example:
+```sh
+976530,RVOP
+985322,VSP2
+```
+
+Check available panels and their correct naming format using `vigeas panels`.
 
 ## USAGE
 
@@ -48,6 +94,7 @@ Commands:
   ont   For ONT Sequencing [*.pod5 data]
 
 Miscellaneous:
+  bed      Generate BED file containing primer coordinates and sequences from primer scheme
   clr3     List supported Clair3 models
   makedb   Create a BLAST database in this workflow -- for <vigeas ill -x hyb>
   panels   List available enrichment panels in this workflow -- for <vigeas ill -x hyb>
@@ -57,7 +104,7 @@ Miscellaneous:
 ```
 
 ## CITATION
-Aguilar Ticona, J. P., Amorim Santos, L., Meng, X., Nery, N., Fofana, M. O., De Moraes, L., Morais Strobel, I., Vitoriano, R., Silveira Cucco, M., Andrade Belitardo, E. M. M., Thakku, G., Cruz, J. S., Detweiler, A. M., Neff, N., Tato, C. M., Reis, M. G., Costa, F., Cummings, D. A. T., Ko, A. I., & Khouri, R. (2026). Metagenomic surveillance reveals off-season circulation of respiratory viruses during the COVID-19 pandemic in Salvador, Brazil. _New Microbes and New Infections_, 70, 101717. [https://doi.org/10.1016/j.nmni.2026.101717](https://doi.org/10.1016/j.nmni.2026.101717)
+- Aguilar Ticona, J. P., Amorim Santos, L., Meng, X., Nery, N., Fofana, M. O., De Moraes, L., Morais Strobel, I., Vitoriano, R., Silveira Cucco, M., Andrade Belitardo, E. M. M., Thakku, G., Cruz, J. S., Detweiler, A. M., Neff, N., Tato, C. M., Reis, M. G., Costa, F., Cummings, D. A. T., Ko, A. I., & Khouri, R. (2026). Metagenomic surveillance reveals off-season circulation of respiratory viruses during the COVID-19 pandemic in Salvador, Brazil. _New Microbes and New Infections_, 70, 101717. [https://doi.org/10.1016/j.nmni.2026.101717](https://doi.org/10.1016/j.nmni.2026.101717)
 
 ## CONTRIBUTIONS
 Thanks to:
