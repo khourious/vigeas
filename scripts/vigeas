@@ -11,15 +11,21 @@ elif [[ -n "$CONDA_EXE" ]]; then
     ENV_MANAGER=conda
 fi
 
+if [ "$(uname)" = "Linux" ]; then
+    UNAME_OS=$(nproc)
+elif [ "$(uname)" = "Darwin" ]; then
+    UNAME_OS=$(sysctl -n hw.ncpu)
+fi
+
 version() {
     echo "
 vigeas [VIral GEnome ASsembly pipelines for WGS]
 Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
-  Main script: May 12, 2026
+  Main script: May 24, 2026
 
-  ILLUMINA workflows: May 12, 2026
-  ONT workflows: May 12, 2026
+  ILLUMINA workflows: May 24, 2026
+  ONT workflows: May 24, 2026
 "
     exit 1
 }
@@ -55,12 +61,12 @@ Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
 Usage: vigeas bed [options]
 
-Options: -i STR  Path containing the *.fasta with the forward/left primers (5'-3')
+Options: -b STR  BED filename
+         -i STR  Path containing the *.fasta with the forward/left primers (5'-3')
          -I STR  Path containing the *.fasta with the reverse/right primers (5'-3')
          -m INT  Maximum allowed mismatches for primer sequence matching
-         -o STR  Output BED filename
-         -O INT  Version assigned to the primer scheme [default: 1]
          -r STR  Path containing the *.fasta with the reference genome
+         -v INT  Version assigned to the primer scheme [default: 1]
 "
         exit 1
     }
@@ -69,14 +75,14 @@ Options: -i STR  Path containing the *.fasta with the forward/left primers (5'-3
         usage_bedgen
     fi
 
-    while getopts "i:I:m:o:O:r:" OPT; do
+    while getopts "b:i:I:m:r:v:" OPT; do
         case "$OPT" in
+            b) PRIMER_SCHEME_NAME="$OPTARG";;
             i) LEFT="$OPTARG";;
             I) RIGHT="$OPTARG";;
             m) MISMATCHES="$OPTARG";;
-            o) PRIMER_SCHEME_NAME="$OPTARG";;
-            O) PRIMER_SCHEME_VERSION="$OPTARG";;
             r) REFERENCE="$OPTARG";;
+            v) PRIMER_SCHEME_VERSION="$OPTARG";;
             *) usage_bedgen;;
         esac
     done
@@ -125,54 +131,58 @@ enrichment_panels() {
 
 primer_schemes() {
     echo "
---------------------------------------------------------------------------------------------------------------------
-     target        amplicon_size    primer_scheme_id       url_reference
---------------------------------------------------------------------------------------------------------------------
- [*] CHIKV         ~400bp           ChikAsianECSA_V1       https://github.com/zibraproject/zika-pipeline
- [*] DENV-1        ~400bp           DENGUESEQ1_V1          https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
- [*] DENV-1        ~900bp           DENV1CADDE_V1          https://doi.org/10.1038/s41467-021-22607-0
- [*] DENV-2        ~400bp           DENGUESEQ2_V1          https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
- [*] DENV-2        ~900bp           DENV2CADDE_V1          https://dx.doi.org/10.3201/eid2504.180958
- [*] DENV-3        ~400bp           DENGUESEQ3_V1          https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
- [*] DENV-3        ~900bp           DENV3CADDE_V1          https://doi.org/10.1093/ve/veaf034
- [*] DENV-4        ~400bp           DENGUESEQ4_V1          https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
- [*] DENV-4        ~900bp           DENV4CADDE_V1          https://doi.org/10.3390/v16101603
- [*] DENV (PAN)    ~400bp           DENGUESEQPAN_V1        https://dx.doi.org/10.17504/protocols.io.kqdg39xxeg25/v2
-     EBOV          ~1,000b          ZaireEbola_V1          https://github.com/artic-network/artic-ncov2019
-     EBOV          ~500bp           ZaireEbola_V2          https://github.com/artic-network/artic-ncov2019
-     EBOV          ~400bp           ZaireEbola_V3          https://github.com/artic-network/artic-ncov2019
-     HIV-1         ~2,000bp         HIV1Sanabani2006_V1    https://doi.org/10.1089/aid.2006.22.171
-     HTLV-1        ~400bp           CCEMHTLV1/V1           https://doi.org/10.1016/j.nexres.2025.101110
-     HTLV-1        ~400bp           CCEMHTLV1/V2           https://doi.org/10.1016/j.nexres.2025.101110
-     LASV (L)      ~400bp           LassaL_V1              https://github.com/zibraproject/zika-pipeline
-     LASV (S)      ~400bp           LassaS_V1              https://github.com/zibraproject/zika-pipeline
-     LASV (L+S)    ~400bp           Lassa_V1               https://github.com/zibraproject/zika-pipeline
-     MPOXV         ~2,000bp         MPXV_V1                https://dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v2
-     NiV           ~400bp           Nipah_V1               https://github.com/artic-network/artic-ncov2019
-     OROV (L)      ~400bp           OROV400L_V1            https://github.com/zibraproject/zika-pipeline
- [*] OROV (L)      ~400bp           OROVFN400L_V1          https://doi.org/10.1038/s41591-024-03300-3
-     OROV (M)      ~400bp           OROV400M_V1            https://github.com/zibraproject/zika-pipeline
- [*] OROV (M)      ~400bp           OROVFN400M_V1          https://doi.org/10.1038/s41591-024-03300-3
-     OROV (S)      ~400bp           OROV400S_V1            https://github.com/zibraproject/zika-pipeline
- [*] OROV (S)      ~400bp           OROVFN400S_V1          https://doi.org/10.1038/s41591-024-03300-3
- [*] OROV (L+M+S)  ~400bp           OROVFN400_V1           https://doi.org/10.1038/s41591-024-03300-3
- [*] SARS-CoV-2    ~400bp           ARTIC_V1               https://github.com/artic-network/artic-ncov2019
- [*] SARS-CoV-2    ~400bp           ARTIC_V2               https://github.com/artic-network/artic-ncov2019
- [*] SARS-CoV-2    ~400bp           ARTIC_V3               https://github.com/artic-network/artic-ncov2019
- [*] SARS-CoV-2    ~400bp           ARTIC_V4               https://github.com/artic-network/artic-ncov2019
- [*] SARS-CoV-2    ~400bp           ARTIC_V4_1             https://github.com/artic-network/artic-ncov2019
- [*] SARS-CoV-2    ~400bp           ARTIC_V5_3_2           https://github.com/quick-lab/SARS-CoV-2
-     SARS-CoV-2    ~1,200bp         MIDNIGHT_V1            https://doi.org/10.1093/biomethods/bpaa014
-     SARS-CoV-2    ~1,200bp         MIDNIGHT_V2            https://doi.org/10.1093/biomethods/bpaa014
- [*] SARS-CoV-2    ~2,000bp         FIOCRUZ-IOC_V1         https://doi.org/10.1101/2020.04.30.069039
- [*] SARS-CoV-2    ~2,000bp         FIOCRUZ-IOC_V2         https://doi.org/10.1101/2020.04.30.069039
- [*] RSV (A/B)     ~1,500bp         RSV_V1                 https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v1
- [*] RSV (A/B)     ~1,500bp         RSV_V2                 https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v2
- [*] RSV (A/B)     ~1,500bp         RSV_V3                 https://dx.doi.org/10.17504/protocols.io.eq2lyjzbrlx9/v3
-     YFV           ~500bp           YFV500_V1              https://github.com/zibraproject/zika-pipeline
-     YFV           ~1,000bp         YFV1000_V1             https://github.com/zibraproject/zika-pipeline
- [*] ZIKV          ~400bp           ZikaAsian_V2           https://github.com/zibraproject/zika-pipeline
---------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
+     target               amplicon_size    primer_scheme_id       url_reference
+------------------------------------------------------------------------------------------------------------------
+     B19V                 ~1,500pb         B19VGIFN_V1            https://doi.org/10.3389/fmicb.2024.1417434
+ [*] CHIKV                ~400bp           ChikAsianECSA_V1       https://github.com/zibraproject/zika-pipeline
+ [*] DENV-1               ~400bp           DENGUESEQ1_V1          https://doi.org/10.1186/s12864-024-10350-x
+ [*] DENV-1               ~900bp           DENV1CADDE_V1          https://doi.org/10.1038/s41467-021-22607-0
+ [*] DENV-2               ~400bp           DENGUESEQ2_V1          https://doi.org/10.1186/s12864-024-10350-x
+     DENV-2 (sylvatic)    ~400bp           DENGUESEQ2SYLV_V1      https://doi.org/10.1186/s12864-024-10350-x
+ [*] DENV-2               ~900bp           DENV2CADDE_V1          https://dx.doi.org/10.3201/eid2504.180958
+ [*] DENV-3               ~400bp           DENGUESEQ3_V1          https://doi.org/10.1186/s12864-024-10350-x
+ [*] DENV-3               ~900bp           DENV3CADDE_V1          https://doi.org/10.1093/ve/veaf034
+ [*] DENV-4               ~400bp           DENGUESEQ4_V1          https://doi.org/10.1186/s12864-024-10350-x
+     DENV-4 (sylvatic)    ~400bp           DENGUESEQ4SYLV_V1      https://doi.org/10.1186/s12864-024-10350-x
+ [*] DENV-4               ~900bp           DENV4CADDE_V1          https://doi.org/10.3390/v16101603
+ [*] DENV (PAN)           ~400bp           DENGUESEQPAN_V1        https://doi.org/10.1186/s12864-024-10350-x
+     EBOV                 ~1,000b          ZaireEbola_V1          https://github.com/artic-network/primer-schemes
+     EBOV                 ~500bp           ZaireEbola_V2          https://github.com/artic-network/primer-schemes
+     EBOV                 ~400bp           ZaireEbola_V3          https://github.com/artic-network/primer-schemes
+     HIV-1                ~2,000bp         HIV1Sanabani2006_V1    https://doi.org/10.1089/aid.2006.22.171
+ [*] HTLV-1               ~400bp           CCEMHTLV1/V1           https://doi.org/10.1016/j.nexres.2025.101110
+ [*] HTLV-1               ~400bp           CCEMHTLV1/V2           https://doi.org/10.1016/j.nexres.2025.101110
+     LASV (L)             ~400bp           LassaL_V1              https://github.com/zibraproject/zika-pipeline
+     LASV (S)             ~400bp           LassaS_V1              https://github.com/zibraproject/zika-pipeline
+     LASV (L+S)           ~400bp           Lassa_V1               https://github.com/zibraproject/zika-pipeline
+     MPOXV                ~2,000bp         MPXV_V1                https://doi.org/10.1371/journal.pbio.3002151
+     MPOXV                ~2,000bp         MPXV_V1_1              https://doi.org/10.1371/journal.pbio.3002151
+     NiV                  ~400bp           Nipah_V1               https://github.com/artic-network/primer-schemes
+     OROV (L)             ~400bp           OROV400L_V1            https://github.com/zibraproject/zika-pipeline
+ [*] OROV (L)             ~400bp           OROVFN400L_V1          https://doi.org/10.1038/s41591-024-03300-3
+     OROV (M)             ~400bp           OROV400M_V1            https://github.com/zibraproject/zika-pipeline
+ [*] OROV (M)             ~400bp           OROVFN400M_V1          https://doi.org/10.1038/s41591-024-03300-3
+     OROV (S)             ~400bp           OROV400S_V1            https://github.com/zibraproject/zika-pipeline
+ [*] OROV (S)             ~400bp           OROVFN400S_V1          https://doi.org/10.1038/s41591-024-03300-3
+ [*] OROV (L+M+S)         ~400bp           OROVFN400_V1           https://doi.org/10.1038/s41591-024-03300-3
+ [*] SARS-CoV-2           ~400bp           ARTIC_V1               https://github.com/artic-network/artic-ncov2019
+ [*] SARS-CoV-2           ~400bp           ARTIC_V2               https://github.com/artic-network/artic-ncov2019
+ [*] SARS-CoV-2           ~400bp           ARTIC_V3               https://github.com/artic-network/artic-ncov2019
+ [*] SARS-CoV-2           ~400bp           ARTIC_V4               https://github.com/artic-network/artic-ncov2019
+ [*] SARS-CoV-2           ~400bp           ARTIC_V4_1             https://github.com/artic-network/artic-ncov2019
+ [*] SARS-CoV-2           ~400bp           ARTIC_V5_3_2           https://github.com/quick-lab/SARS-CoV-2
+     SARS-CoV-2           ~1,200bp         MIDNIGHT_V1            https://doi.org/10.1093/biomethods/bpaa014
+     SARS-CoV-2           ~1,200bp         MIDNIGHT_V2            https://doi.org/10.1093/biomethods/bpaa014
+ [*] SARS-CoV-2           ~2,000bp         FIOCRUZ-IOC_V1         https://doi.org/10.1101/2020.04.30.069039
+ [*] SARS-CoV-2           ~2,000bp         FIOCRUZ-IOC_V2         https://doi.org/10.1101/2020.04.30.069039
+ [*] RSV (A/B)            ~1,500bp         RSV_V1                 https://doi.org/10.1016/j.jviromet.2021.114335
+ [*] RSV (A/B)            ~1,500bp         RSV_V2                 https://doi.org/10.1016/j.jviromet.2021.114335
+ [*] RSV (A/B)            ~1,500bp         RSV_V3                 https://doi.org/10.1016/j.jviromet.2021.114335
+     YFV                  ~500bp           YFV500_V1              https://github.com/zibraproject/zika-pipeline
+     YFV                  ~1,000bp         YFV1000_V1             https://github.com/zibraproject/zika-pipeline
+ [*] ZIKV                 ~400bp           ZikaAsian_V2           https://github.com/zibraproject/zika-pipeline
+------------------------------------------------------------------------------------------------------------------
 * Primer Schemes validated in this workflow
 "
     exit 1
@@ -231,8 +241,6 @@ Options: -f STR  Path containing the *.fasta with the reference genomes
 }
 
 ill() {
-    NPROC=$(nproc)
-
     usage_ill() {
         echo "
 vigeas [VIral GEnome ASsembly pipelines for WGS]
@@ -248,7 +256,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
          -i STR   Path containing the *.fastQ data
          -p INT   Identity[%] in the BLAST used to select reference sequences [only for -x hyb] [default: 90]
          -s STR   Path containing the Illumina samplesheet [basic format: sample_id,primers_cheme or sample_id,hyb_panel]
-         -t INT   Max number of threads [default: $((NPROC - 2))]
+         -t INT   Max number of threads [default: $((UNAME_OS - 2))]
          -u       For assembly using Single-End reads
 "
         exit 1
@@ -285,8 +293,8 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
     bg() {
         start=$(date +%s.%N)
         if [[ -z "$THREADS" ]]; then
-            if ((NPROC > 2)); then
-                THREADS=$((NPROC - 2))
+            if ((UNAME_OS > 2)); then
+                THREADS=$((UNAME_OS - 2))
             else
                 THREADS=2
             fi
@@ -351,7 +359,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                                 PRIMER_SCHEME="$type"
                                 PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_V${PRIMER_SCHEME_VER}" | sed -e 's/RSVA_V1/RSVA\/V1/g' -e 's/RSVA_V2/RSVA\/V2/g' -e 's/RSVA_V3/RSVA\/V3/g' -e 's/RSVB_V1/RSVB\/V1/g' -e 's/RSVB_V2/RSVB\/V2/g' -e 's/RSVB_V3/RSVB\/V3/g')
                                 [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.ann" ]] && bwa-mem2 index -p "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
-                                bbsplit.sh build=1 in="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" in2="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" ref_a="$HOME/vigeas/primer_schemes/RSVA/V${PRIMER_SCHEME_VER}/RSVA.reference.fasta" out_a="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.RSVA.fastq.gz" ref_b="$HOME/vigeas/primer_schemes/RSVB/V{$PRIMER_SCHEME_VER}/RSVB.reference.fasta" out_b="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.RSVB.fastq.gz"
+                                bbsplit.sh build=1 in="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" in2="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R2.fastq.gz" ref_a="$HOME/vigeas/primer_schemes/RSVA/V${PRIMER_SCHEME_VER}/RSVA.reference.fasta" out_a="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.RSVA.fastq.gz" ref_b="$HOME/vigeas/primer_schemes/RSVB/V${PRIMER_SCHEME_VER}/RSVB.reference.fasta" out_b="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.RSVB.fastq.gz"
                                 bwa-mem2 mem -t "$THREADS" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.$PRIMER_SCHEME.fastq.gz" | ivar trim -e -m 32 -q 15 -b "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam"
                                 samtools sort -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam"
                                 samtools index "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam"
@@ -396,12 +404,12 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                             seqkit range "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.R1.fastq.gz" -r 1:1000 | seqkit fq2fa | blastn -num_threads "$THREADS" -db "$HOME/vigeas/blastdb/DENGUESEQPAN" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
                             PRIMER_SCHEME=$(cut -f 2 "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" | sort | uniq -c | sort -nr | head -n 1 | awk '{print $2}')
                             PRIMER_SCHEME_VER=$(grep -o "DENGUESEQPAN_V[1-9]" < "$SAMPLE_SHEET" | sort -u | awk -F'_' '{print $2}')
-                            PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g')
+                            PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ2SYLV_V1/DENGUESEQ2SYLV\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ3_V2/DENGUESEQ3\/V2/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENGUESEQ4SYLV_V1/DENGUESEQ4SYLV\/V1/g')
                             [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.ann" ]] && bwa-mem2 index -p "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                         else
                             PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $2}' | cut -d'_' -f1)
                             PRIMER_SCHEME_VER=$(echo "$DESCRIPTION" | awk -F, '{print $2}' | cut -d'_' -f2-)
-                            PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/CCEMHTLV1_V2/CCEMHTLV1\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g' -e 's/DENV1CADDE_V1/DENV1CADDE\/V1/g' -e 's/DENV2CADDE_V1/DENV2CADDE\/V1/g' -e 's/DENV2GII2022FN_V1/DENV2GII2022FN\/V1/g' -e 's/DENV3CADDE_V1/DENV3CADDE\/V1/g' -e 's/DENV4CADDE_V1/DENV4CADDE\/V1/g' -e 's/OROVFN400L_V1/OROVFN400L\/V1/g' -e 's/OROVFN400M_V1/OROVFN400M\/V1/g' -e 's/OROVFN400S_V1/OROVFN400S\/V1/g')
+                            PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ2SYLV_V1/DENGUESEQ2SYLV\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ3_V2/DENGUESEQ3\/V2/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENGUESEQ4SYLV_V1/DENGUESEQ4SYLV\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/CCEMHTLV1_V2/CCEMHTLV1\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/MPXV_V1_1/MPXV\/V1.1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g' -e 's/DENV1CADDE_V1/DENV1CADDE\/V1/g' -e 's/DENV2CADDE_V1/DENV2CADDE\/V1/g' -e 's/DENV2GII2022FN_V1/DENV2GII2022FN\/V1/g' -e 's/DENV3CADDE_V1/DENV3CADDE\/V1/g' -e 's/DENV4CADDE_V1/DENV4CADDE\/V1/g' -e 's/OROVFN400L_V1/OROVFN400L\/V1/g' -e 's/OROVFN400M_V1/OROVFN400M\/V1/g' -e 's/OROVFN400S_V1/OROVFN400S\/V1/g' -e 's/B19VGIFN_V1/B19VGIFN\/V1/g')
                             [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.ann" ]] && bwa-mem2 index -p "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                         fi
                         if [[ "$SE" == 1 ]]; then
@@ -427,7 +435,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                             printf "\n"
                             printf "%s\t" "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}"
                             printf "%s\t" "${SAMPLE_ID}"
-                            seqkit stats "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.fastq.gz" | awk 'NR==2{gsub(/,/, "", $4); printf "%s\t", $4}'
+							seqkit stats "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" | awk 'NR==2{gsub(/,/, "", $4); printf "%s\t", $4}'							
                             samtools view -F 4 -c "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam" | awk '{printf "%s\t", $1}'
                             AVG_DEPTH=$(samtools depth "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" | awk '{sum+=$3} END {print (NR>0) ? sum/NR : 0}')
                             printf "%.2f\t" "$AVG_DEPTH"
@@ -542,8 +550,6 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
 }
 
 ont() {
-    NPROC=$(nproc)
-
     usage_ont() {
         echo "
 vigeas [VIral GEnome ASsembly pipelines for WGS]
@@ -559,7 +565,7 @@ Options: -c STR   Clair3 model
          -m INT   Min. read length (bp) for chimera filtering [default: expected amplicon size]
          -M INT   Max. read length (bp) for chimera filtering [default: expected amplicon size + 200]
          -s STR   Path containing the samplesheet [basic format: sample_id,barcode,primer_scheme]
-         -t INT   Max number of threads [default: $((NPROC - 2))]
+         -t INT   Max number of threads [default: $((UNAME_OS - 2))]
 "
         exit 1
     }
@@ -599,8 +605,8 @@ Options: -c STR   Clair3 model
     bg() {
         start=$(date +%s.%N)
         if [[ -z "$THREADS" ]]; then
-            if ((NPROC > 2)); then
-                THREADS=$((NPROC - 2))
+            if ((UNAME_OS > 2)); then
+                THREADS=$((UNAME_OS - 2))
             else
                 THREADS=2
             fi
@@ -670,8 +676,8 @@ Options: -c STR   Clair3 model
                             MAX=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
                         fi
                         [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.fai" ]] && samtools faidx "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
-                        bbduk.sh minlen="$MIN" maxlen="$MAX" minavgquality=10 in="$ASSEMBLY_DIR/$SAMPLE_ID/$BARCODE_ID.fastq" out="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" -Xmx3569m -Xms3568m
-                        dedupe.sh in="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" out="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq"
+                        bbduk.sh minlen="$MIN" maxlen="$MAX" minavgquality=10 in="$ASSEMBLY_DIR/$SAMPLE_ID/$BARCODE_ID.fastq" out="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" -Xmx12g
+                        dedupe.sh in="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" out="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq" -Xmx12g
                         bbsplit.sh build=1 in="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq" ref_a="$HOME/vigeas/primer_schemes/RSVA/V${PRIMER_SCHEME_VER}/RSVA.reference.fasta" out_a="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.RSVA.filtDedup.fastq" ref_b="$HOME/vigeas/primer_schemes/RSVB/V${PRIMER_SCHEME_VER}/RSVB.reference.fasta" out_b="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.RSVB.filtDedup.fastq"
                         minimap2 -t "$THREADS" -ax map-ont "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.filtDedup.fastq" | ivar trim -e -m 32 -q 8 -b "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam"
                         samtools sort -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.bam"
@@ -687,7 +693,7 @@ Options: -c STR   Clair3 model
                         bcftools consensus -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.pass.vcf.gz" -m "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.nmask.txt" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                         sed -i -e "s/>.*/>${SAMPLE_ID}/g" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa"
                         muscle -align <(awk 'NR==FNR{print; next} {print $1}' "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.fa" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta") -output "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.aligned.fa"
-                        seqkit grep -ip "$SAMPLE_ID" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.aligned.fa" >> "$ASSEMBLY_DIR/$LIBRARY_NAME.consensus.$PRIMER_SCHEME.$(uname -n).$(date +'%Y-%m-%d').fasta"
+                        seqkit grep -ip "$SAMPLE_ID" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth${DEPTH}.aligned.fa" >> "$ASSEMBLY_DIR/$LIBRARY_NAME.consensus.$PRIMER_SCHEME.$(uname -n).$(date +'%Y-%m-%d').fasta"
                         "$ENV_MANAGER" deactivate
                         "$ENV_MANAGER" activate vigeas-stats
                         samtools depth -a "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.trimmed.sorted.bam" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$PRIMER_SCHEME.depth.tsv"
@@ -721,16 +727,16 @@ Options: -c STR   Clair3 model
                     seqkit range "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq" -r 1:1000 | seqkit fq2fa | blastn -num_threads "$THREADS" -db "$HOME/vigeas/blastdb/DENGUESEQPAN" -out "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" -outfmt "6 qseqid sseqid pident length"
                     PRIMER_SCHEME=$(cut -f 2 "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.blastn.txt" | sort | uniq -c | sort -nr | head -n 1 | awk '{print $2}')
                     PRIMER_SCHEME_VER=$(grep -o "DENGUESEQPAN_V[1-9]" < "$SAMPLE_SHEET" | sort -u | awk -F'_V' '{print $2}')
-                    PRIMER_SCHEME_DIR=$(echo "{$PRIMER_SCHEME}_V${PRIMER_SCHEME_VER}" | sed -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g')
+                    PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_V${PRIMER_SCHEME_VER}" | sed -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ2SYLV_V1/DENGUESEQ2SYLV\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ3_V2/DENGUESEQ3\/V2/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENGUESEQ4SYLV_V1/DENGUESEQ4SYLV\/V1/g')
                     [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.fai" ]] && samtools faidx "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                 else
                     PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | cut -d'_' -f1)
                     PRIMER_SCHEME_VER=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | cut -d'_' -f2-)
-                    PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/CCEMHTLV1_V2/CCEMHTLV1\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g' -e 's/DENV1CADDE_V1/DENV1CADDE\/V1/g' -e 's/DENV2CADDE_V1/DENV2CADDE\/V1/g' -e 's/DENV2GII2022FN_V1/DENV2GII2022FN\/V1/g' -e 's/DENV3CADDE_V1/DENV3CADDE\/V1/g' -e 's/DENV4CADDE_V1/DENV4CADDE\/V1/g' -e 's/OROVFN400L_V1/OROVFN400L\/V1/g' -e 's/OROVFN400M_V1/OROVFN400M\/V1/g' -e 's/OROVFN400S_V1/OROVFN400S\/V1/g')
+                    PRIMER_SCHEME_DIR=$(echo "${PRIMER_SCHEME}_${PRIMER_SCHEME_VER}" | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ2SYLV_V1/DENGUESEQ2SYLV\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ3_V2/DENGUESEQ3\/V2/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENGUESEQ4SYLV_V1/DENGUESEQ4SYLV\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/CCEMHTLV1_V2/CCEMHTLV1\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/MPXV_V1_1/MPXV\/V1.1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g' -e 's/DENV1CADDE_V1/DENV1CADDE\/V1/g' -e 's/DENV2CADDE_V1/DENV2CADDE\/V1/g' -e 's/DENV2GII2022FN_V1/DENV2GII2022FN\/V1/g' -e 's/DENV3CADDE_V1/DENV3CADDE\/V1/g' -e 's/DENV4CADDE_V1/DENV4CADDE\/V1/g' -e 's/OROVFN400L_V1/OROVFN400L\/V1/g' -e 's/OROVFN400M_V1/OROVFN400M\/V1/g' -e 's/OROVFN400S_V1/OROVFN400S\/V1/g' -e 's/B19VGIFN_V1/B19VGIFN\/V1/g')
                     [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.fai" ]] && samtools faidx "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
                 fi
-                PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | awk -F_ '{print $1}')
-                PRIMER_SCHEME_DIR=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/CCEMHTLV1_V2/CCEMHTLV1\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g' -e 's/DENV1CADDE_V1/DENV1CADDE\/V1/g' -e 's/DENV2CADDE_V1/DENV2CADDE\/V1/g' -e 's/DENV2GII2022FN_V1/DENV2GII2022FN\/V1/g' -e 's/DENV3CADDE_V1/DENV3CADDE\/V1/g' -e 's/DENV4CADDE_V1/DENV4CADDE\/V1/g' -e 's/OROVFN400L_V1/OROVFN400L\/V1/g' -e 's/OROVFN400M_V1/OROVFN400M\/V1/g' -e 's/OROVFN400S_V1/OROVFN400S\/V1/g')
+                # PRIMER_SCHEME=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | awk -F_ '{print $1}')
+                # PRIMER_SCHEME_DIR=$(echo "$DESCRIPTION" | awk -F, '{print $3}' | sed -e 's/ARTIC_V1/ARTIC\/V1/g' -e 's/ARTIC_V2/ARTIC\/V2/g' -e 's/ARTIC_V3/ARTIC\/V3/g' -e 's/ARTIC_V4/ARTIC\/V4/g' -e 's/ARTIC\/V4_1/ARTIC\/V4.1/g' -e 's/ARTIC_V5_3_2/ARTIC\/V5.3.2/g' -e 's/ChikAsianECSA_V1/ChikAsianECSA\/V1/g' -e 's/DENGUESEQ1_V1/DENGUESEQ1\/V1/g' -e 's/DENGUESEQ2_V1/DENGUESEQ2\/V1/g' -e 's/DENGUESEQ2SYLV_V1/DENGUESEQ2SYLV\/V1/g' -e 's/DENGUESEQ3_V1/DENGUESEQ3\/V1/g' -e 's/DENGUESEQ3_V2/DENGUESEQ3\/V2/g' -e 's/DENGUESEQ4_V1/DENGUESEQ4\/V1/g' -e 's/DENGUESEQ4SYLV_V1/DENGUESEQ4SYLV\/V1/g' -e 's/FIOCRUZ-IOC_V1/FIOCRUZ-IOC\/V1/g' -e 's/FIOCRUZ-IOC_V2/FIOCRUZ-IOC\/V2/g' -e 's/CCEMHTLV1_V1/CCEMHTLV1\/V1/g' -e 's/CCEMHTLV1_V2/CCEMHTLV1\/V2/g' -e 's/LassaL_V1/LassaL\/V1/g' -e 's/LassaS_V1/LassaS\/V1/g' -e 's/MIDNIGHT_V1/MIDNIGHT\/V1/g' -e 's/MIDNIGHT_V2/MIDNIGHT\/V2/g' -e 's/MPXV_V1/MPXV\/V1/g' -e 's/MPXV_V1_1/MPXV\/V1.1/g' -e 's/Nipah_V1/Nipah\/V1/g' -e 's/OROV400L_V1/OROV400L\/V1/g' -e 's/OROV400M_V1/OROV400M\/V1/g' -e 's/OROV400S_V1/OROV400S\/V1/g' -e 's/WNV400_V1/WNV400\/V1/g' -e 's/YFV500_V1/YFV500\/V1/g' -e 's/YFV1000_V1/YFV1000\/V1/g' -e 's/ZaireEbola_V1/ZaireEbola\/V1/g' -e 's/ZikaAsian_V1/ZikaAsian\/V1/g' -e 's/ZikaAsian_V2/ZikaAsian\/V2/g' -e 's/HTLV1DemincoF_V1/HTLV1DemincoF\/V1/g' -e 's/DENV1CADDE_V1/DENV1CADDE\/V1/g' -e 's/DENV2CADDE_V1/DENV2CADDE\/V1/g' -e 's/DENV2GII2022FN_V1/DENV2GII2022FN\/V1/g' -e 's/DENV3CADDE_V1/DENV3CADDE\/V1/g' -e 's/DENV4CADDE_V1/DENV4CADDE\/V1/g' -e 's/OROVFN400L_V1/OROVFN400L\/V1/g' -e 's/OROVFN400M_V1/OROVFN400M\/V1/g' -e 's/OROVFN400S_V1/OROVFN400S\/V1/g' -e 's/B19VGIFN_V1/B19VGIFN\/V1/g')
                 echo "" && echo "$SAMPLE_ID" && echo "$PRIMER_SCHEME_DIR"
                 if [[ -z "$MIN" ]]; then
                     MIN=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2}' | sort -n | sed -n '1p')
@@ -739,8 +745,8 @@ Options: -c STR   Clair3 model
                     MAX=$(paste <(grep -E "\-" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $2}') <(grep -E "\+" "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" | grep -v alt | awk -F"\t" '{print $3}') | awk -F"\t" '{print $1-$2+200}' | sort -n | sed -n '1p')
                 fi
                 [[ ! -f "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta.fai" ]] && samtools faidx "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta"
-                bbduk.sh minlen="$MIN" maxlen="$MAX" minavgquality=10 in="$ASSEMBLY_DIR/$SAMPLE_ID/$BARCODE_ID.fastq" out="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" -Xmx3569m -Xms3568m
-                dedupe.sh in="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" out="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq" -Xmx20g
+                bbduk.sh minlen="$MIN" maxlen="$MAX" minavgquality=10 in="$ASSEMBLY_DIR/$SAMPLE_ID/$BARCODE_ID.fastq" out="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" -Xmx12g
+                dedupe.sh in="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filt.fastq" out="$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq" -Xmx12g
                 minimap2 -t "$THREADS" -ax map-ont "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.reference.fasta" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.filtDedup.fastq" | ivar trim -e -m 32 -q 8 -b "$HOME/vigeas/primer_schemes/$PRIMER_SCHEME_DIR/$PRIMER_SCHEME.scheme.bed" > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.bam"
                 samtools sort -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.bam"
                 samtools index "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmed.sorted.bam"
@@ -789,7 +795,7 @@ Options: -c STR   Clair3 model
         done
         "$ENV_MANAGER" deactivate
         sed '/^[[:space:]]*$/d' "$ASSEMBLY_DIR/.summary" > "$ASSEMBLY_DIR/$LIBRARY_NAME.summary.$(uname -n).$(date +'%Y-%m-%d').tsv"
-        rm -rf "$ASSEMBLY_DIR/.summary" "$ASSEMBLY_DIR/*.fastq"
+        rm -rf "$ASSEMBLY_DIR/.summary" "$ASSEMBLY_DIR"/*.fastq
         end=$(date +%s.%N)
         runtime=$(python3 -c "print(${end} - ${start})")
         echo "" && echo "Done. The runtime was $runtime seconds." && echo ""

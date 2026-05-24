@@ -1,5 +1,5 @@
 # Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
-# Updated: October 02, 2025
+# Updated: May 24, 2026
 # Author: Laise de Moraes <laise.moraes@fiocruz.br>
 
 if(!interactive()) pdf(NULL)
@@ -37,7 +37,6 @@ ref_seq <- list(
   "DENGUESEQ4/V1" = "Genome reference: NC_002640.1 (DENV-4)",
   "ChikAsianECSA/V1" = "Genome reference: KP164568.1 (CHIKV)",
   "CCEMHTLV1/V1" = "Genome reference: J02029.1 (HTLV-1)",
-  "CCEMHTLV1/V2" = "Genome reference: J02029.1 (HTLV-1)",
   "WNV400/V1" = "Genome reference: NC_009942.1 (WNV)",
   "HIV1Sanabani2006/V1" = "Genome reference: K03455.1 (HIV-1)",
   "RSVA/V1" = "Genome reference: MN163126.1 (RSV-A)",
@@ -49,12 +48,14 @@ ref_seq <- list(
   "HTLV1DemincoF/V1" = "Genome reference: J02029.1 (HTLV-1)",
   "DENV1CADDE/V1" = "Genome reference: NC_001477.1 (DENV-1)",
   "DENV2CADDE/V1" = "Genome reference: NC_001474.2 (DENV-2)",
-  "DENV2GII2022CADDE/V1" = "Genome reference: PV789655.1 (DENV-2 GII)",
   "DENV3CADDE/V1" = "Genome reference: NC_001475.2 (DENV-3)",
   "DENV4CADDE/V1" = "Genome reference: NC_002640.1 (DENV-4)",
   "OROVFN400L/V1" = "Genome reference: KP691612.1 (OROV L segment)",
   "OROVFN400M/V1" = "Genome reference: KP691622.1 (OROV M segment)",
-  "OROVFN400S/V1" = "Genome reference: KP691623.1 (OROV S segment)")
+  "OROVFN400S/V1" = "Genome reference: KP691623.1 (OROV S segment)",
+  "DENV2GII2022FN/V1" = "Genome reference: PV789655.1 (DENV-2 GII)",
+  "CCEMHTLV1/V2" = "Genome reference: J02029.1 (HTLV-1)",
+  "B19VGIFN/V1" = "Genome reference: NC_000883.2 (Erythroparvovirus primate1 - B19V)")
 primer_scheme_2 <- ref_seq[[primer_scheme]]
 
 if (primer_scheme == "ARTIC/V1") {
@@ -3648,6 +3649,64 @@ if (primer_scheme == "CCEMHTLV1/V2") {
     scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".htlv1-coverage.pdf")
+  plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
+  save_plot(output, plot, base_height = 7, base_width = 20)
+}
+
+if (primer_scheme == "B19VGIFN/V1") {
+  depcov <- ggplot() +
+    geom_line(data = depth_coverage, aes(x = position, y = depth), linewidth = .4, colour = "black") +
+    labs(title = paste0(id_sample), subtitle = paste0(primer_scheme_2),
+         y = "Per base coverage (x)", x = NULL) +
+    scale_x_continuous(breaks = c(1, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 5596),
+                       expand = expansion(0, 0), limits = c(0, 5620)) +
+    scale_y_continuous(breaks = c(1, 10, 20, 50, 100, 500, 1000, 5000, 10000, 50000, 100000),
+                       expand = expansion(0, 0), limits = c(1, 100001),
+                       labels = function(x) format(x, scientific = FALSE), trans = "log10") +
+    theme_light(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 14),
+          axis.text.x = element_text(angle = 90, size = 9),
+          axis.text.y = element_text(hjust = 1, size = 9)) +
+    geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
+    geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
+  map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "1", "B19VGI_350FNF-B19VGI_1605FNF", 351, 1631,
+                    "1", "B19VGI_3862FNR-B19VGI_4453F", 3836, 4477)
+  map1plot1 <- map1p1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("1" = "red"))
+  map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
+                    "2", "B19VGI_2387FNR-B19VGI_3298FNF", 2363, 3323,
+                    "2", "B19VGI_4976FNR-B19VGI_5596R", 4955, 5597)
+  map1plot2 <- map1p2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
+    scale_fill_manual(values = c("2" = "blue"))
+  map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://doi.org/10.3389/fcimb.2018.00166
+                         "7.5-kDa", 2084, 2308,
+                         "VP1/VP2", 2624, 4969)
+  map2plot1 <- map2genome1 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://doi.org/10.3389/fcimb.2018.00166
+                         "NS1", 616, 2631,
+                         "11-kDa", 4890, 5174)
+  map2plot2 <- map2genome2 %>% ggplot() +
+    geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+              linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
+    geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
+  output <-  paste0(output, ".b19v-coverage.pdf")
   plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
   save_plot(output, plot, base_height = 7, base_width = 20)
 }

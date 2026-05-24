@@ -1,18 +1,11 @@
-if (!require("pacman")) {install.packages("pacman", dependencies = TRUE)}
-pacman::p_load("cowplot",
-               "dplyr",
-               "ggplot2",
-               "patchwork",
-               "plyr",
-               "qpdf",
-               "readr",
-               "tidyverse",
-               "rstudioapi",
-               "svglite")
+if (!requireNamespace("pacman", quietly = TRUE))
+  install.packages("pacman", dependencies = TRUE)
+library("pacman")
 
-path <- rstudioapi::getActiveDocumentContext()$path
-Encoding(path) <- "UTF-8"
-setwd(dirname(path))
+pacman::p_load(this.path, cowplot, dplyr, ggplot2, patchwork,
+               plyr, qpdf, readr, tidyverse, svglite)
+
+setwd(dirname(this.path()))
 
 input <- list.files(pattern = "\\.depth\\.tsv$",
                     full.names = TRUE,
@@ -38,7 +31,10 @@ ref_seq <- list(
   "AF441119" =
     "Genome reference: AF441119.1 (Orthobunyavirus oropoucheense, M segment - OROV)",
   "AY237111" =
-    "Genome reference: AY237111.1 (Orthobunyavirus oropoucheense, S segment - OROV)")
+    "Genome reference: AY237111.1 (Orthobunyavirus oropoucheense, S segment - OROV)",
+  "AY386330" =
+    "Genome reference: AY386330.1 (Erythroparvovirus primate1 - B19V)"
+)
 
 for (i in input) {
   id_sample <- strsplit(basename(i), "\\.")[[1]][1]
@@ -404,6 +400,67 @@ for (i in input) {
     plot <- depcov + plot_layout(nrow = 1, heights = c(3))
     save_plot(id_sample, plot, base_height = 7, base_width = 20)
   }
+  
+  if (target == "AY386330") {
+    # https://doi.org/10.3389/fcimb.2018.00166
+    depcov <- ggplot() +
+      geom_line(data = depth_coverage, aes(x = position, y = depth),
+                linewidth = .4, colour = "black") +
+      labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
+           y = "Per base coverage (x)", x = NULL) +
+      scale_x_continuous(breaks = c(1, 500, 1000, 1500, 2000, 2500, 3000,
+                                    3500, 4000, 4500, 5000, 5500, 5596),
+                         expand = expansion(0, 0), limits = c(0, 5620),
+                         guide = guide_axis(n.dodge = 2)) +
+      theme_light(base_size = 10) +
+      scale_y_log10(breaks = c(1, 10, 100, 1000, 10000),
+                    expand = expansion(0, 0)) +
+      theme(panel.grid.minor.x = element_blank(),
+            plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
+            axis.title.y = element_text(angle = 90, size = 14),
+            axis.text.x = element_text(size = 9),
+            axis.text.y = element_text(hjust = 1, size = 9)) +
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+    map2genome1 <- tribble(~"gene", ~"start", ~"end",
+                           "7.5-kDa", 2084, 2308,
+                           "VP1/VP2", 2624, 4969)
+    map2plot1 <- map2genome1 %>% ggplot() +
+      geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+                linewidth = .2, fill = "green",
+                colour = "darkgray", alpha = .3) +
+      geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
+                parse = TRUE, size = 6) +
+      scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
+      theme_void() + theme(legend.position = "none") +
+      coord_cartesian(clip = "off")
+    map2genome2 <- tribble(~"gene", ~"start", ~"end",
+                           "11-kDa", 4890, 5174)
+    map2plot2 <- map2genome2 %>% ggplot() +
+      geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+                linewidth = .2, fill = "blue",
+                colour = "darkgray", alpha = .3) +
+      geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
+                parse = TRUE, size = 6) +
+      scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
+      theme_void() + theme(legend.position = "none") +
+      coord_cartesian(clip = "off")
+    map2genome3 <- tribble(~"gene", ~"start", ~"end",
+                           "NS1", 616, 2631)
+    map2plot3 <- map2genome3 %>% ggplot() +
+      geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
+                linewidth = .2, fill = "red",
+                colour = "darkgray", alpha = .3) +
+      geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
+                parse = TRUE, size = 6) +
+      scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
+      theme_void() + theme(legend.position = "none") +
+      coord_cartesian(clip = "off")  
+    id_sample <- paste0(id_sample, ".B19V-coverage.pdf")
+    plot <- depcov / map2plot1 / map2plot2 / map2plot3 +
+      plot_layout(nrow = 4, heights = c(3, .3, .3, .3))
+    save_plot(id_sample, plot, base_height = 7, base_width = 20)
+  }
+  
 }
 
 pdf <- list.files(pattern = "\\coverage.pdf$", full.names = TRUE)
