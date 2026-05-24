@@ -3671,21 +3671,21 @@ if (primer_scheme == "B19VGIFN/V1") {
     geom_hline(yintercept = 10, linetype = "dotted", colour = "black") +
     geom_hline(yintercept = 20, linetype = "dotted", colour = "black")
   map1p1 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
-                    "1", "B19VGI_350FNF-B19VGI_1605FNF", 351, 1631,
-                    "1", "B19VGI_3862FNR-B19VGI_4453F", 3836, 4477)
+                    "1", "B19VGI_350FNF-B19VGI_2387FNR", 351, 2388,
+                    "1", "B19VGI_3298FNF-B19VGI_4976FNR", 3298, 4977)
   map1plot1 <- map1p1 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("1" = "red"))
   map1p2 <- tribble(~"pool", ~"amplicon", ~"start", ~"end",
-                    "2", "B19VGI_2387FNR-B19VGI_3298FNF", 2363, 3323,
-                    "2", "B19VGI_4976FNR-B19VGI_5596R", 4955, 5597)
+                    "2", "B19VGI_1605FNF-B19VGI_3862FNR", 1605, 3863,
+                    "2", "B19VGI_4453F-B19VGI_5596R", 4453, 5597)
   map1plot2 <- map1p2 %>% ggplot() +
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10, fill = pool), alpha = .4) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = amplicon), size = 1) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off") +
     scale_fill_manual(values = c("2" = "blue"))
   map2genome1 <- tribble(~"gene", ~"start", ~"end", # https://doi.org/10.3389/fcimb.2018.00166
@@ -3695,7 +3695,7 @@ if (primer_scheme == "B19VGIFN/V1") {
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   map2genome2 <- tribble(~"gene", ~"start", ~"end", # https://doi.org/10.3389/fcimb.2018.00166
                          "NS1", 616, 2631,
@@ -3704,7 +3704,7 @@ if (primer_scheme == "B19VGIFN/V1") {
     geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
               linewidth = .2, fill = "green", colour = "darkgray", alpha = .3) +
     geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 4) +
-    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9100)) +
+    scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
     theme_void() + theme(legend.position = "none") + coord_cartesian(clip = "off")
   output <-  paste0(output, ".b19v-coverage.pdf")
   plot <- depcov / map1plot1 / map1plot2 / plot_spacer() / map2plot1 / map2plot2 + plot_layout(nrow = 6, heights = c(3, .1, .1, .1, .3, .3))
