@@ -1,3 +1,7 @@
+# Program: vigeas [VIral GEnome ASsembly pipelines for WGS]
+# Updated: May 27, 2026
+# Author: Laise de Moraes <laise.moraes@fiocruz.br>
+
 if (!requireNamespace("pacman", quietly = TRUE))
   install.packages("pacman", dependencies = TRUE)
 library("pacman")

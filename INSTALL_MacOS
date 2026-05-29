@@ -42,36 +42,14 @@ fi
 
 if ! "$ENV_MANAGER" env list | grep -q vigeas-ill; then
     "$ENV_MANAGER" create -y -n vigeas-ill --platform osx-64 -c conda-forge -c bioconda \
-	  bbmap \
       blast \
       bwa-mem2 \
       entrez-direct \
       exonerate \
       fastp \
-      ivar \
-      mafft \
-      samtools \
-      seqkit \
-      seqtk \
-      spades
-fi
-if ! "$ENV_MANAGER" env list | grep -q vigeas-ont; then
-    "$ENV_MANAGER" create -y -n vigeas-ont --platform osx-64 -c conda-forge -c bioconda \
-      bbmap \
-      bcftools \
-      clair3 \
+      ghostscript \
       ivar \
       minimap2 \
-      muscle \
-      samtools \
-      seqkit \
-      seqtk \
-      tensorflow
-fi
-if ! "$ENV_MANAGER" env list | grep -q vigeas-stats; then
-    "$ENV_MANAGER" create -y -n vigeas-stats --platform osx-64 -c conda-forge -c bioconda \
-      exonerate \
-      ghostscript \
       r-base \
       r-cowplot \
       r-dplyr \
@@ -82,8 +60,32 @@ if ! "$ENV_MANAGER" env list | grep -q vigeas-stats; then
       r-svglite \
       samtools \
       seqkit \
-      seqtk
+      seqtk \
+      spades
 fi
+if ! "$ENV_MANAGER" env list | grep -q vigeas-ont; then
+    "$ENV_MANAGER" create -y -n vigeas-ont --platform osx-64 -c conda-forge -c bioconda \
+      bbmap \
+      bcftools \
+      clair3 \
+      exonerate \
+      ghostscript \
+      ivar \
+      minimap2 \
+      muscle \
+      r-base \
+      r-cowplot \
+      r-dplyr \
+      r-ggplot2 \
+      r-patchwork \
+      r-plyr \
+      r-readr \
+      r-svglite \
+      samtools \
+      seqkit \
+      seqtk \
+      tensorflow
+    "$ENV_MANAGER" activate vigeas-ont
 echo "environments:" && "$ENV_MANAGER" env list | grep vigeas
 
 if [ ! -d "rerio" ]; then
