@@ -463,7 +463,7 @@ Options: -d INT   Minimum depth to variant calling [default: 10]
                         samtools index "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.denovo.sorted.bam"
                         samtools consensus -m simple -a -A -d 1 -@ "$THREADS" --show-del yes --show-ins yes -f fasta -T "$HOME/vigeas/refseq/$REFSEQ.fasta" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.denovo.sorted.bam" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.denovo.fasta"
                         bwa-mem2 index -p "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.denovo" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.denovo.fasta"
-                        if echo "$REFSEQ" | grep -Eq "K03455.1"; then
+                        if echo "$REFSEQ" | grep -Eq "K03455.1|M30502.1"; then
 							if [[ "$SE" == 1 ]]; then
 								fastp --thread "$THREADS" --trim_poly_g --cut_front --cut_tail --dedup --qualified_quality_phred 30 -l 50 -i "$ASSEMBLY_DIR/$SAMPLE_ID.R1.fastq.gz" -o "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmedQ30.R1.fastq.gz" -h "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmedQ30.html" -j "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmedQ30.json"
 								bwa-mem2 mem -t "$THREADS" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.denovo" "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.trimmedQ30.R1.fastq.gz" 2>/dev/null | tee >(samtools view -F 2048 -c - | tee "$ASSEMBLY_DIR/$SAMPLE_ID/.$REFSEQ.total_reads") | samtools view -b - > "$ASSEMBLY_DIR/$SAMPLE_ID/$SAMPLE_ID.$REFSEQ.trimmed.bam"
