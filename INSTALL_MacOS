@@ -86,6 +86,7 @@ if ! "$ENV_MANAGER" env list | grep -q vigeas-ont; then
       seqtk \
       tensorflow
     "$ENV_MANAGER" activate vigeas-ont
+fi
 echo "environments:" && "$ENV_MANAGER" env list | grep vigeas
 
 if [ ! -d "rerio" ]; then

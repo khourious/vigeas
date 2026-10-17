@@ -22,7 +22,7 @@ version() {
 vigeas [VIral GEnome ASsembly pipelines for WGS]
 Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
-  Main script: May 27, 2026
+  Main script: Oct 17, 2026
 
   ILLUMINA workflows: May 30, 2026
   ONT workflows: May 24, 2026
@@ -191,7 +191,6 @@ primer_schemes() {
 update() {
     "$ENV_MANAGER" update -y -n vigeas-ill -c conda-forge -c bioconda --all
     "$ENV_MANAGER" update -y -n vigeas-ont -c defaults -c conda-forge -c bioconda --all
-    "$ENV_MANAGER" update -y -n vigeas-stats -c conda-forge -c bioconda --all
     exit 1
 }
 
@@ -248,7 +247,7 @@ Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
 Usage: vigeas ill -x <preset> [options]
 
-Preset:  -x STR   Always applied before other options []
+Preset:  -x STR   Always applied before other options
                   - amp - For libraries using Illumina Amplicon Chemistry [*.FASTQ data]
                   - hyb - For libraries using Illumina Hybrid-Capture Chemistry [*.FASTQ data]
 
