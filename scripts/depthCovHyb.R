@@ -56,7 +56,7 @@ for (i in input) {
     # https://www.hiv.lanl.gov/content/sequence/HIV/MAP/landmark.html
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .4, colour = "black") +
+                linewidth = .4, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 634, 790, 2292, 5041, 5619, 5831,
@@ -72,7 +72,7 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     map2genome1 <- tribble(~"gene", ~"start", ~"end",
                            "5'LTR", 1, 634,
                            "gag", 790, 2292,
@@ -81,7 +81,7 @@ for (i in input) {
                            "nef", 8797, 9417)
     map2plot1 <- map2genome1 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "red", colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#FF0000", colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
       theme_void() + theme(legend.position = "none") +
@@ -93,7 +93,7 @@ for (i in input) {
                            "3'LTR", 9086, 9719)
     map2plot2 <- map2genome2 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "red", colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#FF0000", colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
       theme_void() + theme(legend.position = "none") +
@@ -105,7 +105,7 @@ for (i in input) {
                            "env", 6225, 8795)
     map2plot3 <- map2genome3 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "red", colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#FF0000", colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene), size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 9800)) +
       theme_void() + theme(legend.position = "none") +
@@ -119,7 +119,7 @@ for (i in input) {
   if (target == "U63715") {
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .8, colour = "black") +
+                linewidth = .8, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000,
@@ -133,7 +133,7 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     id_sample <- paste0(id_sample, ".HPgV1-coverage.pdf")
     plot <- depcov + plot_layout(nrow = 1, heights = c(3))
     save_plot(id_sample, plot, base_height = 7, base_width = 20)
@@ -142,7 +142,7 @@ for (i in input) {
   if (target == "AF345523") {
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .8, colour = "black") +
+                linewidth = .8, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 500, 1000, 1500, 2000, 2500,
@@ -157,7 +157,7 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     id_sample <- paste0(id_sample, ".TTV5-coverage.pdf")
     plot <- depcov + plot_layout(nrow = 1, heights = c(3))
     save_plot(id_sample, plot, base_height = 7, base_width = 20)
@@ -166,7 +166,7 @@ for (i in input) {
   if (target == "AB025946") {
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .8, colour = "black") +
+                linewidth = .8, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 500, 1000, 1500, 2000, 2500,
@@ -181,7 +181,7 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     id_sample <- paste0(id_sample, ".TTV19-coverage.pdf")
     plot <- depcov + plot_layout(nrow = 1, heights = c(3))
     save_plot(id_sample, plot, base_height = 7, base_width = 20)
@@ -190,7 +190,7 @@ for (i in input) {
   if (target == "AB038621") {
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .8, colour = "black") +
+                linewidth = .8, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 500, 1000, 1500, 2000, 2500,
@@ -205,7 +205,7 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     id_sample <- paste0(id_sample, ".TTV29-coverage.pdf")
     plot <- depcov + plot_layout(nrow = 1, heights = c(3))
     save_plot(id_sample, plot, base_height = 7, base_width = 20)
@@ -215,7 +215,7 @@ for (i in input) {
     # https://doi.org/10.3389/fimmu.2018.02099
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .4, colour = "black") +
+                linewidth = .4, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 9213, 9338, 116926, 118777, 127151,
@@ -231,14 +231,14 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     map2genome1 <- tribble(~"gene", ~"start", ~"end",
                            "TR[L]", 1, 9213,
                            "TR[S]", 146737, 151023)
     map2plot1 <- map2genome1 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "green",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#00FF00",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 154000)) +
@@ -249,8 +249,8 @@ for (i in input) {
                            "U[S]", 132101, 146096)
     map2plot2 <- map2genome2 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "yellow",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#FFFF55",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 154000)) +
@@ -261,8 +261,8 @@ for (i in input) {
                            "IR[S]", 127173, 131460)
     map2plot3 <- map2genome3 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "red",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#FF0000",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 154000)) +
@@ -278,7 +278,7 @@ for (i in input) {
     # https://doi.org/10.1128/jvi.72.3.2010-2021.1998
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .4, colour = "black") +
+                linewidth = .4, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 9297, 9298, 117782, 117987, 127249,
@@ -294,14 +294,14 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     map2genome1 <- tribble(~"gene", ~"start", ~"end",
                            "TR[L]", 1, 9297,
                            "TR[S]", 148036, 154746)
     map2plot1 <- map2genome1 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "green",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#00FF00",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 156000)) +
@@ -312,8 +312,8 @@ for (i in input) {
                            "U[S]", 133707, 148035)
     map2plot2 <- map2genome2 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "yellow",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#FFFF55",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 156000)) +
@@ -324,8 +324,8 @@ for (i in input) {
                            "IR[S]", 128079, 132898)
     map2plot3 <- map2genome3 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "red",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#FF0000",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 156000)) +
@@ -340,7 +340,7 @@ for (i in input) {
   if (target == "AF484424") {
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .6, colour = "darkblue") +
+                linewidth = .6, colour = "#000085") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 1000, 2000, 3000, 4000, 5000,
@@ -354,7 +354,7 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     id_sample <- paste0(id_sample, ".OROVL-coverage.pdf")
     plot <- depcov + plot_layout(nrow = 1, heights = c(3))
     save_plot(id_sample, plot, base_height = 7, base_width = 20)
@@ -363,7 +363,7 @@ for (i in input) {
   if (target == "AF441119") {
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .6, colour = "darkred") +
+                linewidth = .6, colour = "#7F170E") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 500, 1000, 1500, 2000, 2500, 3000,
@@ -377,7 +377,7 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     id_sample <- paste0(id_sample, ".OROVM-coverage.pdf")
     plot <- depcov + plot_layout(nrow = 1, heights = c(3))
     save_plot(id_sample, plot, base_height = 7, base_width = 20)
@@ -386,7 +386,7 @@ for (i in input) {
   if (target == "AY237111") {
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .6, colour = "darkgreen") +
+                linewidth = .6, colour = "#2A6319") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
       scale_x_continuous(breaks = c(1, 100, 200, 300, 400, 500, 600, 700, 754),
@@ -399,7 +399,7 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     id_sample <- paste0(id_sample, ".OROVS-coverage.pdf")
     plot <- depcov + plot_layout(nrow = 1, heights = c(3))
     save_plot(id_sample, plot, base_height = 7, base_width = 20)
@@ -409,11 +409,11 @@ for (i in input) {
     # https://doi.org/10.3389/fcimb.2018.00166
     depcov <- ggplot() +
       geom_line(data = depth_coverage, aes(x = position, y = depth),
-                linewidth = .4, colour = "black") +
+                linewidth = .4, colour = "#000000") +
       labs(title = paste0(id_sample), subtitle = paste0(target_refseq),
            y = "Per base coverage (x)", x = NULL) +
-      scale_x_continuous(breaks = c(1, 500, 1000, 1500, 2000, 2500, 3000,
-                                    3500, 4000, 4500, 5000, 5500, 5596),
+      scale_x_continuous(breaks = c(1, 616, 2084, 2308, 2624, 2631,
+                                    4890, 4969, 5174, 5596),
                          expand = expansion(0, 0), limits = c(0, 5620),
                          guide = guide_axis(n.dodge = 2)) +
       theme_light(base_size = 10) +
@@ -424,14 +424,14 @@ for (i in input) {
             axis.title.y = element_text(angle = 90, size = 14),
             axis.text.x = element_text(size = 9),
             axis.text.y = element_text(hjust = 1, size = 9)) +
-      geom_hline(yintercept = 10, linetype = "dotted", colour = "black")
+      geom_hline(yintercept = 10, linetype = "dotted", colour = "#000000")
     map2genome1 <- tribble(~"gene", ~"start", ~"end",
                            "7.5-kDa", 2084, 2308,
                            "VP1/VP2", 2624, 4969)
     map2plot1 <- map2genome1 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "green",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#00FF00",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
@@ -441,8 +441,8 @@ for (i in input) {
                            "11-kDa", 4890, 5174)
     map2plot2 <- map2genome2 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "blue",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#0000FF",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
@@ -452,8 +452,8 @@ for (i in input) {
                            "NS1", 616, 2631)
     map2plot3 <- map2genome3 %>% ggplot() +
       geom_rect(aes(xmin = start, xmax = end, ymin = 8, ymax = 10),
-                linewidth = .2, fill = "red",
-                colour = "darkgray", alpha = .3) +
+                linewidth = .2, fill = "#FF0000",
+                colour = "#AEAEAE", alpha = .3) +
       geom_text(aes(x = (start + end) / 2, y = 9, label = gene),
                 parse = TRUE, size = 6) +
       scale_x_continuous(expand = expansion(0, 0), limits = c(0, 5620)) +
