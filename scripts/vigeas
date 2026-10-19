@@ -22,7 +22,7 @@ version() {
 vigeas [VIral GEnome ASsembly pipelines for WGS]
 Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
-  Main script: Oct 17, 2026
+  Main script: Oct 19, 2026
 
   ILLUMINA workflows: May 30, 2026
   ONT workflows: May 24, 2026
@@ -47,6 +47,7 @@ Miscellaneous:
   makedb   Create a BLAST database in this workflow -- for <vigeas ill -x hyb>
   panels   List available enrichment panels in this workflow -- for <vigeas ill -x hyb>
   primers  List available primer schemes in this workflow -- for <vigeas ill -x amp> and <vigeas ont -x bda>
+  selftest Run bult-in test datasets to verify pipelines work correctly
   update   Update conda/mamba dependencies
   version  Show last update information
 "
@@ -108,6 +109,51 @@ Options: -b STR  BED filename
         } | sort -k4,4V -k5,5 > $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_NAME"/V"$PRIMER_SCHEME_VERSION"/"$PRIMER_SCHEME_NAME".scheme.bed
         cp "$REFERENCE" $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_NAME"/V"$PRIMER_SCHEME_VERSION"/"$PRIMER_SCHEME_NAME".reference.fasta
         samtools faidx $HOME/vigeas/primer_schemes/"$PRIMER_SCHEME_NAME"/V"$PRIMER_SCHEME_VERSION"/"$PRIMER_SCHEME_NAME".reference.fasta
+    fi
+    exit 0
+}
+
+clr3() {
+    find "$HOME"/rerio/clair3_models/* -type d -o -type l | awk -F/ '{print $NF}'
+    exit 1
+}
+
+makedb() {
+    usage_makedb() {
+        echo "
+vigeas [VIral GEnome ASsembly pipelines for WGS]
+Written by Laise de Moraes <laise.moraes@fiocruz.br>
+
+Usage: vigeas makedb [options]
+
+Options: -f STR  Path containing the *.FASTA with the reference genomes
+         -t STR  Path containing the *.TSV metadata of the genome references
+"
+        exit 1
+    }
+
+    if [ $# -lt 1 ]; then
+        usage_makedb
+    fi
+
+    while getopts "f:t:" OPT; do
+        case "$OPT" in
+            f) FASTA="$OPTARG";;
+            t) METADATA="$OPTARG";;
+            *) usage_makedb;;
+        esac
+    done
+
+    if [[ -z "$FASTA" ]]; then
+        usage_makedb
+    else
+        "$ENV_MANAGER" activate vigeas-ill
+        DATABASE_NAME="$(basename $FASTA | awk -F/ '{print $NF}' | awk -F. '{print $1}')"
+        cp "$FASTA" "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta"
+        [[ -n "$DATABASE_NAME" && -n "$METADATA" && -f "$METADATA" ]] && cp "$METADATA" "$HOME/vigeas/blastdb/$DATABASE_NAME.tsv"
+        makeblastdb -in "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta" -dbtype nucl -out "$HOME/vigeas/blastdb/$DATABASE_NAME"
+        awk -v home="$HOME" '/^>/{if(s) close(s); s=home "/vigeas/refseq/" substr($0,2) ".fasta"; print > s; next}{if(s) print >> s}' "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta"
+        find "$HOME/vigeas/refseq/" -type f -name "*.fasta" -exec sh -c '[ ! -f "$1.fai" ] && samtools faidx "$1"' _ {} \;
     fi
     exit 0
 }
@@ -188,55 +234,54 @@ primer_schemes() {
     exit 1
 }
 
-update() {
-    "$ENV_MANAGER" update -y -n vigeas-ill -c conda-forge -c bioconda --all
-    "$ENV_MANAGER" update -y -n vigeas-ont -c defaults -c conda-forge -c bioconda --all
-    exit 1
-}
-
-clr3() {
-    find "$HOME"/rerio/clair3_models/* -type d -o -type l | awk -F/ '{print $NF}'
-    exit 1
-    }
-
-makedb() {
-    usage_makedb() {
+selftest () {
+    usage_selftest() {
         echo "
 vigeas [VIral GEnome ASsembly pipelines for WGS]
 Written by Laise de Moraes <laise.moraes@fiocruz.br>
 
-Usage: vigeas makedb [options]
+Usage: vigeas selftest [options]
 
-Options: -f STR  Path containing the *.FASTA with the reference genomes
-         -t STR  Path containing the *.TSV metadata of the genome references
+Options: -d STR  Test dataset to run
+
+Available test datasets:
+  amp-rsv    Illumina Amplicon Chemistry (RSV)
+  hyb-hiv1   Illumina Hybrid-Capture Chemistry (HIV-1)
 "
         exit 1
     }
 
     if [ $# -lt 1 ]; then
-        usage_makedb
+        usage_selftest
     fi
 
-    while getopts "f:t:" OPT; do
+    while getopts "d:" OPT; do
         case "$OPT" in
-            f) FASTA="$OPTARG";;
-            t) METADATA="$OPTARG";;
-            *) usage_ill;;
+            d) DATASET="$OPTARG";;
+            *) usage_selftest;;
         esac
     done
 
-    if [[ -z "$FASTA" ]]; then
-        usage_makedb
+    if [[ -z "$DATASET" ]]; then
+        usage_selftest
     else
-        "$ENV_MANAGER" activate vigeas-ill
-        DATABASE_NAME="$(basename $FASTA | awk -F/ '{print $NF}' | awk -F. '{print $1}')"
-        cp "$FASTA" "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta"
-        [[ -n "$DATABASE_NAME" && -n "$METADATA" && -f "$METADATA" ]] && cp "$METADATA" "$HOME/vigeas/blastdb/$DATABASE_NAME.tsv"
-        makeblastdb -in "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta" -dbtype nucl -out "$HOME/vigeas/blastdb/$DATABASE_NAME"
-        awk -v home="$HOME" '/^>/{if(s) close(s); s=home "/vigeas/refseq/" substr($0,2) ".fasta"; print > s; next}{if(s) print >> s}' "$HOME/vigeas/blastdb/$DATABASE_NAME.fasta"
-        find "$HOME/vigeas/refseq/" -type f -name "*.fasta" -exec sh -c '[ ! -f "$1.fai" ] && samtools faidx "$1"' _ {} \;
+        if [[ "$DATASET" == "amp-rsv" ]]; then
+            "$ENV_MANAGER" activate vigeas-ill
+            "$(which bash)" vigeas ill -x amp -i "$HOME/vigeas/datasets/ill_amp_rsv/" -s "$HOME/vigeas/datasets/ill_amp_rsv/ill_amp_rsv.csv"
+        elif [[ "$DATASET" == "hyb-hiv1" ]]; then
+            "$ENV_MANAGER" activate vigeas-ill
+            "$(which bash)" vigeas ill -x hyb -i "$HOME/vigeas/datasets/ill_hyb_hiv1/" -s "$HOME/vigeas/datasets/ill_hyb_hiv1/ill_hyb_hiv1.csv" -u
+        else
+            exit 1
+        fi
     fi
     exit 0
+}
+
+update() {
+    "$ENV_MANAGER" update -y -n vigeas-ill -c conda-forge -c bioconda --all
+    "$ENV_MANAGER" update -y -n vigeas-ont -c defaults -c conda-forge -c bioconda --all
+    exit 1
 }
 
 ill() {
@@ -786,6 +831,7 @@ case "$1" in
     ont)      shift; ont "$@";;
     panels)   shift; enrichment_panels;;
     primers)  shift; primer_schemes;;
+    selftest) shift; selftest "$@";;
     update)   shift; update;;
     version)  shift; version;;
     *)        echo "Error: Unknown command '$1'";;
